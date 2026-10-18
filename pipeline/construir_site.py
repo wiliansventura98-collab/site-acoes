@@ -152,13 +152,24 @@ def indec_geoportal(nomes_provincia):
             "fonte": "INDEC, Censo Nacional de Población, Hogares y Viviendas 2022, via Geoportal estadístico (portalgeoestadistico.indec.gob.ar)"}
 
 
+def _toponimos():
+    """Cidades com população (GeoNames, via all-the-cities) para os nomes que aparecem conforme o zoom dos mapas.
+    Formato compacto: [nome, lon, lat, população, tipo] com tipo C = capital nacional, A = capital provincial, D = demais."""
+    arq = REFERENCIAS / "toponimos_ar.csv"
+    if not arq.exists():
+        return []
+    with open(arq, encoding="utf-8") as fh:
+        return [[r["nome"], round(float(r["lon"]), 4), round(float(r["lat"]), 4), int(r["populacao"]),
+                 "C" if r["tipo_geonames"] == "PPLC" else "A" if r["tipo_geonames"] == "PPLA" else "D"] for r in csv.DictReader(fh)]
+
+
 def _eventos():
     """Acontecimentos de 2024 marcados na linha do tempo (referencias/acontecimentos_2024.csv)."""
     arq = REFERENCIAS / "acontecimentos_2024.csv"
     if not arq.exists():
         return []
     with open(arq, encoding="utf-8") as fh:
-        return [{"data": r["data"], "nome": r["acontecimento"], "tipo": r["tipo"], "fonte": r["fonte"]} for r in csv.DictReader(fh)]
+        return [{"data": r["data"], "nome": r["acontecimento"], "curto": r.get("rotulo") or r["acontecimento"], "tipo": r["tipo"], "fonte": r["fonte"]} for r in csv.DictReader(fh)]
 
 
 def escrever_csv(res, caminho):
@@ -348,7 +359,7 @@ def main():
     _json({"deptos": json.loads((limites / "departamentos.topo.json").read_text(encoding="utf-8")),
            "neigh": json.loads((limites / "paises_vizinhos.topo.json").read_text(encoding="utf-8")),
            "coords": coords, "pop": _populacao(), "locinfo": res.locinfo, "deptLabels": res.rotulos_departamento,
-           "contexto": contexto(), "eventos": _eventos()},
+           "contexto": contexto(), "eventos": _eventos(), "toponimos": _toponimos()},
           DADOS / "geo.json")
     escrever_csv(res, DADOS / f"acoes_{a.ano}.csv")
     escrever_contexto_csv(res, DADOS / "contexto_censo2022_departamentos.csv")

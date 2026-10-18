@@ -24,7 +24,7 @@
     const [base, geo] = await Promise.all([json('../dados/base.json'), json('../dados/geo.json')]);
     window.__BASE__ = base;
     window.__GEO__ = geo;
-    for (const m of MODULOS) await script(`../assets/js/app/${m}.js?v=20261018e`);
+    for (const m of MODULOS) await script(`../assets/js/app/${m}.js?v=20261018f`);
   } catch (erro) {
     console.error(erro);
     if (lede) lede.textContent = 'Não foi possível carregar a base. Verifique a conexão e recarregue a página.';

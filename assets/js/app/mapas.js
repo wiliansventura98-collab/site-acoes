@@ -160,6 +160,41 @@ const LISA_COR = { HH:'#c45a00', LL:'#2569ad', HL:'#f6c768', LH:'#a9cdee', ns:'#
 const LISA_ROT = { HH:'Alto cercado de alto (ponto quente)', LL:'Baixo cercado de baixo (ponto frio)', HL:'Alto cercado de baixo', LH:'Baixo cercado de alto', ns:'Não significativo (p ≥ 0,05)' };
 let ESP_CACHE={k:null, v:null};
 
+/* ---------- topônimos: nomes que aparecem conforme o zoom ----------
+   Províncias e capitais em todas as escalas; cidades por população a partir de certos níveis de aproximação;
+   departamentos/partidos nas aproximações maiores e no detalhe da AMBA. Rótulos sem sobreposição, com halo branco. */
+const TOPO_PTS = ((GEO.toponimos)||[]).map(([n,lon,lat,pop,t])=>({n,lon,lat,pop,t}));
+const limiarCidade = k => k>=18? 2000 : k>=10? 10000 : k>=6? 30000 : k>=3.5? 80000 : k>=2? 250000 : Infinity;
+function topoLayer(m, proj, box, k, modo){
+  const [x0,y0,x1,y1]=box, ocup=[], out=[];
+  const cabe=(bx)=>{ if(bx[0]<x0+4 || bx[2]>x1-4 || bx[1]<y0+4 || bx[3]>y1-4) return false; if(ocup.some(o=>!(bx[2]<o[0]||bx[0]>o[2]||bx[3]<o[1]||bx[1]>o[3]))) return false; ocup.push(bx); return true; };
+  const larg=(t,size,w)=>{ _cv.font=`${w||400} ${size}px ${FONT}`; return _cv.measureText(t).width; };
+  // 1) províncias (até aproximação moderada)
+  if(modo==='pais' && k<6) PROVS_FC.forEach(f=>{ const c=f.properties.pi>=0? PROV_XY[f.properties.pi] : mainCentroid(f); const p=proj(c); if(!p) return;
+    const nome=f.properties.p.replace(/^CABA.*$/,'CABA').toUpperCase(); if(nome==='CABA') return; const sz=k>=2.5? 10.5 : 8.5, w=larg(nome,sz,600)*1.12;
+    const bx=[p[0]-w/2, p[1]-sz, p[0]+w/2, p[1]+3]; if(cabe(bx)) out.push({tipo:'prov', x:p[0], y:p[1], t:nome, sz}); });
+  // 2) cidades: capitais sempre; demais pela população e pelo zoom
+  const lim = modo==='amba'? 250000 : modo==='mini'? (k>=2? 1e6 : Infinity) : limiarCidade(k);
+  TOPO_PTS.filter(c=> modo==='mini'? (c.t!=='D' && k>=2) : (c.t!=='D' || c.pop>=lim)).forEach(c=>{ const p=proj([c.lon,c.lat]); if(!p || p[0]<x0 || p[0]>x1 || p[1]<y0 || p[1]>y1) return;
+    const imp=c.t==='C'? 3 : c.t==='A'? 2 : c.pop>=500000? 2 : 1, sz=modo==='mini'? 8.5 : imp===3? 12 : imp===2? 11 : 10, w=larg(c.n,sz,imp>=2?700:500);
+    const cands=[[p[0]+5, p[1]+sz*0.35, 'start'], [p[0]-5, p[1]+sz*0.35, 'end'], [p[0], p[1]-6, 'middle'], [p[0], p[1]+sz+4, 'middle']];
+    for(const [tx,ty,a] of cands){ const xa= a==='start'? tx : a==='end'? tx-w : tx-w/2; const bx=[xa-1, ty-sz, xa+w+1, ty+3]; if(cabe(bx)){ ocup.push([p[0]-3,p[1]-3,p[0]+3,p[1]+3]); out.push({tipo:'cid', x:p[0], y:p[1], tx, ty, a, t:c.n, sz, imp}); break; } } });
+  // 3) departamentos e partidos
+  if((modo==='pais' && k>=8) || modo==='amba') DEPTS.forEach(f=>{ if(modo==='amba' && f.properties.r!=='Gran Buenos Aires') return; const p=proj(f.properties.c); if(!p) return;
+    const nome=f.properties.n.replace(/\s*\([^)]*\)\s*$/,'').replace(/^CABA.*/,'CABA'); const sz=modo==='amba'? 9 : 9.5, w=larg(nome,sz,400);
+    const bx=[p[0]-w/2-1, p[1]-sz, p[0]+w/2+1, p[1]+3]; if(cabe(bx)) out.push({tipo:'dep', x:p[0], y:p[1], t:nome, sz}); });
+  const g=m.append('g').attr('class','toponimos').attr('pointer-events','none');
+  out.forEach(d=>{
+    if(d.tipo==='cid'){ g.append('circle').attr('cx',d.x).attr('cy',d.y).attr('r', d.imp===3? 3.4 : d.imp===2? 2.8 : 2.1).attr('fill', d.imp>=2? C.ink : '#ffffff').attr('stroke',C.ink).attr('stroke-width',1);
+      g.append('text').attr('x',d.tx).attr('y',d.ty).attr('text-anchor',d.a).attr('font-size',d.sz).attr('font-family',FONT).attr('font-weight',d.imp>=2? 700 : 500).attr('fill',C.ink)
+        .attr('paint-order','stroke').attr('stroke','#ffffff').attr('stroke-width',3).attr('stroke-linejoin','round').attr('stroke-opacity',.9).text(d.t); }
+    else if(d.tipo==='prov') g.append('text').attr('x',d.x).attr('y',d.y).attr('text-anchor','middle').attr('font-size',d.sz).attr('font-family',FONT).attr('font-weight',600).attr('letter-spacing',1.2).attr('fill','#6d7f93')
+        .attr('paint-order','stroke').attr('stroke','#ffffff').attr('stroke-width',2.5).attr('stroke-opacity',.7).text(d.t);
+    else g.append('text').attr('x',d.x).attr('y',d.y).attr('text-anchor','middle').attr('font-size',d.sz).attr('font-family',FONT).attr('font-style','italic').attr('fill','#56677c')
+        .attr('paint-order','stroke').attr('stroke','#ffffff').attr('stroke-width',2.5).attr('stroke-opacity',.85).text(d.t); });
+  return out.length;
+}
+
 const PROJ = () => d3.geoConicConformal().parallels([-28,-46]).rotate([64,0]);
 const mstate = { unit:'loc', measure:'abs', mode:'one', cmp:'nombremov', n:6, author:'', ctx:'', mes:'' };
 try{ const s=JSON.parse(localStorage.getItem('as24m2')||'null'); if(s){ Object.assign(mstate, s); if(VI[mstate.cmp]==null) mstate.cmp='nombremov'; } }catch(e){}
@@ -171,6 +206,7 @@ document.querySelectorAll('#mapMeasure button').forEach(b=>b.onclick=()=>{ if(b.
 document.querySelectorAll('#mapMode button').forEach(b=>b.onclick=()=>{ mstate.mode=b.dataset.v; render(); });
 $('cmpVar').onchange=e=>{ mstate.cmp=e.target.value; render(); };
 $('ctxLayer').onchange=e=>{ mstate.ctx=e.target.value; render(); };
+$('mapTopo').onchange=e=>{ mstate.topo=e.target.checked; render(); };
 const MES_VALS = VARS[VI.mes].values;
 MES_VALS.forEach((m,i)=>{ const o=el('option',null,m.replace(/^\d\d · /,'')); o.value=String(i); $('mapMes').append(o); });
 $('mapMes').onchange=e=>{ mstate.mes=e.target.value; pararAnim(); render(); };
@@ -325,6 +361,7 @@ function drawBase(g, proj, box, md, sh, o){
       .attr('fill',d=>o.ctxCls.color(d[cdef.campo])).attr('stroke','#2b2216').attr('stroke-width', o.small? .6 : .9);
     if(tip) sq.on('mousemove',(e,d)=>tip.show(e, d.aglomerado, [`${o.ctxCls.fmt(d[cdef.campo])} ${cdef.curto}`, cdef.titulo])).on('mouseleave',()=>tip.hide());
   }
+  if(o.topo) topoLayer(m, proj, box, o.topoK||1, o.topoModo||'pais');
   g.append('rect').attr('x',x0).attr('y',y0).attr('width',x1-x0).attr('height',y1-y0).attr('fill','none').attr('stroke',C.ink).attr('stroke-width',o.small? .7 : 1);
   return m;
 }
@@ -426,6 +463,7 @@ function techNote(md, sh, o, multi){
   if(md.spatial) s.push('Filtros espaciais aplicados ao lugar: só são representados os lugares dentro das unidades selecionadas, mesmo quando a notícia também cita outros lugares.');
   s.push('Limites: departamentos/partidos (linha fina), províncias (média) e regiões estatísticas do INDEC (grossa): Gran Buenos Aires (CABA e 24 partidos), Pampeana, Noroeste, Noreste, Cuyo e Patagonia.');
   const zk = (multi? ZOOM.multi : ZOOM.one).k; if(zk>1) s.push(`Vista ampliada (×${zk.toLocaleString('pt-BR',{maximumFractionDigits:1})}) em relação ao país inteiro.`);
+  if(mstate.topo!==false) s.push(`Topônimos: GeoNames (CC BY 4.0); capitais sempre visíveis, demais cidades conforme a população e o nível de aproximação.`);
   s.push(`Sistema de coordenadas geográficas, datum WGS 84; projeção cônica conforme de Lambert (paralelos-padrão 28° S e 46° S; meridiano central 64° O); grade de ${gridStep(zk).toLocaleString('pt-BR')}°; escala gráfica válida para o centro do mapa.`);
   const ft = filtersText(multi? [md.vid, mstate.cmp] : md.vid);
   if(mstate.mes!=='' && mstate.mes!=null) s.push(`Período: notícias de ${MES_VALS[+mstate.mes].replace(/^\d\d · /,'').toLowerCase()} de 2024 (mês da notícia).`);
@@ -479,7 +517,7 @@ function renderMap(b){
   const b0=b, comMes = mstate.mes!=='' && mstate.mes!=null;
   if(comMes){ const im=+mstate.mes; b=b.filter(r=>r.v[VI.mes].includes(im)); }
   const nomeMes = comMes? MES_VALS[+mstate.mes].replace(/^\d\d · /,'').toLowerCase() : '';
-  $('mapMes').value = mstate.mes||'';
+  $('mapMes').value = mstate.mes||''; $('mapTopo').checked = mstate.topo!==false;
   if(!RATE_OK(mstate.unit)) mstate.measure='abs';
   const cdef = ctxEscolha(mstate.ctx), cpoly = !!cdef && ['prov','reg','dep','biv','lisa'].includes(cdef.nivel);
   if(cpoly) mstate.measure='abs';
@@ -535,7 +573,7 @@ function renderMap(b){
     o.popR = d3.scaleSqrt().domain([0, 18e6]).range([0, Math.min(52, fw*0.11)]);
     o.popDR = d3.scaleSqrt().domain([0, 2e6]).range([0, Math.min(30, fw*0.065)]);
     const gm = svg.append('g');
-    const mm = drawBase(gm, proj, frame, md, sh, {...o, tip, onClick, sel: st.f[vid], labels: fw>=380? LABELS : [], gstep: gs});
+    const mm = drawBase(gm, proj, frame, md, sh, {...o, tip, onClick, sel: st.f[vid], labels: fw>=380? LABELS : [], gstep: gs, topo: mstate.topo!==false, topoK: ZOOM.one.k, topoModo:'pais'});
     const zbOne = attachZoom(gm, 'one', [fx0, y], frame, mm);
     mm.append('path').datum(AMBA_BOX).attr('d',d3.geoPath(proj)).attr('fill','none').attr('stroke',C.ink).attr('stroke-dasharray','3 2').attr('stroke-width',.9).attr('pointer-events','none');
     graticuleLabels(svg, proj, frame, gs, 9.5);
@@ -550,7 +588,7 @@ function renderMap(b){
     const ih = Math.round(rw*0.66);
     const iframe=[rx, ry, rx+rw, ry+ih];
     const iproj = d3.geoMercator().fitExtent([[rx+2, ry+2],[rx+rw-2, ry+ih-2]], AMBA_BOX);
-    drawBase(svg.append('g'), iproj, iframe, md, sh, {...o, tip, onClick, sel: st.f[vid], gstep:0.25, labels: LABELS_AMBA});
+    drawBase(svg.append('g'), iproj, iframe, md, sh, {...o, tip, onClick, sel: st.f[vid], gstep:0.25, labels: LABELS_AMBA, topo: mstate.topo!==false, topoModo:'amba'});
     svg.append('rect').attr('x',rx+6).attr('y',ry+6).attr('width',Math.min(rw-12, 236)).attr('height',18).attr('fill','#ffffff').attr('fill-opacity',.88);
     svg.append('text').attr('x',rx+11).attr('y',ry+19).attr('font-size',11).attr('font-weight',700).attr('fill',C.ink).text('Detalhe: Área Metropolitana de Buenos Aires');
     scaleBar(svg, iproj, rx+rw/2, ry+ih/2, rx+16, ry+ih-14, Math.min(90, rw*0.3), true);
@@ -596,7 +634,7 @@ function renderMap(b){
       const fr=[x0, y0+46, x0+cw, y0+46+ch];
       const proj = zoomProj(PROJ().fitExtent([[x0+cw*0.05, y0+50],[x0+cw*0.95, y0+42+ch]], ALL), ZOOM.multi, [x0, y0+46]); projRef = projRef||proj;
       const gz = g.append('g');
-      const mz = drawBase(gz, proj, fr, s.md, sh, {...o, small:true, tip, onClick:(v,i)=>{ st.f[cv]=new Set([s.k]); toggleFilter(v,i,true); }, sel: st.f[vid], gstep: gridStep(ZOOM.multi.k)});
+      const mz = drawBase(gz, proj, fr, s.md, sh, {...o, small:true, tip, onClick:(v,i)=>{ st.f[cv]=new Set([s.k]); toggleFilter(v,i,true); }, sel: st.f[vid], gstep: gridStep(ZOOM.multi.k), topo: mstate.topo!==false, topoK: ZOOM.multi.k, topoModo:'mini'});
       const zbC = attachZoom(gz, 'multi', [x0, y0+46], fr, mz);
       if(j===0){ ZCTL = {sel: gz, zb: zbC}; ctlFrame = fr; }
       northArrow(g, x0+cw-14, y0+46+ch*0.70, 11);

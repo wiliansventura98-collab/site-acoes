@@ -16,6 +16,16 @@ $('cmpAk').onchange=e=>{ CMP.ak=+e.target.value; render(); };
 $('cmpBk').onchange=e=>{ CMP.bk=e.target.value; render(); };
 $('cmpY').onchange=e=>{ CMP.y=e.target.value; render(); };
 
+const CMP_EX = [
+  ['GBA × demais regiões, por tipo de movimento', {av:'region', akNome:'Gran Buenos Aires', bk:'resto', y:'tipomov'}],
+  ['Sindicais × demais, por ação matriz', {av:'tipomov', akNome:'Movimientos sindicales', bk:'resto', y:'matriz'}],
+  ['Patagônia × Noroeste, por objetivos', {av:'region', akNome:'Patagonia', bkNome:'Noroeste (NOA)', y:'objetivos'}],
+  ['Feministas × estudantis, por ação matriz', {av:'tipomov', akNome:'Movimientos de mujeres/feministas', bkNome:'Movimientos Estudiantiles', y:'matriz'}],
+  ['Escala nacional × municipal, por instituição interpelada', {av:'escala', akNome:'Nacional', bkNome:'Municipal', y:'tipoinst'}],
+];
+(()=>{ const box=$('cmpPresets'); box.append(el('span',null,'Exemplos prontos:'));
+  CMP_EX.forEach(([rot,ex])=>{ const b=el('button','btn',rot); b.type='button'; b.onclick=()=>{ const vals=VARS[VI[ex.av]].values; CMP.av=ex.av; CMP.ak=vals.indexOf(ex.akNome); CMP.bk= ex.bkNome? String(vals.indexOf(ex.bkNome)) : 'resto'; CMP.y=ex.y; render(); }; box.append(b); }); })();
+
 function renderCmp(b){
   if(VI[CMP.av]==null) CMP.av='region'; if(VI[CMP.y]==null) CMP.y='tipomov';
   const iv=VI[CMP.av], v=VARS[iv];
@@ -62,6 +72,12 @@ function renderCmp(b){
     .style('fill',d=>Math.abs(d.z)<1.96? 'var(--ink-3)' : d.d>0? COR_A : '#b37800').text(d=>`${d.d>=0?'+':'−'}${f1(Math.abs(d.d))}${Math.abs(d.z)>=1.96? ' *' : ''}`);
   const lg=el('div','legend'); [[COR_A, `A: ${nomeA} (${fmt(A.length)} notícias)`],[COR_B, `B: ${nomeB}${CMP.bk==='resto'? '' : ` (${fmt(B.length)} notícias)`}`]].forEach(([c,t])=>{ const s=el('span'); const i=el('i','sw'); i.style.background=c; i.style.borderRadius='50%'; s.append(i, document.createTextNode(t)); lg.append(s); });
   box.append(lg);
+  // leitura automática: as maiores diferenças significativas em cada direção
+  const sig=linhas.filter(d=>Math.abs(d.z)>=1.96), maisA=sig.filter(d=>d.d>0).sort((p,q)=>q.d-p.d).slice(0,3), maisB=sig.filter(d=>d.d<0).sort((p,q)=>p.d-q.d).slice(0,3);
+  const frase=l=>l.map(d=>`<b>${vy.values[d.k]}</b> (${f1(d.pa)}% contra ${f1(d.pb)}%)`).join('; ');
+  const Lg=$('cmpLeitura'); Lg.hidden=false;
+  Lg.innerHTML = `<b>Leitura deste resultado:</b> ` + (!sig.length? `nenhuma diferença entre <b>${nomeA}</b> e <b>${nomeB}</b> é estatisticamente significativa nas categorias de “${vy.label}”; os dois grupos têm perfis parecidos, ou há poucas notícias para afirmar uma diferença.` :
+    (maisA.length? `as notícias de <b>${nomeA}</b> têm proporcionalmente mais ${frase(maisA)}. ` : '') + (maisB.length? `As de <b>${nomeB}</b> têm mais ${frase(maisB)}. ` : '') + `As demais diferenças podem ser acaso.`);
   $('cmpMeta').textContent=`${fmt(A.length)} × ${fmt(B.length)} notícias`;
   const comuns = CMP.bk!=='resto'? rows.filter(r=>temA(r) && r.v[iv].includes(+CMP.bk)).length : 0;
   $('cmpNote').textContent=`Cada linha mostra a proporção das notícias de cada grupo que têm a categoria de “${vy.label}”. As 18 categorias mais frequentes nos dois grupos estão ordenadas da maior vantagem de A à maior vantagem de B. A coluna da direita traz a diferença em pontos percentuais; * marca diferenças significativas a 5% (teste z de duas proporções). Os grupos respeitam os demais filtros ativos.`

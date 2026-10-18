@@ -71,15 +71,30 @@ function renderCtx(b){
   if(cr){ const xd=x.domain(), f=v=>cr.a+cr.b*(logX? Math.log10(v) : v);
     const xs2 = logX? d3.range(0,41).map(i=>xd[0]*Math.pow(xd[1]/xd[0], i/40)) : [xd[0], xd[1]];
     svg.append('path').attr('class','trend').attr('d', d3.line().x(v=>x(v)).y(v=>y(Math.max(y.domain()[0], f(v))))(xs2)); }
+  // quadrantes pelas medianas e lugares fora da tendência
+  const medX=d3.median(pts,d=>d.x), medY=d3.median(pts,d=>d.y);
+  if(medX!=null && medY!=null){
+    svg.append('line').attr('x1',x(medX)).attr('x2',x(medX)).attr('y1',m.t).attr('y2',H-m.b).attr('stroke','#9aa6b2').attr('stroke-width',1);
+    svg.append('line').attr('x1',m.l).attr('x2',W-m.r).attr('y1',y(medY)).attr('y2',y(medY)).attr('stroke','#9aa6b2').attr('stroke-width',1);
+    const q=(xx,yy,t,a)=>svg.append('text').attr('x',xx).attr('y',yy).attr('text-anchor',a).style('font-size','11px').style('font-weight',700).style('fill','#7c8aa0').text(t);
+    q(W-m.r-4, m.t+12, 'indicador alto · mais notícias', 'end'); q(m.l+6, m.t+12, 'indicador baixo · mais notícias', 'start');
+    q(W-m.r-4, H-m.b-6, 'indicador alto · menos notícias', 'end'); q(m.l+6, H-m.b-6, 'indicador baixo · menos notícias', 'start');
+  }
+  const prev=d=>cr? cr.a+cr.b*(logX? Math.log10(d.x) : d.x) : d.y;
+  pts.forEach(d=>{ d.res=d.y-prev(d); });
+  const sdRes=d3.deviation(pts,d=>d.res)||1;
+  const acima=[...pts].filter(d=>d.n>0 && d.res>1.5*sdRes).sort((a,q)=>q.res-a.res).slice(0,4), abaixo=[...pts].filter(d=>d.res< -1*sdRes).sort((a,q)=>a.res-q.res).slice(0,3);
+  const dest=new Set([...acima,...abaixo]);
   const tip=tipFor(box);
   svg.append('g').selectAll('circle').data([...pts].sort((a,q)=>q.n-a.n)).join('circle').attr('cx',d=>x(d.x)).attr('cy',d=>y(d.y)).attr('r',d=>rr(d.n))
     .attr('fill',d=>REG_COR.get(d.reg)||COR_OUTROS).attr('fill-opacity',d=> dep && !d.n? .28 : .82).attr('class','sc-pt').style('cursor','pointer')
     .on('mousemove',(e,d)=>tip.show(e, d.p, [`${fmt(d.n)} notícias · ${nfmt1(d.y)} por 100 mil hab.`, `${titX}: ${d.x.toLocaleString('pt-BR',{maximumFractionDigits:2})} ${unX}`, d.reg]))
     .on('mouseleave',()=>tip.hide()).on('click',(e,d)=>{ if(d.i>=0) toggleFilter(vid, d.i); });
+  svg.append('g').selectAll('circle').data([...dest]).join('circle').attr('cx',d=>x(d.x)).attr('cy',d=>y(d.y)).attr('r',d=>rr(d.n)+3.5).attr('fill','none').attr('stroke',d=>d.res>0? '#c45a00' : '#2569ad').attr('stroke-width',2).attr('pointer-events','none');
   // rótulos sem sobreposição: os de maior número de notícias têm prioridade
   const curtoP = p => p.replace('CABA (Ciudad de Buenos Aires)','CABA').replace('Santiago del Estero','Sgo. del Estero').replace('Tierra del Fuego','T. del Fuego');
   const ocupados=[]; const rot=[];
-  [...pts].sort((a,q)=>q.n-a.n).slice(0, dep? 14 : 99).filter(d=>d.n>0 || !dep).forEach(d=>{ const tx=curtoP(d.p).replace(/ \((Buenos Aires|[^)]+)\)$/,''), w=tx.length*5.6, bx=[x(d.x)+rr(d.n)+3, y(d.y)-5, x(d.x)+rr(d.n)+3+w, y(d.y)+6];
+  [...dest, ...[...pts].sort((a,q)=>q.n-a.n).filter(d=>!dest.has(d)).slice(0, dep? 12 : 99)].filter(d=>d.n>0 || !dep).forEach(d=>{ const tx=curtoP(d.p).replace(/ \((Buenos Aires|[^)]+)\)$/,''), w=tx.length*5.6, bx=[x(d.x)+rr(d.n)+3, y(d.y)-5, x(d.x)+rr(d.n)+3+w, y(d.y)+6];
     const bate = ocupados.some(o=>!(bx[2]<o[0]||bx[0]>o[2]||bx[3]<o[1]||bx[1]>o[3])) || bx[2]>W-2;
     if(!bate){ ocupados.push(bx); rot.push([d,tx]); } });
   svg.append('g').selectAll('text').data(rot).join('text').attr('class','sc-label').attr('x',([d])=>x(d.x)+rr(d.n)+3).attr('y',([d])=>y(d.y)+3.5).text(([,tx])=>tx);
@@ -88,6 +103,12 @@ function renderCtx(b){
   const f2 = v => v.toLocaleString('pt-BR',{minimumFractionDigits:2, maximumFractionDigits:2});
   $('ctxMeta').textContent= dep? `${fmt(pts.length)} departamentos · ${fmt(pts.filter(d=>d.n).length)} com notícias` : `${pts.length} jurisdições`;
   const defX = IND.find(d=>'i_'+d.k===CTXV.x);
+  { const rho=cr? cr.rho : 0, ar=Math.abs(rho), discorda = cr && Math.sign(cr.r)!==Math.sign(cr.rho) && Math.max(Math.abs(cr.r),ar)>=0.1, forca= discorda? 'inconsistente' : ar<0.1? 'praticamente nenhuma' : ar<0.3? 'fraca' : ar<0.6? 'moderada' : 'forte';
+    const nomeInd=titX.replace(/, 20\d\d$/,'').toLowerCase(), uni=dep? 'departamentos' : 'províncias';
+    const sentido = discorda? `a linha de tendência (Pearson, r = ${f2(cr.r)}) e a ordem dos lugares (Spearman) apontam em direções opostas, sinal de que poucos casos extremos puxam a linha; na prática, não há relação consistente entre ${nomeInd} e notícias por habitante` : ar<0.1? `não há relação clara entre ${nomeInd} e notícias por habitante` : rho>0? `onde ${nomeInd} é maior, tende a haver <b>mais</b> notícias por habitante` : `onde ${nomeInd} é maior, tende a haver <b>menos</b> notícias por habitante`;
+    const lista=l=>l.map(d=>d.p.replace(/ \((Buenos Aires|[^)]+)\)$/,'')).join(', ');
+    const Lg=$('ctxLeitura'); Lg.hidden=!cr;
+    if(cr) Lg.innerHTML=`<b>Leitura:</b> relação <b>${forca}</b> (ρ = ${f2(rho)}): ${sentido}, entre ${fmt(pts.length)} ${uni}.` + (acima.length? ` <span style="color:#c45a00">●</span> Muito <b>acima</b> do esperado pela tendência: ${lista(acima)}.` : '') + (abaixo.length? ` <span style="color:#2569ad">●</span> Muito <b>abaixo</b>: ${lista(abaixo)}.` : '') + ` Os quadrantes usam as medianas dos dois eixos.`; }
   $('ctxNote').textContent = (dep? `Cada ponto é um departamento ou partido (área ∝ número de notícias; pontos claros = sem notícias no recorte; cor = região estatística). Eixo vertical: notícias que citam o departamento por 100 mil habitantes (Censo 2022), no recorte atual. `
       : `Cada ponto é uma jurisdição (área ∝ número de notícias; cor = região estatística, com Buenos Aires em Pampeana). Eixo vertical: notícias que citam a província por 100 mil habitantes (Censo 2022, resultados definitivos), no recorte atual. `)
     + (defX && defX.definicao? `Indicador (INDEC): ${defX.definicao.split(/\n/)[0]} ` : '')
@@ -95,7 +116,7 @@ function renderCtx(b){
     + 'Associação entre agregados territoriais não indica causalidade nem se aplica a indivíduos (falácia ecológica); a cobertura da imprensa também varia entre províncias.';
   renderCtxTabela(dep? mapData(b.filter(r=>match(r,'provincia')),'prov') : md);
   renderCtxRegioes(b);
-  $('ctxSources').textContent = 'Fontes: INDEC, Censo Nacional de Población, Hogares y Viviendas 2022, resultados definitivos (população) e indicadores por província e departamento obtidos no Geoportal estadístico do INDEC (portalgeoestadistico.indec.gob.ar: privação material dos hogares, serviços, conectividade, educação, trabalho, saúde, estrutura demográfica, diversidade e migração); área calculada pelo projeto em projeção equivalente; Ministerio de Seguridad Nacional, SNIC-SAT, Informe de Homicidios Dolosos 2024 (homicídios 2023 e 2024); INDEC, Encuesta Permanente de Hogares: pobreza e indigência no 2º semestre de 2024 e mercado de trabalho no 4º trimestre de 2024 (regiões). Detalhes em pipeline/referencias/contexto/FONTES.md no repositório.';
+  $('ctxSources').textContent = 'Fontes: INDEC, Censo Nacional de Población, Hogares y Viviendas 2022, resultados definitivos (população) e indicadores por província e departamento obtidos no Geoportal estadístico do INDEC (portalgeoestadistico.indec.gob.ar: privação material dos hogares, serviços, conectividade, educação, trabalho, saúde, estrutura demográfica, diversidade e migração); área calculada pelo projeto em projeção equivalente; Ministerio de Seguridad Nacional, SNIC-SAT, Informe de Homicidios Dolosos 2024 (homicídios 2023 e 2024); INDEC, Encuesta Permanente de Hogares: pobreza e indigência no segundo semestre de 2024 e mercado de trabalho no quarto trimestre de 2024 (regiões). Detalhes em pipeline/referencias/contexto/FONTES.md no repositório.';
 }
 
 function barCell(td, v, max, txt, cor){
@@ -135,7 +156,7 @@ function renderCtxRegioes(b){
   const lin=REG_ORDEM.map(r=>{ const k=REG_VALS.indexOf(r), e=CTX.regioes[r]||{}; return { r, k, n: k>=0? (c.get(k)||0) : 0, pob:e.pobreza_personas_2s2024, ind:e.indigencia_personas_2s2024, des:e.desocupacao_4t2024 }; });
   const mx={ n:d3.max(lin,d=>d.n)||1, pob:d3.max(lin,d=>d.pob||0), ind:d3.max(lin,d=>d.ind||0), des:d3.max(lin,d=>d.des||0) };
   const t=el('table','ctx-table'); const th=el('thead'); const tr=el('tr');
-  ['Região','Notícias (recorte)','Pobreza, % pessoas (2º sem. 2024)','Indigência, % pessoas (2º sem. 2024)','Desocupação, % (4º trim. 2024)'].forEach(h=>tr.append(el('th',null,h)));
+  ['Região','Notícias (recorte)','Pobreza, % pessoas (segundo semestre de 2024)','Indigência, % pessoas (segundo semestre de 2024)','Desocupação, % (quarto trimestre de 2024)'].forEach(h=>tr.append(el('th',null,h)));
   th.append(tr); t.append(th); const tb=el('tbody');
   const p1 = v => v==null? '—' : v.toLocaleString('pt-BR',{minimumFractionDigits:1, maximumFractionDigits:1});
   lin.forEach(d=>{ const r=el('tr'); const c1=el('td','nm'); c1.append(el('i','dot')); c1.firstChild.style.background=REG_COR.get(d.r); c1.append(document.createTextNode(d.r)); r.append(c1);

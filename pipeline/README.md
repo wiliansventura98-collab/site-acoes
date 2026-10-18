@@ -52,6 +52,7 @@ Para ver o site com os dados novos, sirva a pasta do repositório (por exemplo, 
 | `departamentos.csv` | 512 departamentos/partidos com província, região do INDEC e centróide |
 | `localidades_geonames_ar.csv` | Localidades argentinas do GeoNames (via pacote `cities.json`) |
 | `coordenadas_manuais.csv` | Localidades conferidas manualmente |
+| `toponimos_ar.csv` | 877 cidades argentinas com população e hierarquia (GeoNames, CC BY 4.0, via pacote `all-the-cities`), usadas nos nomes que aparecem conforme o zoom |
 | `acontecimentos_2024.csv` | Acontecimentos políticos de 2024 marcados na linha do tempo, com data e fonte |
 | `contexto/` | Indicadores oficiais de contexto (população, área e densidade; pobreza, indigência e desocupação; homicídios; 28 indicadores do Censo 2022 por departamento obtidos no Geoportal do INDEC), com fontes em `contexto/FONTES.md` |
 | `limites/departamentos.topo.json` | Departamentos simplificados (3%) com província e região |

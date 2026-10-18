@@ -18,6 +18,15 @@ $('acmN').onchange=e=>{ ACMS.n=+e.target.value; render(); };
 $('acmAx').onchange=e=>{ ACMS.ax=e.target.value; render(); };
 $('acmRows').onchange=e=>{ ACMS.rows=e.target.checked; render(); };
 
+const ACM_EX = [
+  ['Quem, como e onde', ['tipomov','matriz','objetivos','direccion','escala','region']],
+  ['Repertório de ação', ['matriz','direccion','modalidad','localizacion','escala']],
+  ['Movimentos e objetivos', ['tipomov','objetivos','direccion']],
+  ['Instituições interpeladas', ['tipoinst','escala','region','direccion']],
+];
+(()=>{ const box=$('acmPresets'); box.append(el('span',null,'Combinações prontas:'));
+  ACM_EX.forEach(([rot,vs])=>{ const b=el('button','btn',rot); b.type='button'; b.onclick=()=>{ ACMS.vars=vs.filter(x=>ACM_OK.includes(x)); $('acmVars').querySelectorAll('input').forEach(i=>{ i.checked=ACMS.vars.includes(i.value); }); render(); }; box.append(b); }); })();
+
 function jacobi(A0){ // autovalores e autovetores de matriz simétrica
   const n=A0.length, A=A0.map(r=>r.slice()), V=A0.map((_,i)=>A0.map((__,j)=>i===j?1:0));
   for(let sweep=0; sweep<60; sweep++){
@@ -95,6 +104,12 @@ function renderACM(b){
   svg.append('line').attr('y1',m.t).attr('y2',H-m.b).attr('x1',X(0)).attr('x2',X(0)).attr('stroke','var(--line-2)').attr('stroke-dasharray','4 4');
   svg.append('text').attr('class','ax-title').attr('x',W-m.r).attr('y',Y(0)-6).attr('text-anchor','end').text(`Eixo ${d1+1} · ${pct1(R.lam[d1]/R.totalIn)}% da inércia${R.adjTot? ` (${pct1(R.adj[d1]/R.adjTot)}% corrigida)` : ''}`);
   svg.append('text').attr('class','ax-title').attr('x',X(0)+6).attr('y',m.t+10).text(`Eixo ${d2+1} · ${pct1(R.lam[d2]/R.totalIn)}%${R.adjTot? ` (${pct1(R.adj[d2]/R.adjTot)}% corrigida)` : ''}`);
+  // nomes dos polos nas bordas do plano
+  const curto2=t=>t.replace(/^Movimientos? (de |por la |por )?/i,'').replace(/^Objetivos (en torno a |por la |por el |de |por )?/i,'').slice(0,22);
+  const poloTxt=(d,s)=>pts.filter(p=>p.k>=0 && s*p.f[d]>0).sort((a,q)=>q.ctr[d]-a.ctr[d]).slice(0,2).map(p=>curto2(p.nome)).join(' · ');
+  const pl=(x,y,t,a)=>svg.append('text').attr('x',x).attr('y',y).attr('text-anchor',a).style('font-size','11px').style('font-weight',700).style('fill','#2569ad').attr('paint-order','stroke').attr('stroke','#fff').attr('stroke-width',3).text(t);
+  pl(m.l+2, Y(0)+16, '← '+poloTxt(d1,-1), 'start'); pl(W-m.r-2, Y(0)+16, poloTxt(d1,1)+' →', 'end');
+  pl(X(0)-8, H-m.b+4, '↓ '+poloTxt(d2,-1), 'end'); pl(X(0)-8, m.t+26, '↑ '+poloTxt(d2,1), 'end');
   if(ACMS.rows){ svg.append('g').selectAll('circle').data(R.rowsC).join('circle').attr('cx',d=>X(d[d1])).attr('cy',d=>Y(d[d2])).attr('r',1.6).attr('fill','var(--ink-3)').attr('opacity',.22); }
   const cor=new Map(ACMS.vars.map((v,i)=>[v, PALETA[i % PALETA.length]]));
   const mmax=d3.max(pts,p=>p.mass)||1, rr=d3.scaleSqrt().domain([0,mmax]).range([2.5, W<640? 8 : 12]);
@@ -112,6 +127,11 @@ function renderACM(b){
   const lg=el('div','legend'); ACMS.vars.forEach(v=>{ const s=el('span'); const i=el('i','sw'); i.style.background=cor.get(v); i.style.borderRadius='50%'; s.append(i, document.createTextNode(VARS[VI[v]].label)); lg.append(s); }); box.append(lg);
   $('acmMeta').textContent=`${fmt(R.n)} notícias · ${R.Q} variáveis · ${R.J} categorias`;
   $('acmNote').textContent=`Categorias próximas no plano tendem a aparecer nas mesmas notícias; categorias distantes do centro são as mais características. Distâncias calculadas em coordenadas principais, com a mesma escala nos dois eixos; tamanho do ponto ∝ peso da categoria. Inércia total ${f2(R.totalIn)}; entre parênteses, a inércia corrigida de Benzécri, mais realista na ACM. Pontos claros são categorias agrupadas como “Outras”. O cálculo considera os filtros ativos. Clique numa categoria para filtrar.`;
+  // leitura automática dos eixos
+  const polo=(d,sinal)=>pts.filter(p=>p.k>=0 && sinal*p.f[d]>0).sort((a,q)=>q.ctr[d]-a.ctr[d]).slice(0,3).map(p=>`<b>${p.nome}</b>`).join(', ');
+  const pc=d=>R.adjTot? pct1(R.adj[d]/R.adjTot) : pct1(R.lam[d]/R.totalIn);
+  const Lg=$('acmLeitura'); Lg.hidden=false;
+  Lg.innerHTML=`<b>Leitura deste plano:</b> o <b>eixo ${d1+1}</b> (horizontal, ${pc(d1)}% da informação) opõe ${polo(d1,-1)} (à esquerda) a ${polo(d1,1)} (à direita). O <b>eixo ${d2+1}</b> (vertical, ${pc(d2)}%) opõe ${polo(d2,-1)} (embaixo) a ${polo(d2,1)} (em cima). Notícias com as categorias de um mesmo lado tendem a ser parecidas entre si; procure no gráfico quais outras categorias aparecem perto delas.`;
   // contribuições
   const ctr=$('acmCtr');
   [d1,d2].forEach(d=>{ const col=el('div'); col.append(el('h3','h3',`Eixo ${d+1}`));

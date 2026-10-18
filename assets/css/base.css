@@ -251,3 +251,37 @@ i.evb{flex:none;display:inline-grid;place-items:center;width:18px;height:18px;bo
 .fic-news ul{margin:0;padding-left:18px;display:grid;gap:6px;font-size:14px}
 .fic-news a{color:var(--ink);font-weight:600;text-decoration:none}
 .fic-news a:hover{color:var(--accent);text-decoration:underline}
+/* guias de leitura */
+.guia{border:1px solid var(--line);border-left:4px solid #6cace4;border-radius:10px;background:var(--mist);margin:4px 0 14px}
+.guia summary{cursor:pointer;padding:10px 14px;font-weight:750;color:var(--ink);list-style:none;display:flex;align-items:center;gap:8px}
+.guia summary::-webkit-details-marker{display:none}
+.guia summary::before{content:"?";display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--ink);color:#fff;font-size:12px;font-weight:800}
+.guia[open] summary{border-bottom:1px solid var(--line)}
+.guia-corpo{padding:6px 18px 14px;font-size:14px;line-height:1.55;color:var(--ink-2);max-width:92ch}
+.guia-corpo h4{margin:12px 0 4px;font-size:14px;color:var(--ink);font-weight:800}
+.guia-corpo p{margin:0 0 6px}
+.guia-corpo ul,.guia-corpo ol{margin:0 0 6px;padding-left:20px;display:grid;gap:4px}
+.guia-corpo b{color:var(--ink)}
+.leitura{border-radius:10px;background:#fff8e6;border:1px solid #f2d48a;padding:10px 14px;margin:10px 0 14px;font-size:14px;color:var(--ink)}
+.leitura b{font-weight:800}
+.presets{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 12px}
+.presets span{font-size:13px;color:var(--ink-2);font-weight:650}
+.presets .btn{font-size:13px;padding:5px 12px}
+.eventos{grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.eventos li.ev-card{display:grid;gap:4px;align-content:start;border:1px solid var(--line);border-top:4px solid;border-radius:10px;padding:10px 12px;background:#fff}
+.ev-cab{display:flex;gap:8px;align-items:center}
+.ev-cab i.evb{transform:none}
+.ev-tipo{margin-left:auto;font-size:11.5px;color:var(--ink-3);text-transform:capitalize}
+.ev-nome{margin:0;color:var(--ink);font-weight:650;line-height:1.35}
+.ev-num{font-size:13px;color:var(--ink-2)}
+.ev-num strong{font-size:22px;font-weight:800;color:var(--ink);margin-right:4px}
+.ev-card .meta{margin:0}
+.ev-card details summary{cursor:pointer;font-size:13px;color:var(--accent);font-weight:650}
+.ev-card details ul{margin:6px 0 0;padding-left:18px;display:grid;gap:4px;font-size:12.5px}
+.ev-card details a{color:var(--ink)}
+.ev-fonte{font-size:12.5px;color:var(--accent)}
+.fic-sheet{margin-top:4px}
+.fic-news{margin-top:18px;border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.fic-news ul{margin:0;padding-left:18px;display:grid;gap:6px;font-size:14px}
+.fic-news a{color:var(--ink);font-weight:600;text-decoration:none}
+.fic-news a:hover{color:var(--accent);text-decoration:underline}

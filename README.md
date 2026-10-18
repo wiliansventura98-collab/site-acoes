@@ -32,7 +32,9 @@ A plataforma permite explorar a base sem instalar nada: escolher variáveis, cru
 | **Contexto** | Dispersão por província ou por departamento (notícias por 100 mil hab. × qualquer indicador do Censo 2022, densidade ou homicídios, com correlações de Pearson e Spearman), panorama provincial ordenável e quadro das regiões estatísticas. |
 | **No tempo** | Notícias por mês, calendário diário, **série semanal empilhada com os acontecimentos de 2024** (paros gerais, marchas universitárias, Ley Bases, vetos, datas do calendário de lutas) e categorias mês a mês. |
 | **Imprensa** | Quem noticia: veículos mais frequentes, concentração da cobertura (curva de Lorenz e Gini), veículos × regiões e diversidade de fontes por província. |
-| **Fichas** | Perfil de um movimento, tipo de movimento, província, departamento, localidade, objetivo ou ação: evolução, mapa, repertório, objetivos, parceiros e notícias recentes. |
+| **Fichas** | Prancha de um movimento, tipo de movimento, província, departamento, localidade, objetivo ou ação, no padrão das pranchas de mapa: indicadores, mapa com escala, norte, grade e topônimos, detalhe da AMBA, evolução mensal, perfis, parceiros, nota técnica e exportação em PNG e SVG. |
+
+Cada aba tem um guia **Como ler**, com explicação, exemplos tirados da própria base e cuidados de interpretação; Comparar, Correspondências e Contexto trazem também uma **leitura automática** do resultado em palavras, e Comparar e Correspondências têm **exemplos prontos**. Nos mapas, os **nomes de lugares mudam com o zoom**: capitais e províncias no país inteiro, cidades menores e departamentos ao aproximar (GeoNames, CC BY 4.0).
 
 O endereço da página guarda a aba, as variáveis e os filtros: o botão **Copiar link deste recorte** permite enviar a outra pessoa exatamente o mesmo gráfico.
 
