@@ -123,6 +123,10 @@ table{border-collapse:collapse;width:100%;font-size:13px}
 .mapctl input[type=text]{font:inherit;font-size:15px;color:var(--ink);background:var(--bg);border:1px solid var(--line-2);border-radius:7px;padding:8px 10px;width:100%;min-width:0;text-transform:none;letter-spacing:0;font-weight:400}
 .sheet{position:relative;min-width:0;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:#ffffff}
 .sheet svg{display:block;width:100%;height:auto}
+.zoomctl{position:absolute;display:grid;gap:4px;z-index:4}
+.zoomctl button{width:32px;height:32px;border-radius:6px;border:1px solid #9aa6b2;background:#ffffff;color:#1b2533;font:600 18px/1 Arial,sans-serif;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.15)}
+.zoomctl button:hover{background:#eef4fa}
+.zoomhint{position:absolute;left:50%;top:40%;transform:translateX(-50%);background:rgba(27,37,51,.86);color:#fff;font:14px/1.3 Arial,sans-serif;padding:10px 14px;border-radius:8px;pointer-events:none;z-index:5;text-align:center;max-width:80%}
 .sheetbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin:12px 0 4px}
 .legend{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;font-size:12.5px;color:var(--ink-2)}
 .hit{cursor:pointer}
@@ -224,7 +228,7 @@ table{border-collapse:collapse;width:100%;font-size:13px}
     <p class="note" id="mapNote"></p>
     <div class="sheet" id="sheet"></div>
     <div class="sheetbar">
-      <span class="meta">Passe o mouse para ver valores; clique num lugar para filtrar a base.</span>
+      <span class="meta">Passe o mouse para ver valores e clique num lugar para filtrar. Aproxime com os botões +/−, Ctrl + rolagem ou pinça, e arraste para mover.</span>
       <div class="tools"><button class="btn" id="dlPng" hidden>Baixar PNG</button><button class="btn" id="dlSvg" hidden>Baixar SVG</button><span class="toast" id="mapMsg"></span></div>
     </div>
     <div class="rank" id="mapRank"></div>
@@ -561,7 +565,7 @@ function northArrow(g, x, y, s){
   g.append('path').attr('d',`M${x},${y} L${x-s*.42},${y+s*1.25} L${x},${y+s*.95} Z`).attr('fill','#ffffff').attr('stroke',C.ink).attr('stroke-width',.8);
   g.append('text').attr('x',x).attr('y',y-3).attr('text-anchor','middle').attr('font-size',s*.62).attr('font-weight',700).attr('font-family',FONT).attr('fill',C.ink).text('N');
 }
-const degLat = v => `${Math.abs(v)}° S`, degLon = v => `${Math.abs(v)}° O`;
+const degLat = v => `${Math.abs(v).toLocaleString('pt-BR')}° S`, degLon = v => `${Math.abs(v).toLocaleString('pt-BR')}° O`;
 function graticuleLabels(g, proj, box, step, size){
   const [x0,y0,x1,y1]=box;
   for(let lon=-85; lon<=-40; lon+=step){ let prev=null; for(let lat=-70; lat<=-10; lat+=0.05){ const p=proj([lon,lat]); if(prev && (prev[1]-y1)*(p[1]-y1)<=0){ const t=(y1-prev[1])/(p[1]-prev[1]); const x=prev[0]+t*(p[0]-prev[0]);
@@ -603,10 +607,11 @@ function drawBase(g, proj, box, md, sh, o){
   const path = d3.geoPath(proj); const [x0,y0,x1,y1]=box;
   const cid = 'clip'+Math.random().toString(36).slice(2,8);
   g.append('clipPath').attr('id',cid).append('rect').attr('x',x0).attr('y',y0).attr('width',x1-x0).attr('height',y1-y0);
-  const m = g.append('g').attr('clip-path',`url(#${cid})`);
-  m.append('rect').attr('x',x0).attr('y',y0).attr('width',x1-x0).attr('height',y1-y0).attr('fill',C.sea);
+  const mc = g.append('g').attr('clip-path',`url(#${cid})`);
+  mc.append('rect').attr('x',x0).attr('y',y0).attr('width',x1-x0).attr('height',y1-y0).attr('fill',C.sea);
+  const m = mc.append('g').attr('class','zoomable');
   m.append('path').datum(d3.geoGraticule().step([o.gstep||5,o.gstep||5]).extent([[-100,-75],[-30,-5]])()).attr('d',path).attr('fill','none').attr('stroke',C.grat).attr('stroke-width',.5);
-  m.append('g').selectAll('path').data(NEIGH).join('path').attr('d',path).attr('fill',C.neigh).attr('stroke', d=>d.properties.name==='Argentina'? 'none' : C.neighLine).attr('stroke-width',.6);
+  m.append('g').selectAll('path').data(NEIGH).join('path').attr('d',path).attr('fill', d=>d.properties.name==='Argentina'? C.land : C.neigh).attr('stroke', d=>d.properties.name==='Argentina'? 'none' : C.neighLine).attr('stroke-width',.6);
   const tip=o.tip, sel=o.sel||new Set();
   const tipText = i => { const n=md.c.get(i)||0; const L=[`${fmt(n)} notícias · ${pct(n, md.N)} do recorte`]; if(md.unit==='prov' && POP[i]) L.push(`${nfmt1(md.rate(i))} por 100 mil hab.`); return L; };
   const ev = (s, nameOf, idxOf) => { if(!tip) return s; return s.attr('class','hit')
@@ -690,7 +695,8 @@ function techNote(md, sh, o, multi){
   if(o.fill) s.push(`Valores relativos em coroplético: taxa = notícias ÷ população residente × 100.000. População: INDEC, Censo Nacional de Población, Hogares y Viviendas 2022, resultados definitivos. Classes por quantis (até 5 classes) dos valores não nulos${multi?', comuns a todos os mapas':''}.`);
   if(md.spatial) s.push('Filtros espaciais aplicados ao lugar: só são representados os lugares dentro das unidades selecionadas, mesmo quando a notícia também cita outros lugares.');
   s.push('Limites: departamentos/partidos (linha fina), províncias (média) e regiões estatísticas do INDEC (grossa): Gran Buenos Aires (CABA e 24 partidos), Pampeana, Noroeste, Noreste, Cuyo e Patagonia.');
-  s.push('Sistema de coordenadas geográficas, datum WGS 84; projeção cônica conforme de Lambert (paralelos-padrão 28° S e 46° S; meridiano central 64° O); grade de 5°; escala gráfica válida para o centro do mapa.');
+  const zk = (multi? ZOOM.multi : ZOOM.one).k; if(zk>1) s.push(`Vista ampliada (×${zk.toLocaleString('pt-BR',{maximumFractionDigits:1})}) em relação ao país inteiro.`);
+  s.push(`Sistema de coordenadas geográficas, datum WGS 84; projeção cônica conforme de Lambert (paralelos-padrão 28° S e 46° S; meridiano central 64° O); grade de ${gridStep(zk).toLocaleString('pt-BR')}°; escala gráfica válida para o centro do mapa.`);
   const ft = filtersText(multi? [md.vid, mstate.cmp] : md.vid);
   s.push(`Fonte dos dados: Base de notícias de ações coletivas 2024 (${fmt(md.N)} notícias${st.rep?', incluindo repetidas':', sem repetidas'}${ft? '; recorte: '+ft : ''}; ${fmt(md.N-md.mapped)} sem localização mapeável nesta escala). Base cartográfica: departamentos (mgaitan/departamentos_argentina), simplificada; países limítrofes: Natural Earth 1:50 milhões.`);
   s.push(`Elaboração: ${mstate.author || 'não informada'}, ${today}.`);
@@ -700,6 +706,41 @@ function mapTitle(md, o){
   const u = md.unit==='loc'? 'localidade' : md.unit==='dept'? 'departamento / partido' : 'província';
   const t = o.fill && o.circles? `Notícias de ações coletivas por ${u}: taxa por 100 mil habitantes e valores absolutos` : o.fill? `Notícias de ações coletivas por 100 mil habitantes, por ${u}` : `Notícias de ações coletivas por ${u}`;
   return t + ' · Argentina, 2024';
+}
+
+
+/* ---------- zoom & pan (Google-Maps-like) ----------
+   The zoom is baked into the projection on every redraw, so the scale bar, grid labels and symbol sizes stay
+   correct and the exported sheet shows the zoomed view. During a gesture the drawn group is only transformed. */
+const ZOOM = { one:{k:1,x:0,y:0}, multi:{k:1,x:0,y:0} };
+let ZINIT = false, ZCTL = null, zTimer = null;
+const toGlobal = (z,O) => d3.zoomIdentity.translate(z.x + (1-z.k)*O[0], z.y + (1-z.k)*O[1]).scale(z.k);
+const toLocal = (t,O) => ({k:t.k, x:t.x + (t.k-1)*O[0], y:t.y + (t.k-1)*O[1]});
+function zoomProj(proj, z, O){ const k=z.k; const [tx,ty]=proj.translate(); return proj.scale(proj.scale()*k).translate([O[0]+k*(tx-O[0])+z.x, O[1]+k*(ty-O[1])+z.y]); }
+const gridStep = k => k>=20? 0.5 : k>=8? 1 : k>=3? 2 : 5;
+function attachZoom(sel, key, O, frame, content){
+  const [x0,y0,x1,y1]=frame; const t0=toGlobal(ZOOM[key],O);
+  const zb = d3.zoom().scaleExtent([1,40]).wheelDelta(ev => -ev.deltaY * (ev.deltaMode===1? 0.05 : ev.deltaMode? 1 : 0.003)).extent([[x0,y0],[x1,y1]]).translateExtent([[x0,y0],[x1,y1]])
+    .filter(ev => ev.type==='wheel'? (ev.ctrlKey||ev.metaKey) : ev.type.startsWith('touch')? (ev.touches? ev.touches.length>1 : false) : (!ev.button && ev.type!=='dblclick'))
+    .on('zoom', ev=>{ if(ZINIT) return; const t=ev.transform, k=t.k/t0.k; content.attr('transform',`translate(${t.x-k*t0.x},${t.y-k*t0.y}) scale(${k})`); })
+    .on('end', ev=>{ if(ZINIT) return; const z=toLocal(ev.transform,O); const p=ZOOM[key]; if(Math.abs(z.k-p.k)<1e-6 && Math.abs(z.x-p.x)<.5 && Math.abs(z.y-p.y)<.5) return; ZOOM[key]=z; clearTimeout(zTimer); zTimer=setTimeout(()=>renderMap(base()), 30); });
+  sel.call(zb).on('dblclick.zoom', null);
+  ZINIT=true; sel.call(zb.transform, t0); ZINIT=false;
+  sel.style('touch-action','pan-x pan-y').style('cursor', ZOOM[key].k>1? 'grab' : null);
+  return zb;
+}
+function zoomControls(box, frame, key){
+  box.querySelectorAll('.zoomctl,.zoomhint').forEach(e=>e.remove());
+  const svg=box.querySelector('svg'); const vbW=svg.viewBox.baseVal.width||1; const s=box.clientWidth/vbW;
+  const c=el('div','zoomctl'); c.style.left=((frame[2]-8)*s - 34)+'px'; c.style.top=((frame[1]+8)*s)+'px';
+  const mk=(txt,label,fn)=>{ const b=el('button',null,txt); b.type='button'; b.title=label; b.setAttribute('aria-label',label); b.onclick=fn; c.append(b); };
+  const run = f => { if(!ZCTL) return; f(ZCTL.sel.transition().duration(220), ZCTL.zb); };
+  mk('+','Aproximar',()=>run((s,z)=>s.call(z.scaleBy,1.7)));
+  mk('−','Afastar',()=>run((s,z)=>s.call(z.scaleBy,1/1.7)));
+  mk('⤢','Ver o país inteiro',()=>run((s,z)=>s.call(z.transform,d3.zoomIdentity)));
+  box.append(c);
+  const h=el('div','zoomhint','Use Ctrl + rolagem (⌘ no Mac) ou pinça para aproximar; arraste para mover'); h.hidden=true; box.append(h);
+  if(!box._wheelHint){ box._wheelHint=true; let ht; box.addEventListener('wheel',e=>{ if(e.ctrlKey||e.metaKey) return; const hh=box.querySelector('.zoomhint'); if(!hh) return; hh.hidden=false; clearTimeout(ht); ht=setTimeout(()=>{ hh.hidden=true; },1400); },{passive:true}); }
 }
 
 let SHEET_SVG = null;
@@ -722,7 +763,7 @@ function renderMap(b){
   const tip = tipFor(box);
   const onClick = (v,i)=>toggleFilter(v,i);
   const M = 22;
-  let H;
+  let H; var ctlFrame = null;
   if(mstate.mode==='one'){
     const rows = b.filter(r=>match(r, vid));
     const md = mapData(rows, unit);
@@ -736,16 +777,19 @@ function renderMap(b){
     const GL = 40; // room for latitude labels
     const fx0 = M+GL, fw = (wide? Math.round(W*0.56) : W-2*M) - GL, fh = Math.round(fw*1.58);
     const frame = [fx0, y, fx0+fw, y+fh];
-    const proj = PROJ().fitExtent([[fx0+fw*0.06, y+fh*0.015],[fx0+fw*0.94, y+fh*0.985]], ALL);
+    const proj = zoomProj(PROJ().fitExtent([[fx0+fw*0.06, y+fh*0.015],[fx0+fw*0.94, y+fh*0.985]], ALL), ZOOM.one, [fx0, y]);
+    const zk = ZOOM.one.k, gs = gridStep(zk);
     sh.r = d3.scaleSqrt().domain([0, sh.max]).range([0, Math.min(38, fw*0.08)*(o.fill? 0.72 : 1)]);
     const gm = svg.append('g');
-    const mm = drawBase(gm, proj, frame, md, sh, {...o, tip, onClick, sel: st.f[vid], labels: fw>=380? LABELS : []});
+    const mm = drawBase(gm, proj, frame, md, sh, {...o, tip, onClick, sel: st.f[vid], labels: fw>=380? LABELS : [], gstep: gs});
+    const zbOne = attachZoom(gm, 'one', [fx0, y], frame, mm);
     mm.append('path').datum(AMBA_BOX).attr('d',d3.geoPath(proj)).attr('fill','none').attr('stroke',C.ink).attr('stroke-dasharray','3 2').attr('stroke-width',.9).attr('pointer-events','none');
-    graticuleLabels(svg, proj, frame, 5, 9.5);
+    graticuleLabels(svg, proj, frame, gs, 9.5);
     // scale + north inside the frame, over the Atlantic
-    const [ax, ay] = proj([-60.5,-49.6]);
     northArrow(svg, fx0+fw-26, y+fh*0.70, 20);
-    scaleBar(svg, proj, fx0+fw/2, y+fh/2, Math.max(ax, fx0+fw*0.5), Math.min(ay, y+fh-20), fw*0.26, true);
+    scaleBar(svg, proj, fx0+fw/2, y+fh/2, fx0+fw*0.50, y+fh-22, fw*0.26, true);
+    if(zk>1) svg.append('text').attr('x',fx0+8).attr('y',y+fh-10).attr('font-size',10).attr('fill',C.ink2).text(`Ampliação ×${zk.toLocaleString('pt-BR',{maximumFractionDigits:1})}`);
+    ZCTL = {sel: gm, zb: zbOne}; var ctlFrame = frame;
     // right column (or below)
     let rx, ry, rw;
     if(wide){ rx = fx0+fw+30; ry = y; rw = W-rx-M; } else { rx = M; ry = y+fh+30; rw = W-2*M; }
@@ -793,8 +837,11 @@ function renderMap(b){
       textBlock(g, x0, y0+10, cvar.values[s.k], 12, cw, {weight:700, max:2});
       g.append('text').attr('x',x0).attr('y',y0+40).attr('font-size',10.5).attr('fill',C.ink2).text(`${fmt(s.md.N)} notícias · ${fmt(s.md.mapped)} no mapa`);
       const fr=[x0, y0+46, x0+cw, y0+46+ch];
-      const proj = PROJ().fitExtent([[x0+cw*0.05, y0+50],[x0+cw*0.95, y0+42+ch]], ALL); projRef = projRef||proj;
-      drawBase(g, proj, fr, s.md, sh, {...o, small:true, tip, onClick:(v,i)=>{ st.f[cv]=new Set([s.k]); toggleFilter(v,i,true); }, sel: st.f[vid]});
+      const proj = zoomProj(PROJ().fitExtent([[x0+cw*0.05, y0+50],[x0+cw*0.95, y0+42+ch]], ALL), ZOOM.multi, [x0, y0+46]); projRef = projRef||proj;
+      const gz = g.append('g');
+      const mz = drawBase(gz, proj, fr, s.md, sh, {...o, small:true, tip, onClick:(v,i)=>{ st.f[cv]=new Set([s.k]); toggleFilter(v,i,true); }, sel: st.f[vid], gstep: gridStep(ZOOM.multi.k)});
+      const zbC = attachZoom(gz, 'multi', [x0, y0+46], fr, mz);
+      if(j===0){ ZCTL = {sel: gz, zb: zbC}; ctlFrame = fr; }
       northArrow(g, x0+cw-14, y0+46+ch*0.70, 11);
     });
     const rowsN = Math.ceil(sets.length/cols);
@@ -815,6 +862,7 @@ function renderMap(b){
   }
   svg.attr('viewBox', `0 0 ${W} ${Math.ceil(H)}`); svg.select('.bgpaper').attr('width',W).attr('height',Math.ceil(H));
   SHEET_SVG = svg.node();
+  if(ctlFrame) zoomControls(box, ctlFrame, mstate.mode);
 }
 
 // export
