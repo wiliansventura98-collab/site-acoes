@@ -26,8 +26,8 @@ A plataforma permite explorar a base sem instalar nada: escolher variáveis, cru
 | **Fluxos** | Diagrama de Sankey com duas ou três variáveis encadeadas (por exemplo, tipo de movimento → ação matriz → objetivos), em contagem fracionada que preserva o total do recorte. |
 | **Tipologias** | Mapa de árvore da ação matriz subdividida pela ação derivada, ou de qualquer par de variáveis. |
 | **Redes** | Rede de coocorrência: movimentos (ou outras categorias) que aparecem juntos nas mesmas notícias, com cor pelo tipo de movimento predominante. |
-| **Mapa** | Pranchas cartográficas com círculos proporcionais (valores absolutos) e coropléticos (taxas), camadas de contexto do INDEC e do SNIC, mapas por categoria, zoom, nota técnica e exportação em PNG e SVG. |
-| **Contexto** | Dispersão por província (notícias por 100 mil hab. × densidade, população ou homicídios, com correlações), panorama provincial ordenável e quadro das regiões estatísticas (pobreza, indigência, desocupação). |
+| **Mapa** | Pranchas cartográficas com círculos proporcionais (valores absolutos) e coropléticos (taxas por 100 mil hab. por província ou departamento), 38 camadas de contexto do INDEC e do SNIC (28 indicadores do Censo 2022 por departamento), mapas por categoria, zoom, nota técnica e exportação em PNG e SVG. |
+| **Contexto** | Dispersão por província ou por departamento (notícias por 100 mil hab. × qualquer indicador do Censo 2022, densidade ou homicídios, com correlações de Pearson e Spearman), panorama provincial ordenável e quadro das regiões estatísticas (pobreza, indigência, desocupação). |
 | **No tempo** | Notícias por mês, calendário diário das ações por data de início e categorias mês a mês. |
 
 Em todas as abas é possível consultar as notícias do recorte, com link para a matéria original, e baixar o recorte em **CSV**.
@@ -44,8 +44,11 @@ Em todas as abas é possível consultar as notícias do recorte, com link para a
 | Pobreza e indigência, 2º semestre de 2024 | 6 regiões e 31 aglomerados urbanos | INDEC, Encuesta Permanente de Hogares |
 | Desocupação, 4º trimestre de 2024 | 6 regiões e 31 aglomerados urbanos | INDEC, Encuesta Permanente de Hogares |
 | Homicídios dolosos por 100 mil hab., 2023 e 2024 | 24 jurisdições | Ministerio de Seguridad Nacional, SNIC |
+| 28 indicadores do Censo 2022: privação material dos hogares (IPMH e seus tipos), água, esgoto, gás, piso, aluguel, internet, computador, secundário completo, frequência escolar, jovens que não estudam nem trabalham, desocupação, inatividade, cobertura de saúde, aposentadoria, densidade, crescimento 2010-2022, feminidade, envelhecimento, dependência, fecundidade, população indígena, afrodescendente, nascida em outro país ou em outra província; população absoluta | 511 departamentos/partidos e 24 jurisdições | INDEC, Censo 2022, via [Geoportal estadístico](https://portalgeoestadistico.indec.gob.ar/) |
 
 Valores relativos aparecem em coroplético por baixo dos círculos de notícias; a população absoluta, em círculos vazados. Detalhes em [`pipeline/referencias/contexto/FONTES.md`](pipeline/referencias/contexto/FONTES.md).
+
+![Notícias por departamento sobre a privação material dos hogares (Censo 2022)](docs/mapa-censo-departamentos.png)
 
 ![Notícias por localidade sobre a pobreza por região](docs/mapa-contexto.png)
 

@@ -12,7 +12,7 @@ const LOC_XY = LOC_VALS.map(v=> GEO.coords[v] || null);
 const provIdx = {}; PROV_VALS.forEach((v,i)=>{ provIdx[v]=i; });
 const deptIdx = {}; DEPT_VALS.forEach((v,i)=>{ deptIdx[v]=i; });
 const POP = {}; Object.entries(GEO.pop).forEach(([k,n])=>{ if(provIdx[k]!=null) POP[provIdx[k]]=n; });
-const DEPT_HAS = new Set();
+const DEPT_HAS = new Set(), DI_ID = [];
 let REGS_FC=[];
 let TOPO=null, DEPTS=[], PROVS_FC=[], MESH={}, ALL=null, NEIGH=[], DEPT_XY=[], PROV_XY=[];
 function mainCentroid(f){ // centroid of the largest part, so islands don't pull the symbol into the sea
@@ -22,7 +22,8 @@ if(HAS_D3){
   TOPO = GEO.deptos; const OBJ = TOPO.objects[Object.keys(TOPO.objects)[0]];
   DEPTS = topojson.feature(TOPO, OBJ).features;
   const ROTULOS = GEO.deptLabels || {};
-  DEPTS.forEach(f=>{ const p=f.properties; p.n = ROTULOS[f.id] || p.n; p.di = deptIdx[p.n] ?? -1; p.pi = provIdx[p.p] ?? -1; if(p.di>=0){ DEPT_HAS.add(p.di); DEPT_XY[p.di]=mainCentroid(f); } });
+  DEPTS.forEach(f=>{ const p=f.properties; p.n = ROTULOS[f.id] || p.n; p.di = deptIdx[p.n] ?? -1; p.pi = provIdx[p.p] ?? -1; p.c = mainCentroid(f);
+    if(p.di>=0){ DEPT_HAS.add(p.di); DEPT_XY[p.di]=p.c; DI_ID[p.di]=f.id; } });
   PROVS_FC = [...d3.group(OBJ.geometries, g=>g.properties.p)].map(([p,gs])=>({type:'Feature', properties:{p, pi: provIdx[p] ?? -1}, geometry: topojson.merge(TOPO, gs)}));
   PROVS_FC.forEach(f=>{ if(f.properties.pi>=0) PROV_XY[f.properties.pi]=mainCentroid(f); });
   MESH.dept = topojson.mesh(TOPO, OBJ, (a,b)=> a!==b && a.properties.p===b.properties.p);
@@ -84,10 +85,21 @@ const CTXDEF = {
            fonte:'INDEC, Encuesta Permanente de Hogares, mercado de trabalho'},
   popAbs: {nivel:'pop', titulo:'População residente, 2022 (absoluto)', fonte:'INDEC, Censo 2022, resultados definitivos'},
 };
+/* Censo 2022 por departamento (INDEC, Geoportal estadístico): coroplético sobre os 511 departamentos/partidos */
+const IND = (CTX.indec && CTX.indec.indicadores) || [], IND_DEP = (CTX.indec && CTX.indec.departamentos) || {};
+IND.forEach(d=>{ CTXDEF['c_'+d.k] = {nivel:'dep', campo:d.k, titulo:`${d.titulo}, 2022`, curto:d.unidade, dec:d.dec, tema:d.tema, definicao:d.definicao,
+  fonte:`INDEC, Censo Nacional de Población, Hogares y Viviendas 2022, via Geoportal estadístico (indicador ${d.ids[0]}: “${d.indec}”)`}; });
+CTXDEF.popDep = {nivel:'popDep', titulo:'População residente por departamento, 2022 (absoluto)', fonte:'INDEC, Censo 2022, via Geoportal estadístico (indicador 37)'};
+(()=>{ const s=$('ctxLayer'); if(!IND.length) return;
+  const og0=s.querySelector('optgroup'); const op=document.createElement('option'); op.value='popDep'; op.textContent='População absoluta por departamento (círculos)'; og0.append(op);
+  [...new Set(IND.map(d=>d.tema))].forEach(t=>{ const og=document.createElement('optgroup'); og.label=`${t} · Censo 2022, por departamento`;
+    IND.filter(d=>d.tema===t).forEach(d=>{ const o=document.createElement('option'); o.value='c_'+d.k; o.textContent=d.titulo; og.append(o); }); s.append(og); }); })();
+const POP_D = []; DEPTS.forEach(f=>{ const v=IND_DEP[f.id]; if(f.properties.di>=0 && v && v.pop) POP_D[f.properties.di]=v.pop; });
+const popOf = (unit, i) => unit==='dept'? POP_D[i] : unit==='prov'? POP[i] : null;
 const ctxEscolha = k => (k && CTXDEF[k]) || null;
-function ctxValor(def, chave){ if(!def) return null; const fonte = def.nivel==='prov'? CTX.provincias : def.nivel==='reg'? CTX.regioes : null; const r = fonte && fonte[chave]; return r? r[def.campo] : null; }
+function ctxValor(def, chave){ if(!def) return null; const fonte = def.nivel==='prov'? CTX.provincias : def.nivel==='reg'? CTX.regioes : def.nivel==='dep'? IND_DEP : null; const r = fonte && fonte[chave]; return r? r[def.campo] : null; }
 function ctxClasses(def){
-  let vals = def.nivel==='agl'? CTX.aglomerados.map(a=>a[def.campo]) : Object.values(def.nivel==='prov'? CTX.provincias : CTX.regioes).map(r=>r[def.campo]);
+  let vals = def.nivel==='agl'? CTX.aglomerados.map(a=>a[def.campo]) : Object.values(def.nivel==='prov'? CTX.provincias : def.nivel==='dep'? IND_DEP : CTX.regioes).map(r=>r[def.campo]);
   vals = vals.filter(v=>v!=null && isFinite(v)).sort(d3.ascending);
   const k = Math.min(5, vals.length), rnd = v => +v.toFixed(def.dec);
   const th = [...new Set(d3.range(1,k).map(i=>rnd(d3.quantileSorted(vals, i/k))))].filter(x=>x>vals[0] && x<vals[vals.length-1]);
@@ -101,7 +113,7 @@ const PROJ = () => d3.geoConicConformal().parallels([-28,-46]).rotate([64,0]);
 const mstate = { unit:'loc', measure:'abs', mode:'one', cmp:'nombremov', n:6, author:'', ctx:'' };
 try{ const s=JSON.parse(localStorage.getItem('as24m2')||'null'); if(s){ Object.assign(mstate, s); if(VI[mstate.cmp]==null) mstate.cmp='nombremov'; } }catch(e){}
 const msave = () => { try{ localStorage.setItem('as24m2', JSON.stringify(mstate)); }catch(e){} };
-const RATE_OK = u => u==='prov';
+const RATE_OK = u => u==='prov' || u==='dept';
 fillSelect($('cmpVar'), false);
 document.querySelectorAll('#mapUnit button').forEach(b=>b.onclick=()=>{ mstate.unit=b.dataset.v; if(!RATE_OK(mstate.unit)) mstate.measure='abs'; render(); });
 document.querySelectorAll('#mapMeasure button').forEach(b=>b.onclick=()=>{ if(b.disabled) return; mstate.measure=b.dataset.v; render(); });
@@ -161,12 +173,13 @@ function classify(values){
 }
 
 const UNIT_VID = { loc:'localidad', dept:'departamento', prov:'provincia' };
+const rateIds = unit => (unit==='dept'? DEPTS.map(f=>f.properties.di) : PROVS_FC.map(f=>f.properties.pi)).filter(i=>i>=0);
 const UNIT_XY = u => u==='loc'? LOC_XY : u==='dept'? DEPT_XY : PROV_XY;
 function mapData(rows, unit, extra){
   const vid = UNIT_VID[unit], XY = UNIT_XY(unit);
   const cons = spatialCons(vid).concat(extra||[]);
   const c = keepPlaces(counts(rows, vid), vid, cons);
-  const rate = i => POP[i]? (c.get(i)||0)/POP[i]*1e5 : 0;
+  const rate = i => { const P=popOf(unit,i); return P? (c.get(i)||0)/P*1e5 : 0; };
   const iv=VI[vid]; const mapped = rows.filter(r=>r.v[iv].some(i=>!!XY[i] && c.has(i))).length;
   const max = d3.max([...c].filter(([i])=>XY[i]), d=>d[1]) || 0;
   return { unit, vid, c, rate, N: rows.length, mapped, max, XY, spatial: cons.length>0 };
@@ -183,26 +196,32 @@ function drawBase(g, proj, box, md, sh, o){
   m.append('path').datum(d3.geoGraticule().step([o.gstep||5,o.gstep||5]).extent([[-100,-75],[-30,-5]])()).attr('d',path).attr('fill','none').attr('stroke',C.grat).attr('stroke-width',.5);
   m.append('g').selectAll('path').data(NEIGH).join('path').attr('d',path).attr('fill', d=>d.properties.name==='Argentina'? C.land : C.neigh).attr('stroke', d=>d.properties.name==='Argentina'? 'none' : C.neighLine).attr('stroke-width',.6);
   const tip=o.tip, sel=o.sel||new Set();
-  const tipText = i => { const n=md.c.get(i)||0; const L=[`${fmt(n)} notícias · ${pct(n, md.N)} do recorte`]; if(md.unit==='prov' && POP[i]) L.push(`${nfmt1(md.rate(i))} por 100 mil hab.`);
-    if(md.unit==='prov' && o.ctx && o.ctx.nivel==='prov'){ const v=ctxValor(o.ctx, PROV_VALS[i]); if(v!=null) L.push(`${o.ctxCls.fmt(v)} ${o.ctx.curto} (${o.ctx.titulo.split(',')[0].toLowerCase()})`); } return L; };
+  const tipText = i => { const n=md.c.get(i)||0; const L=[`${fmt(n)} notícias · ${pct(n, md.N)} do recorte`]; const P=popOf(md.unit,i); if(P) L.push(`${nfmt1(md.rate(i))} notícias por 100 mil hab. (${fmt(P)} hab.)`);
+    const chaveCtx = o.ctx && ((md.unit==='prov' && o.ctx.nivel==='prov')? PROV_VALS[i] : (md.unit==='dept' && o.ctx.nivel==='dep')? DI_ID[i] : null);
+    if(chaveCtx!=null){ const v=ctxValor(o.ctx, chaveCtx); if(v!=null) L.push(`${o.ctx.titulo.replace(/, 20\d\d.*$/,'')}: ${o.ctxCls.fmt(v)} ${o.ctx.curto}`); } return L; };
   const ev = (s, nameOf, idxOf) => { if(!tip) return s; return s.attr('class','hit')
       .on('mousemove',(e,d)=>{ const i=idxOf(d); if(i<0) return tip.hide(); tip.show(e, nameOf(d), tipText(i)); })
       .on('mouseleave',()=>tip.hide()).on('click',(e,d)=>{ const i=idxOf(d); if(i>=0) o.onClick(md.vid, i); }); };
-  const cdef = o.ctx, cpoly = cdef && (cdef.nivel==='prov' || cdef.nivel==='reg');
+  const cdef = o.ctx, cpoly = cdef && ['prov','reg','dep'].includes(cdef.nivel), cdep = cpoly && cdef.nivel==='dep';
+  const deptFill = cdep || (o.fill && md.unit==='dept');
   if(cpoly){ // camada de contexto em coroplético (substitui o fundo neutro)
-    const feats = cdef.nivel==='prov'? PROVS_FC : REGS_FC;
-    const nome = f => cdef.nivel==='prov'? f.properties.p : f.properties.r;
-    const sCtx = m.append('g').selectAll('path').data(feats).join('path').attr('d',path).attr('fill', f=>o.ctxCls.color(ctxValor(cdef, nome(f))));
-    if(tip && md.unit!=='prov') sCtx.on('mousemove',(e,f)=>{ const v=ctxValor(cdef, nome(f)); tip.show(e, nome(f), [v==null? 'sem dado' : `${o.ctxCls.fmt(v)} ${cdef.curto}`, cdef.titulo]); }).on('mouseleave',()=>tip.hide());
-    if(md.unit==='prov') ev(sCtx, f=>f.properties.p, f=>f.properties.pi);
-  } else if(o.fill){ // choropleth of rates (provinces)
-    ev(m.append('g').selectAll('path').data(PROVS_FC).join('path').attr('d',path).attr('fill',f=> f.properties.pi>=0? sh.color(md.rate(f.properties.pi)) : C.zero), f=>f.properties.p, f=>f.properties.pi);
+    const feats = cdep? DEPTS : cdef.nivel==='prov'? PROVS_FC : REGS_FC;
+    const chaveF = f => cdep? f.id : cdef.nivel==='prov'? f.properties.p : f.properties.r;
+    const nomeF = f => cdep? f.properties.n : chaveF(f);
+    const sCtx = m.append('g').selectAll('path').data(feats).join('path').attr('d',path).attr('fill', f=>o.ctxCls.color(ctxValor(cdef, chaveF(f))));
+    const casa = (md.unit==='prov' && cdef.nivel==='prov') || (md.unit==='dept' && cdep);
+    if(tip && !casa) sCtx.on('mousemove',(e,f)=>{ const v=ctxValor(cdef, chaveF(f)); tip.show(e, nomeF(f), [v==null? 'sem dado' : `${o.ctxCls.fmt(v)} ${cdef.curto}`, cdef.titulo]); }).on('mouseleave',()=>tip.hide());
+    if(casa) ev(sCtx, f=> cdep? f.properties.n : f.properties.p, f=> cdep? f.properties.di : f.properties.pi);
+  } else if(o.fill){ // choropleth of rates (provinces or departments)
+    const fe = md.unit==='dept'? DEPTS : PROVS_FC, ix = f => md.unit==='dept'? f.properties.di : f.properties.pi;
+    ev(m.append('g').selectAll('path').data(fe).join('path').attr('d',path).attr('fill',f=> ix(f)>=0? sh.color(md.rate(ix(f))) : C.zero), f=> md.unit==='dept'? f.properties.n : f.properties.p, ix);
   } else {
     const land = m.append('g').selectAll('path').data(md.unit==='prov'? PROVS_FC : DEPTS).join('path').attr('d',path).attr('fill',C.land);
     if(md.unit!=='loc') ev(land, f=> md.unit==='prov'? f.properties.p : f.properties.n, f=> md.unit==='prov'? f.properties.pi : f.properties.di);
   }
   // boundary hierarchy: departments < provinces < regions
   if(!o.fill && !cpoly) m.append('path').datum(MESH.dept).attr('d',path).attr('fill','none').attr('stroke',C.dept).attr('stroke-width', o.small? .2 : .35);
+  else if(deptFill) m.append('path').datum(MESH.dept).attr('d',path).attr('fill','none').attr('stroke','#ffffff').attr('stroke-opacity',.75).attr('stroke-width', o.small? .15 : .3);
   m.append('path').datum(MESH.prov).attr('d',path).attr('fill','none').attr('stroke',C.prov).attr('stroke-width', o.small? .55 : 1);
   m.append('path').datum(MESH.reg).attr('d',path).attr('fill','none').attr('stroke',C.reg).attr('stroke-width', o.small? 1.3 : 2.3).attr('stroke-linejoin','round');
   m.append('path').datum(MESH.out).attr('d',path).attr('fill','none').attr('stroke',C.reg).attr('stroke-width', o.small? .8 : 1.2);
@@ -220,6 +239,12 @@ function drawBase(g, proj, box, md, sh, o){
     const sp = m.append('g').selectAll('circle').data(pts).join('circle').attr('cx',d=>d.xy[0]).attr('cy',d=>d.xy[1]).attr('r',d=>o.popR(d.n))
       .attr('fill','none').attr('stroke','#5e4c33').attr('stroke-width', o.small? .7 : 1.1).attr('stroke-dasharray','3 2');
     if(tip) sp.on('mousemove',(e,d)=>tip.show(e, d.p, [`${fmt(d.n)} habitantes (Censo 2022)`])).on('mouseleave',()=>tip.hide());
+  }
+  if(cdef && cdef.nivel==='popDep'){ // população absoluta por departamento: círculos vazados
+    const pts = DEPTS.map(f=>({n:(IND_DEP[f.id]||{}).pop, nm:f.properties.n, xy:proj(f.properties.c)})).filter(d=>d.n && d.xy && d.xy[0]>x0-30 && d.xy[0]<x1+30 && d.xy[1]>y0-30 && d.xy[1]<y1+30).sort((a,b)=>b.n-a.n);
+    const sp = m.append('g').selectAll('circle').data(pts).join('circle').attr('cx',d=>d.xy[0]).attr('cy',d=>d.xy[1]).attr('r',d=>o.popDR(d.n))
+      .attr('fill','#957d58').attr('fill-opacity',.08).attr('stroke','#5e4c33').attr('stroke-width', o.small? .5 : .8);
+    if(tip) sp.on('mousemove',(e,d)=>tip.show(e, d.nm, [`${fmt(d.n)} habitantes (Censo 2022)`])).on('mouseleave',()=>tip.hide());
   }
   if(o.circles){
     const pts=[]; md.c.forEach((n,i)=>{ if(md.XY[i]){ const xy=proj(md.XY[i]); if(xy && xy[0]>x0-40 && xy[0]<x1+40 && xy[1]>y0-40 && xy[1]<y1+40) pts.push({i,n,xy}); } });
@@ -266,7 +291,12 @@ function legendBlock(g, x, y, w, md, sh, o){
   if(o.ctx){
     const d=o.ctx;
     yy += textBlock(g, x, yy, `Contexto: ${d.titulo}`, 12, w, {weight:700}) + 6;
-    if(d.nivel==='pop'){
+    if(d.nivel==='popDep'){
+      const ref=[1.5e6, 3e5, 5e4], R=o.popDR(ref[0]), cx=x+R+2, base=yy+2*R+4;
+      ref.forEach(v=>{ const r=o.popDR(v); g.append('circle').attr('cx',cx).attr('cy',base-r).attr('r',r).attr('fill','#957d58').attr('fill-opacity',.08).attr('stroke','#5e4c33');
+        g.append('text').attr('x',cx+R+14).attr('y',base-2*r+3.5).attr('font-size',10.5).attr('font-family',FONT).attr('fill',C.ink2).text(fmt(v)+' hab.'); });
+      yy = base + 14;
+    } else if(d.nivel==='pop'){
       const ref=[20e6, 5e6, 1e6], R=o.popR(ref[0]), cx=x+R+2, base=yy+2*R+4;
       ref.forEach(v=>{ const r=o.popR(v); g.append('circle').attr('cx',cx).attr('cy',base-r).attr('r',r).attr('fill','none').attr('stroke','#5e4c33').attr('stroke-dasharray','3 2');
         g.append('text').attr('x',cx+R+14).attr('y',base-2*r+3.5).attr('font-size',10.5).attr('font-family',FONT).attr('fill',C.ink2).text(fmt(v)+' hab.'); });
@@ -279,7 +309,7 @@ function legendBlock(g, x, y, w, md, sh, o){
     yy += textBlock(g, x, yy+8, `Fonte: ${d.fonte}.`, 9.5, w, {fill:C.ink3}) + 18;
   }
   [['Limite internacional',C.neighLine,.9],['Limite regional (INDEC)',C.reg,2.3],['Limite provincial',C.prov,1],['Limite de departamento / partido',C.dept,.6]].forEach(([l,c,wd])=>{
-    if((o.fill || (o.ctx && (o.ctx.nivel==='prov'||o.ctx.nivel==='reg'))) && wd===.6) return;
+    if(((o.fill && md.unit!=='dept') || (o.ctx && (o.ctx.nivel==='prov'||o.ctx.nivel==='reg'))) && wd===.6) return;
     g.append('line').attr('x1',x).attr('x2',x+18).attr('y1',yy+5).attr('y2',yy+5).attr('stroke',c).attr('stroke-width',wd);
     g.append('text').attr('x',x+26).attr('y',yy+9).attr('font-size',10.5).attr('font-family',FONT).attr('fill',C.ink2).text(l); yy += 15; });
   g.append('rect').attr('x',x).attr('y',yy+1).attr('width',18).attr('height',10).attr('fill',C.sea).attr('stroke','#9aa6b2').attr('stroke-width',.4);
@@ -298,9 +328,10 @@ function techNote(md, sh, o, multi){
   const art = md.unit==='dept'? 'o' : 'a', de = md.unit==='dept'? 'do' : 'da';
   const s = ['NOTA TÉCNICA.'];
   if(o.circles) s.push(`Valores absolutos em círculos proporcionais: a área de cada círculo é proporcional ao número de notícias que citam ${art} ${unitTxt} (raio ∝ √n; maior círculo = ${fmt(sh.max||0)} notícias${multi?', mesma escala em todos os mapas':''}). ${md.unit==='loc'? 'Localidades posicionadas pelo GeoNames; na falta, no centro do departamento.' : `Círculos no centróide ${de} ${unitTxt} (da maior porção de terra, quando há ilhas).`} Notícias que citam vários lugares contam em cada um.`);
-  if(o.fill) s.push(`Valores relativos em coroplético: taxa = notícias ÷ população residente × 100.000. População: INDEC, Censo Nacional de Población, Hogares y Viviendas 2022, resultados definitivos. Classes por quantis (até 5 classes) dos valores não nulos${multi?', comuns a todos os mapas':''}.`);
+  if(o.fill) s.push(`Valores relativos em coroplético: taxa = notícias ÷ população residente ${md.unit==='dept'? 'do departamento/partido' : 'da província'} × 100.000. População: INDEC, Censo Nacional de Población, Hogares y Viviendas 2022, resultados definitivos${md.unit==='dept'? ' (Geoportal estadístico)' : ''}. Classes por quantis (até 5 classes) dos valores não nulos${multi?', comuns a todos os mapas':''}.${md.unit==='dept'? ' Em departamentos pouco populosos, uma única notícia gera taxas altas: leia junto com os valores absolutos.' : ''}`);
   if(o.ctx){ const d=o.ctx; s.push(d.nivel==='pop'? `Camada de contexto: população residente em 2022 em círculos vazados proporcionais (área ∝ habitantes), no centróide de cada província; fonte: ${d.fonte}.`
-    : `Camada de contexto: ${d.titulo}, ${d.nivel==='agl'? 'em símbolos de cor nos 31 aglomerados urbanos da EPH (valores urbanos, não provinciais)' : d.nivel==='reg'? 'em coroplético por região estatística (valores dos aglomerados urbanos de cada região)' : 'em coroplético por província'}; classes por quantis; fonte: ${d.fonte}.`); }
+    : d.nivel==='popDep'? `Camada de contexto: população residente em 2022 em círculos vazados proporcionais (área ∝ habitantes), no centróide de cada departamento/partido; fonte: ${d.fonte}.`
+    : `Camada de contexto: ${d.titulo}, ${d.nivel==='agl'? 'em símbolos de cor nos 31 aglomerados urbanos da EPH (valores urbanos, não provinciais)' : d.nivel==='reg'? 'em coroplético por região estatística (valores dos aglomerados urbanos de cada região)' : d.nivel==='dep'? 'em coroplético por departamento/partido (CABA como um todo; sem dado para as Ilhas Malvinas)' : 'em coroplético por província'}; classes por quantis${d.nivel==='dep'? ' dos 511 departamentos' : ''}; fonte: ${d.fonte}.${d.definicao? ' Definição do INDEC: '+d.definicao.split(/\n/)[0] : ''}`); }
   if(md.spatial) s.push('Filtros espaciais aplicados ao lugar: só são representados os lugares dentro das unidades selecionadas, mesmo quando a notícia também cita outros lugares.');
   s.push('Limites: departamentos/partidos (linha fina), províncias (média) e regiões estatísticas do INDEC (grossa): Gran Buenos Aires (CABA e 24 partidos), Pampeana, Noroeste, Noreste, Cuyo e Patagonia.');
   const zk = (multi? ZOOM.multi : ZOOM.one).k; if(zk>1) s.push(`Vista ampliada (×${zk.toLocaleString('pt-BR',{maximumFractionDigits:1})}) em relação ao país inteiro.`);
@@ -354,11 +385,11 @@ function zoomControls(box, frame, key){
 let SHEET_SVG = null;
 function renderMap(b){
   if(!RATE_OK(mstate.unit)) mstate.measure='abs';
-  const cdef = ctxEscolha(mstate.ctx), cpoly = !!cdef && (cdef.nivel==='prov' || cdef.nivel==='reg');
+  const cdef = ctxEscolha(mstate.ctx), cpoly = !!cdef && ['prov','reg','dep'].includes(cdef.nivel);
   if(cpoly) mstate.measure='abs';
   $('ctxLayer').value = mstate.ctx || '';
   document.querySelectorAll('#mapUnit button').forEach(x=>x.setAttribute('aria-pressed', String(x.dataset.v===mstate.unit)));
-  document.querySelectorAll('#mapMeasure button').forEach(x=>{ x.setAttribute('aria-pressed', String(x.dataset.v===mstate.measure)); x.disabled = x.dataset.v!=='abs' && (!RATE_OK(mstate.unit) || cpoly); x.title = !x.disabled? '' : cpoly? 'Com uma camada de contexto em coroplético, as notícias aparecem em círculos' : 'Taxa disponível para províncias (população por departamento e localidade não incluída)'; });
+  document.querySelectorAll('#mapMeasure button').forEach(x=>{ x.setAttribute('aria-pressed', String(x.dataset.v===mstate.measure)); x.disabled = x.dataset.v!=='abs' && (!RATE_OK(mstate.unit) || cpoly); x.title = !x.disabled? '' : cpoly? 'Com uma camada de contexto em coroplético, as notícias aparecem em círculos' : 'Taxa disponível para províncias e departamentos (sem população por localidade)'; });
   document.querySelectorAll('#mapMode button').forEach(x=>x.setAttribute('aria-pressed', String(x.dataset.v===mstate.mode)));
   $('cmpWrap').hidden = $('cmpNWrap').hidden = mstate.mode!=='multi';
   $('cmpVar').value = mstate.cmp; $('cmpN').value = String(mstate.n);
@@ -367,7 +398,7 @@ function renderMap(b){
   const box=$('sheet'); box.querySelectorAll('svg').forEach(s=>s.remove()); $('mapRank').textContent='';
   if(!HAS_D3){ $('mapNote').textContent='Não foi possível carregar a biblioteca de mapas nesta visualização.'; return; }
   const unit = mstate.unit, vid = UNIT_VID[unit];
-  const o = { circles: mstate.measure!=='rate', fill: mstate.measure!=='abs', ctx: cdef, ctxCls: cdef && cdef.nivel!=='pop'? ctxClasses(cdef) : null };
+  const o = { circles: mstate.measure!=='rate', fill: mstate.measure!=='abs', ctx: cdef, ctxCls: cdef && !['pop','popDep'].includes(cdef.nivel)? ctxClasses(cdef) : null };
   const W = Math.max(320, box.clientWidth);
   const svg = d3.select(box).append('svg').attr('font-family',FONT).attr('width','100%');
   svg.append('rect').attr('class','bgpaper').attr('x',0).attr('y',0).attr('fill',C.paper);
@@ -379,7 +410,7 @@ function renderMap(b){
     const rows = b.filter(r=>match(r, vid));
     const md = mapData(rows, unit);
     const sh = { max: md.max||1 };
-    if(o.fill) Object.assign(sh, classify(PROVS_FC.map(f=>f.properties.pi).filter(i=>i>=0).map(md.rate)));
+    if(o.fill) Object.assign(sh, classify(rateIds(unit).map(md.rate)));
     const wide = W>=780;
     let y = M+14;
     y += textBlock(svg, M, y+4, mapTitle(md, o), 19, W-2*M, {weight:700}) + 10;
@@ -392,6 +423,7 @@ function renderMap(b){
     const zk = ZOOM.one.k, gs = gridStep(zk);
     sh.r = d3.scaleSqrt().domain([0, sh.max]).range([0, Math.min(38, fw*0.08)*(o.fill? 0.72 : 1)]);
     o.popR = d3.scaleSqrt().domain([0, 18e6]).range([0, Math.min(52, fw*0.11)]);
+    o.popDR = d3.scaleSqrt().domain([0, 2e6]).range([0, Math.min(30, fw*0.065)]);
     const gm = svg.append('g');
     const mm = drawBase(gm, proj, frame, md, sh, {...o, tip, onClick, sel: st.f[vid], labels: fw>=380? LABELS : [], gstep: gs});
     const zbOne = attachZoom(gm, 'one', [fx0, y], frame, mm);
@@ -424,7 +456,7 @@ function renderMap(b){
     $('mapTitle').textContent = 'Mapa'; $('mapMeta').textContent = `${fmt(md.mapped)} de ${fmt(md.N)} notícias no mapa`;
     const regSel = st.f.region? [...st.f.region].map(i=>REG_VALS[i]) : [];
     const baWarn = unit==='prov' && regSel.some(r=>r==='Gran Buenos Aires'||r==='Pampeana') ? 'A província de Buenos Aires se divide entre as regiões Gran Buenos Aires e Pampeana; para separar as duas, use Departamentos ou Localidades. ' : '';
-    $('mapNote').textContent = baWarn + (RATE_OK(unit)? '' : 'Para localidades e departamentos o mapa mostra valores absolutos (círculos); a taxa por habitante está disponível por província. ') + `${fmt(md.N-md.mapped)} notícias do recorte ficam fora do mapa por serem de escala nacional, virtuais, sem referência espacial ou no exterior.`;
+    $('mapNote').textContent = baWarn + (RATE_OK(unit)? '' : 'Para localidades o mapa mostra valores absolutos (círculos); a taxa por habitante está disponível por departamento e por província. ') + `${fmt(md.N-md.mapped)} notícias do recorte ficam fora do mapa por serem de escala nacional, virtuais, sem referência espacial ou no exterior.`;
   } else {
     const cv = mstate.cmp, icv = VI[cv], cvar = VARS[icv];
     const rowsAll = b.filter(r=>match(r, [vid, cv]));
@@ -433,7 +465,7 @@ function renderMap(b){
     if(!cats.length){ $('mapNote').textContent='Nenhuma categoria com notícias neste recorte.'; svg.remove(); return; }
     const sets = cats.map(k=>({k, md: mapData(rowsAll.filter(r=>r.v[icv].includes(k)), unit, SP.includes(cv)? [[cv, new Set([k])]] : [])}));
     const sh = { max: d3.max(sets, s=>s.md.max)||1 };
-    if(o.fill){ const ids=PROVS_FC.map(f=>f.properties.pi).filter(i=>i>=0); Object.assign(sh, classify(sets.flatMap(s=>ids.map(s.md.rate)))); }
+    if(o.fill){ const ids=rateIds(unit); Object.assign(sh, classify(sets.flatMap(s=>ids.map(s.md.rate)))); }
     const maxC = Math.min(sets.length, W>=1050? 4 : W>=760? 3 : W>=500? 2 : 1);
     let cols = maxC; for(let c=maxC; c>=Math.max(1,maxC-1); c--){ if((Math.ceil(sets.length/c)*c - sets.length) < (Math.ceil(sets.length/cols)*cols - sets.length)) cols=c; }
     const gap = 16, cw = (W-2*M-(cols-1)*gap)/cols, ch = Math.round(cw*1.5);
@@ -443,6 +475,7 @@ function renderMap(b){
     y += textBlock(svg, M, y+4, `${cats.length} categorias mais frequentes de “${cvar.label}”${ft? ' · recorte: '+ft : ''} · mesma escala em todos os mapas`, 12.5, W-2*M, {fill:C.ink2}) + 16;
     sh.r = d3.scaleSqrt().domain([0, sh.max]).range([0, Math.min(26, cw*0.1)*(o.fill? 0.75 : 1)]);
     o.popR = d3.scaleSqrt().domain([0, 18e6]).range([0, Math.min(34, cw*0.13)]);
+    o.popDR = d3.scaleSqrt().domain([0, 2e6]).range([0, Math.min(20, cw*0.08)]);
     let projRef=null;
     sets.forEach((s,j)=>{
       const col=j%cols, row=Math.floor(j/cols), x0=M+col*(cw+gap), y0=y+row*(ch+50);
@@ -471,7 +504,7 @@ function renderMap(b){
     const nh = textBlock(svg, noteX, noteY, techNote(md0, sh, o, true), 10, noteW, {fill:C.ink2, lh:1.38});
     H = Math.max(ly+lgH, noteY+nh) + M;
     $('mapTitle').textContent = 'Mapas por categoria'; $('mapMeta').textContent = `${cats.length} mapas · ${cvar.label}`;
-    $('mapNote').textContent = `Cada mapa mostra as notícias que têm a categoria indicada, dentro do recorte atual, na mesma escala para comparação.` + (RATE_OK(unit)? '' : ' Para localidades e departamentos os mapas mostram valores absolutos (círculos).');
+    $('mapNote').textContent = `Cada mapa mostra as notícias que têm a categoria indicada, dentro do recorte atual, na mesma escala para comparação.` + (RATE_OK(unit)? '' : ' Para localidades os mapas mostram valores absolutos (círculos).');
   }
   svg.attr('viewBox', `0 0 ${W} ${Math.ceil(H)}`); svg.select('.bgpaper').attr('width',W).attr('height',Math.ceil(H));
   SHEET_SVG = svg.node();

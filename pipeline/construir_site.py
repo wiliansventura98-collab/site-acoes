@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import argparse
 import collections
+import functools
 import csv
 import json
 import os
@@ -50,6 +51,7 @@ def _populacao():
     return {r["provincia"]: int(r["populacao_2022"]) for r in _ler_csv("populacao_provincias_2022.csv")}
 
 
+@functools.lru_cache(maxsize=1)
 def contexto():
     """Indicadores oficiais por província, região e aglomerado (ver referencias/contexto/FONTES.md)."""
     prov = {}
@@ -59,7 +61,95 @@ def contexto():
         prov.setdefault(r["provincia"], {}).update({k: _num(v) for k, v in r.items() if k != "provincia"})
     reg = {r["regiao"]: {k: _num(v) for k, v in r.items() if k != "regiao"} for r in _ler_csv("eph_regioes_2024.csv")}
     agl = [{k: (v if k in ("aglomerado", "provincia", "regiao") else _num(v)) for k, v in r.items()} for r in _ler_csv("eph_aglomerados_2024.csv")]
-    return {"provincias": prov, "regioes": reg, "aglomerados": agl}
+    indec = indec_geoportal(prov.keys())
+    for p, vals in indec["provincias"].items():
+        prov.setdefault(p, {}).update({"i_" + k: v for k, v in vals.items()})
+    return {"provincias": prov, "regioes": reg, "aglomerados": agl, "indec": indec}
+
+
+# Indicadores do Censo 2022 obtidos no Geoportal estadístico do INDEC (API datosestadisticos.indec.gob.ar).
+# chave: (rótulo, unidade curta, tema, casas decimais, sentido)  sentido +1: valores altos = mais carência
+INDEC_INDICADORES = {
+    "ipmh":      ("Hogares com privação material (IPMH, incidência)", "% dos hogares", "Desigualdade e privação", 1, 1),
+    "ipmhConv":  ("Hogares com privação convergente (corrente e patrimonial)", "% dos hogares", "Desigualdade e privação", 1, 1),
+    "ipmhCorr":  ("Hogares só com privação de recursos correntes", "% dos hogares", "Desigualdade e privação", 1, 1),
+    "ipmhPatr":  ("Hogares só com privação patrimonial", "% dos hogares", "Desigualdade e privação", 1, 1),
+    "agua":      ("Hogares com água de rede pública", "% dos hogares", "Moradia e serviços", 1, -1),
+    "cloaca":    ("Hogares com esgoto ligado à rede pública", "% dos hogares", "Moradia e serviços", 1, -1),
+    "gas":       ("Hogares que cozinham com gás de rede ou eletricidade", "% dos hogares", "Moradia e serviços", 1, -1),
+    "pisos":     ("Hogares com piso revestido", "% dos hogares", "Moradia e serviços", 1, -1),
+    "alquila":   ("Hogares em moradia alugada", "% dos hogares", "Moradia e serviços", 1, 0),
+    "internet":  ("Hogares com internet", "% dos hogares", "Conectividade", 1, -1),
+    "compu":     ("Hogares com computador ou tablet", "% dos hogares", "Conectividade", 1, -1),
+    "secund":    ("Pessoas de 25 anos ou mais com secundário completo", "% (25 anos e +)", "Educação", 1, -1),
+    "asist1517": ("Frequência escolar de 15 a 17 anos", "% (15 a 17 anos)", "Educação", 1, -1),
+    "nini":      ("Jovens de 14 a 24 anos que não estudam nem trabalham", "% (14 a 24 anos)", "Educação", 1, 1),
+    "desocup":   ("Taxa de desocupação (desocupados ÷ população ativa)", "% da pop. ativa", "Trabalho e proteção", 1, 1),
+    "inact":     ("População de 14 anos ou mais inativa", "% (14 anos e +)", "Trabalho e proteção", 1, 0),
+    "salud":     ("Pessoas de 18 a 64 anos com plano ou cobertura de saúde", "% (18 a 64 anos)", "Trabalho e proteção", 1, -1),
+    "jubM":      ("Mulheres de 60 anos ou mais com aposentadoria ou pensão", "% (60 anos e +)", "Trabalho e proteção", 1, -1),
+    "dens":      ("Densidade demográfica", "hab./km²", "População", 1, 0),
+    "crec":      ("Crescimento anual médio da população, 2010-2022", "por mil hab.", "População", 1, 0),
+    "fem":       ("Índice de feminidade", "mulheres por 100 homens", "População", 0, 0),
+    "env":       ("Índice de envelhecimento", "65+ por 100 de 0 a 14", "População", 0, 0),
+    "dep":       ("Índice de dependência potencial", "inativos por 100 ativos", "População", 0, 0),
+    "hijos":     ("Média de filhos por mulher de 14 a 49 anos", "filhos", "População", 2, 0),
+    "indig":     ("População indígena ou descendente de povos indígenas", "% da população", "Diversidade e migração", 1, 0),
+    "afro":      ("População afrodescendente", "% da população", "Diversidade e migração", 1, 0),
+    "extr":      ("Nascidos em outro país", "% da população", "Diversidade e migração", 1, 0),
+    "otraProv":  ("Nascidos em outra província", "% da população", "Diversidade e migração", 1, 0),
+}
+# Departamentos com nomes diferentes nas duas bases; Tolhuin (2017) e Lezama (2009) não existem na camada de limites usada
+ALIAS_INDEC = {"38021": "doctor manuel belgrano|jujuy", "46028": "coronel felipe varela|la rioja",
+               "46056": "general angel v penaloza|la rioja", "46070": "general juan f quiroga|la rioja",
+               "46084": "general ocampo|la rioja", "86098": "juan f ibarra|santiago del estero"}
+
+
+def indec_geoportal(nomes_provincia):
+    """Lê referencias/contexto/indec_geoportal_2022.json e devolve valores por departamento (id da camada de limites)
+    e por província (nome usado no site), mais as definições oficiais de cada indicador."""
+    from comum import chave, chave_provincia
+    arq = CONTEXTO / "indec_geoportal_2022.json"
+    if not arq.exists():
+        return {"indicadores": [], "departamentos": {}, "provincias": {}}
+    bruto = json.loads(arq.read_text(encoding="utf-8"))
+    prov_cod = {c: chave_provincia(n) for c, n in bruto["provincias"]["nomes"].items()}
+    nome_site = {chave_provincia(n): n for n in nomes_provincia}
+    nome_site.setdefault("ciudad autonoma de buenos aires", next((n for n in nomes_provincia if n.startswith("CABA")), "CABA"))
+    ids = {r["id"] for r in csv.DictReader(open(REFERENCIAS / "departamentos.csv", encoding="utf-8"))}
+
+    def valores(v):
+        out = {k: v.get(k) for k in INDEC_INDICADORES if k in v}
+        o, d = v.get("ocup"), v.get("desoc")
+        out["desocup"] = round(d / (o + d) * 100, 1) if o and d is not None else None
+        out["pop"] = v.get("pob"); out["viv"] = v.get("viv")
+        return {k: (round(x, 2) if isinstance(x, float) else x) for k, x in out.items() if x is not None}
+
+    provs = {nome_site.get(prov_cod[c], prov_cod[c]): valores(v) for c, v in bruto["provincias"]["valores"].items()}
+    deps, sem_par = {}, []
+    for c, v in bruto["departamentos"]["valores"].items():
+        if c.startswith("02"):
+            continue  # comunas da CABA: a camada de limites tem a cidade inteira (valores da jurisdição)
+        k = ALIAS_INDEC.get(c) or chave(bruto["departamentos"]["nomes"][c]) + "|" + prov_cod[c[:2]]
+        if k in ids:
+            deps[k] = valores(v)
+        else:
+            sem_par.append(f"{c} {bruto['departamentos']['nomes'][c]}")
+    caba = next((k for k in ids if k.startswith("CABA|")), None)
+    if caba:
+        deps[caba] = provs[nome_site["ciudad autonoma de buenos aires"]]
+    if sem_par:
+        print("INDEC sem polígono correspondente:", "; ".join(sem_par))
+    meta = bruto["meta"]
+    inds = []
+    for k, (rot, un, tema, dec, sentido) in INDEC_INDICADORES.items():
+        m = meta.get("ocup" if k == "desocup" else k, {})
+        dm = m.get("dep", {})
+        inds.append({"k": k, "titulo": rot, "unidade": un, "tema": tema, "dec": dec, "sentido": sentido,
+                     "indec": dm.get("titulo"), "definicao": (dm.get("definicao") or "").strip()[:600],
+                     "ids": [m.get("dep_id"), m.get("prov_id")]})
+    return {"indicadores": inds, "departamentos": deps, "provincias": provs,
+            "fonte": "INDEC, Censo Nacional de Población, Hogares y Viviendas 2022, via Geoportal estadístico (portalgeoestadistico.indec.gob.ar)"}
 
 
 def escrever_csv(res, caminho):
@@ -92,6 +182,23 @@ def escrever_dicionario(res, caminho, ano):
         linhas += [f"| {k.replace('|', '/')} | {n} |" for k, n in cont.most_common(8)]
         linhas.append("")
     caminho.write_text("\n".join(linhas), encoding="utf-8")
+
+
+def escrever_contexto_csv(res, caminho):
+    """Indicadores do Censo 2022 por departamento ao lado das notícias, para análise em planilha, R ou QGIS."""
+    ctx = contexto()["indec"]
+    unicas = [r for r in res.registros if r["status"] != "Repetida"]
+    conta = collections.Counter(x for r in unicas for x in r["v"]["departamento"])
+    topo = json.loads((REFERENCIAS / "limites" / "departamentos.topo.json").read_text(encoding="utf-8"))
+    obj = next(iter(topo["objects"].values()))
+    cols = ["pop", "viv", *INDEC_INDICADORES]
+    with open(caminho, "w", newline="", encoding="utf-8-sig") as fh:
+        w = csv.writer(fh)
+        w.writerow(["id", "departamento", "provincia", "regiao", "noticias", "noticias_100mil_hab"] + cols)
+        for g in sorted(obj["geometries"], key=lambda g: (g["properties"]["p"], g["properties"]["n"])):
+            gid, p = g["id"], g["properties"]; rot = res.rotulos_departamento.get(gid, p["n"]); v = ctx["departamentos"].get(gid, {})
+            n = conta.get(rot, 0)
+            w.writerow([gid, rot, p["p"], p["r"], n, round(n / v["pop"] * 1e5, 2) if v.get("pop") else ""] + [v.get(k, "") for k in cols])
 
 
 def _topo_para_geometrias(topo):
@@ -148,15 +255,19 @@ def escrever_camadas(res, coords, relatorio, caminho):
     gpd.GeoDataFrame(loc, crs="EPSG:4326").to_file(caminho, layer="localidades", driver="GPKG")
 
     topo = json.loads((REFERENCIAS / "limites" / "departamentos.topo.json").read_text(encoding="utf-8"))
+    ctx = contexto()
+    ind_dep = ctx["indec"]["departamentos"]
     deps = []
     for gid, props, geom in _topo_para_geometrias(topo):
         rot = res.rotulos_departamento.get(gid, props.get("n"))
+        v = ind_dep.get(gid, {})
+        n = conta["departamento"].get(rot, 0)
         deps.append({"id": gid, "departamento": rot, "provincia": props.get("p"), "regiao": props.get("r"),
-                     "noticias": conta["departamento"].get(rot, 0), "geometry": geom})
+                     "noticias": n, "noticias_100mil_hab": round(n / v["pop"] * 1e5, 2) if v.get("pop") else None,
+                     **{"censo_" + k: v.get(k) for k in ["pop", "viv", *INDEC_INDICADORES]}, "geometry": geom})
     gdep = gpd.GeoDataFrame(deps, crs="EPSG:4326")
     gdep.to_file(caminho, layer="departamentos", driver="GPKG")
 
-    ctx = contexto()
     provs = []
     for p, grupo in gdep.groupby("provincia"):
         n = conta["provincia"].get(p, 0); habitantes = pop.get(p); c = ctx["provincias"].get(p, {})
@@ -164,6 +275,7 @@ def escrever_camadas(res, coords, relatorio, caminho):
                       "densidade_hab_km2": c.get("densidade_hab_km2"), "noticias": n,
                       "noticias_100mil_hab": round(n / habitantes * 1e5, 2) if habitantes else None,
                       "taxa_homicidios_2023": c.get("taxa_homicidios_2023"), "taxa_homicidios_2024": c.get("taxa_homicidios_2024"),
+                      **{"censo_" + k: c.get("i_" + k) for k in INDEC_INDICADORES},
                       "geometry": unary_union(list(grupo.geometry)).buffer(0)})
     gpd.GeoDataFrame(provs, crs="EPSG:4326").to_file(caminho, layer="provincias", driver="GPKG")
 
@@ -211,6 +323,7 @@ def main():
            "contexto": contexto()},
           DADOS / "geo.json")
     escrever_csv(res, DADOS / f"acoes_{a.ano}.csv")
+    escrever_contexto_csv(res, DADOS / "contexto_censo2022_departamentos.csv")
     escrever_dicionario(res, DADOS / "dicionario.md", a.ano)
     with open(DADOS / "relatorio_geocodificacao.csv", "w", newline="", encoding="utf-8") as fh:
         w = csv.DictWriter(fh, fieldnames=["localidade", "metodo", "lon", "lat"]); w.writeheader(); w.writerows(relatorio)

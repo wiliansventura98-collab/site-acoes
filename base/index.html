@@ -172,6 +172,12 @@
   <section class="panel" id="ctxSec" role="tabpanel" aria-labelledby="tab-ctx" hidden>
     <div class="sechead"><h2>Notícias e indicadores oficiais</h2><span class="meta" id="ctxMeta"></span></div>
     <div class="mapctl">
+      <label class="f">Unidade
+        <span class="seg" id="ctxNivel">
+          <button data-v="prov" aria-pressed="true">Províncias</button>
+          <button data-v="dept" aria-pressed="false">Departamentos</button>
+        </span>
+      </label>
       <label class="f" for="ctxX">Indicador (eixo horizontal)
         <select id="ctxX">
           <option value="densidade_hab_km2">Densidade demográfica, 2022 (hab./km², escala log)</option>
