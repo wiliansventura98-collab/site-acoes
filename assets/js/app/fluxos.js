@@ -7,7 +7,7 @@
  */
 
 // Paleta categórica compartilhada (azul-celeste e ouro do Sol de Maio como âncoras)
-const PALETA = ['#1c4f8a','#e0a106','#5fa3dc','#9c3d0f','#2f8a74','#c0392b','#6d5aa8','#b07d2b','#3c6e47','#d46f9a','#36506b','#8a9a2b','#7c4a8a','#c96a1b'];
+const PALETA = ['#13294b','#f2a900','#6cace4','#9c3d0f','#2f8a74','#c0392b','#6d5aa8','#b07d2b','#3c6e47','#d46f9a','#36506b','#8a9a2b','#7c4a8a','#c96a1b'];
 const COR_OUTROS = '#a3a9b0', COR_SEM = '#cfd3d8';
 const ehSemInfo = s => /no informa|^ni$|no indica/i.test(s);
 

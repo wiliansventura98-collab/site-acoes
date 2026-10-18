@@ -300,6 +300,25 @@ def escrever_camadas(res, coords, relatorio, caminho):
           f"{len(pontos)} pontos notícia×localidade")
 
 
+# Texto curto das faixas da marcha desenhada na abertura: os objetivos mais frequentes da base
+LEMA_CURTO = {"objetivos laborales": "Trabajo", "objetivos por la reproduccion social": "Reproducción social",
+              "objetivos politicos": "Política", "objetivos en torno a derechos humanos": "Derechos humanos",
+              "objetivos educativos": "Educación", "objetivos por la igualdad de genero": "Igualdad de género",
+              "objetivos por la vivienda y habitat": "Vivienda y hábitat", "objetivos sanitarios": "Salud",
+              "objetivos socioambientales": "Ambiente", "objetivos lgttbiq": "Diversidad", "objetivos de reconocimiento": "Reconocimiento"}
+
+
+def lemas(regs, n=9):
+    from comum import chave
+    cont = collections.Counter(x for r in regs for x in r["v"]["objetivos"])
+    out = []
+    for k, c in cont.most_common():
+        curto = LEMA_CURTO.get(chave(k))
+        if curto:
+            out.append([curto, c])
+    return out[:n]
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--ano", type=int, default=2024)
@@ -339,7 +358,7 @@ def main():
     _json({"noticias": len(res.linhas), "unicas": unicas, "variaveis": len(res.variaveis),
            "movimentos": distintos("nombremov", sem_info), "localidades": distintos("localidad", sem_info),
            "provincias": distintos("provincia", lambda s: s in pop), "fontes": distintos("fuente", sem_info),
-           "aglomerados_contexto": len(contexto()["aglomerados"]) - 1}, DADOS / "resumo.json")
+           "aglomerados_contexto": len(contexto()["aglomerados"]) - 1, "lemas": lemas(regs_unicos)}, DADOS / "resumo.json")
     metodos = collections.Counter(r["metodo"] for r in relatorio)
     print(f"{len(res.linhas)} notícias ({unicas} únicas), {len(res.variaveis)} variáveis; localidades: {dict(metodos)}")
     for aviso in res.avisos:
