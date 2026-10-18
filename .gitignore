@@ -1,0 +1,7 @@
+# Planilhas originais têm dados pessoais de quem codificou: nunca versionar
+*.xlsx
+*.xls
+dados/brutos/
+__pycache__/
+*.pyc
+.DS_Store

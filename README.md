@@ -73,17 +73,43 @@ As categorias mantêm os nomes originais da ficha de codificação, em espanhol.
 - **Localidades:** [GeoNames](https://www.geonames.org/).
 - **Bibliotecas:** [D3.js](https://d3js.org/) 7.8.5 e [TopoJSON Client](https://github.com/topojson/topojson-client) 3.1.0.
 
+## Dados abertos
+
+| Arquivo | Uso |
+|---|---|
+| [`dados/acoes_2024.csv`](dados/acoes_2024.csv) | Base tratada, uma linha por notícia (Excel, R, Python) |
+| [`dados/dicionario.md`](dados/dicionario.md) | Dicionário de variáveis |
+| [`dados/camadas/acoes_2024.gpkg`](dados/camadas/acoes_2024.gpkg) | Camadas para QGIS: localidades, departamentos, províncias, regiões e notícias por localidade |
+| [`dados/relatorio_geocodificacao.csv`](dados/relatorio_geocodificacao.csv) | Como cada localidade foi posicionada |
+
+Detalhes em [`dados/README.md`](dados/README.md).
+
+## Reprodutibilidade
+
+Todo o tratamento é feito por um [pipeline em Python](pipeline/README.md): anonimização da planilha, padronização das categorias, leitura da referência espacial, geocodificação e geração dos arquivos do site e das camadas. A cada envio ao ramo `main`, o **GitHub Actions** verifica que não há dados pessoais, executa o pipeline e publica o site.
+
+```bash
+python -m pip install -r pipeline/requirements.txt
+python pipeline/anonimizar.py 2024_Base_Tratada.xlsx --ano 2024
+python pipeline/construir_site.py --ano 2024
+```
+
 ## Estrutura do repositório
 
 ```
-index.html            página inicial
-base/index.html       base interativa (dados, limites e coordenadas embutidos)
-assets/js/            bibliotecas D3 e TopoJSON (cópias locais)
-docs/                 imagens usadas neste README
-.nojekyll             publica os arquivos como estão no GitHub Pages
+index.html                    página inicial
+base/index.html               base interativa (estrutura da página)
+assets/css/                   estilos da página inicial e da base
+assets/js/app/                aplicação em módulos: núcleo, distribuição, notícias, mapas, tempo, exportação
+assets/js/vendor/             bibliotecas D3 e TopoJSON (cópias locais)
+dados/                        dados gerados: JSON do site, CSV, GeoPackage, dicionário
+dados/fonte/                  entrada do pipeline (planilha sem dados pessoais)
+pipeline/                     scripts Python e referências geográficas
+.github/workflows/            automação de geração dos dados e publicação
+docs/                         imagens deste README
 ```
 
-O site é estático: não há servidor, banco de dados nem etapa de compilação. Cada alteração enviada ao ramo `main` é publicada automaticamente pelo GitHub Pages em cerca de um minuto.
+O site é estático: não há servidor nem banco de dados. A página carrega `dados/base.json` e `dados/geo.json` e desenha tudo no navegador.
 
 ## Responsável
 

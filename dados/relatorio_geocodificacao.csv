@@ -1,0 +1,135 @@
+localidade,metodo,lon,lat
+CABA (Ciudad de Buenos Aires),manual,-58.437,-34.6075
+Alta Gracia (Córdoba),geonames,-64.4297,-31.6498
+Avellaneda (Buenos Aires),geonames,-58.3674,-34.6602
+Azul (Buenos Aires),geonames,-59.8585,-36.778
+Añelo (Neuquén),geonames,-68.7875,-38.3543
+Bahía Blanca (Buenos Aires),geonames,-62.2655,-38.7176
+Benavídez (Buenos Aires),manual,-58.7,-34.41
+Berazategui (Buenos Aires),geonames,-58.2128,-34.7653
+Berisso (Buenos Aires),geonames,-57.8833,-34.8715
+Bernardo de Irigoyen (Misiones),geonames,-53.6468,-26.2554
+Bragado (Buenos Aires),geonames,-60.4896,-35.1156
+Calilegua (Jujuy),geonames,-64.77,-23.7744
+Campana (Buenos Aires),geonames,-58.9592,-34.1633
+Catriel (Río Negro),geonames,-67.7945,-37.8755
+Centenario (Neuquén),geonames,-68.1318,-38.8295
+Chivilcoy (Buenos Aires),geonames,-60.0191,-34.8969
+Cinco Saltos (Río Negro),geonames,-68.0629,-38.8222
+Cipolletti (Río Negro),geonames,-67.9903,-38.9339
+Claypole (Buenos Aires),manual,-58.34,-34.8
+Comodoro Rivadavia (Chubut),geonames,-67.494,-45.8626
+Concepción del Uruguay (Entre Ríos),geonames,-58.2322,-32.4846
+Concordia (Entre Ríos),geonames,-58.0171,-31.392
+Corrientes (Corrientes),geonames,-58.8344,-27.4678
+Córdoba (Córdoba),geonames,-64.1885,-31.4065
+Don Torcuato (Buenos Aires),geonames,-58.6273,-34.4946
+El Bolsón (Río Negro),geonames,-71.5334,-41.9605
+Esquel (Chubut),geonames,-71.3195,-42.9115
+Ezeiza (Buenos Aires),geonames,-58.5247,-34.8544
+Firmat (Santa Fe),geonames,-61.4832,-33.4594
+Florencio Varela (Buenos Aires),manual,-58.276,-34.8
+Formosa (Formosa),geonames,-58.1731,-26.1849
+General La Madrid (Buenos Aires),geonames,-61.2631,-37.2467
+General Pico (La Pampa),geonames,-63.7579,-35.6593
+General Roca (Río Negro),geonames,-67.5833,-39.0333
+Gobernador Gregores (Santa Cruz),geonames,-70.2474,-48.7506
+González Catán (Buenos Aires),manual,-58.646,-34.77
+Gregorio de Laferrere (Buenos Aires),manual,-58.59,-34.75
+Gualeguaychú (Entre Ríos),geonames,-58.5184,-33.0078
+Gálvez (Santa Fe),geonames,-61.221,-32.0296
+Haedo (Buenos Aires),geonames,-58.5921,-34.6424
+Huinca Renancó (Córdoba),geonames,-64.3746,-34.8413
+Ituzaingó (Buenos Aires),geonames,-58.6662,-34.6604
+Junín (Buenos Aires),geonames,-60.9464,-34.5939
+La Banda (Santiago del Estero),geonames,-64.2438,-27.7304
+La Caldera (Salta),geonames,-65.3818,-24.6048
+La Granja (Córdoba),geonames,-64.2679,-31.0086
+La Matanza (Buenos Aires),centro do departamento,-58.62545,-34.77017
+La Plata (Buenos Aires),geonames,-57.9544,-34.9213
+La Quiaca (Jujuy),geonames,-65.5965,-22.1045
+La Rioja (La Rioja),geonames,-66.8564,-29.4133
+La Tablada (Buenos Aires),manual,-58.53,-34.69
+Lanús (Buenos Aires),geonames,-58.3913,-34.7076
+Las Heras (Mendoza),geonames,-68.8405,-32.8503
+Libertador General San Martín (Jujuy),geonames,-64.7935,-23.8131
+Lincoln (Buenos Aires),geonames,-61.5293,-34.8682
+Llavallol (Buenos Aires),manual,-58.43,-34.79
+Lomas de Zamora (Buenos Aires),geonames,-58.4028,-34.7574
+Lucila del Mar (Buenos Aires),centro do departamento,-56.71803,-36.68127
+Luján (Buenos Aires),geonames,-59.1148,-34.5664
+Malargüe (Mendoza),geonames,-69.5852,-35.4779
+Mar del Plata (Buenos Aires),geonames,-57.5562,-38.0004
+Mar del Tuyú (Buenos Aires),geonames,-56.6939,-36.5743
+Mendoza (Mendoza),geonames,-68.8458,-32.8895
+Mercedes (Buenos Aires),geonames,-59.4314,-34.6507
+Merlo (Buenos Aires),geonames,-58.7274,-34.6654
+Miguel Torres (Santa Fe),centro do departamento,-61.94581,-33.92607
+Monte Grande (Buenos Aires),manual,-58.468,-34.816
+Montevideo (Uruguay),não localizada,,
+Moreno (Buenos Aires),geonames,-58.7914,-34.634
+Morón (Buenos Aires),geonames,-58.6221,-34.6512
+Máximo Paz (Santa Fe),centro do departamento,-60.85288,-33.48672
+Necochea (Buenos Aires),geonames,-58.7396,-38.5545
+Necochea - Quequén (Buenos Aires),manual,-58.739,-38.555
+Neuquén (Neuquén),geonames,-68.0592,-38.9508
+Olavarría (Buenos Aires),geonames,-60.3232,-36.8938
+Olivos (Buenos Aires),geonames,-58.4803,-34.5087
+Palpalá (Jujuy),geonames,-65.2136,-24.258
+Paraná (Entre Ríos),geonames,-60.529,-31.7327
+Pilar (Buenos Aires),geonames,-58.914,-34.4587
+Posadas (Misiones),geonames,-55.9238,-27.3918
+Presidencia Roque Sáenz Peña (Chaco),geonames,-60.4413,-26.7909
+Puerto Iguazú (Misiones),geonames,-54.5735,-25.5991
+Puerto Madryn (Chubut),geonames,-65.0383,-42.7685
+Quilmes (Buenos Aires),geonames,-58.2545,-34.7206
+Rafaela (Santa Fe),geonames,-61.4908,-31.2528
+Rawson (Chubut),geonames,-65.1056,-43.3003
+Reconquista (Santa Fe),geonames,-59.65,-29.15
+Resistencia (Chaco),geonames,-58.9866,-27.4636
+Rojas (Buenos Aires),geonames,-60.7337,-34.1977
+Rosario (Santa Fe),geonames,-60.6393,-32.9468
+Rosario del Tala (Entre Ríos),geonames,-59.1393,-32.3007
+Río Gallegos (Santa Cruz),geonames,-69.2523,-51.6253
+Río Grande (Tierra del Fuego),geonames,-67.7097,-53.7877
+Río Negro (Río Negro),não localizada,,
+Salta (Salta),geonames,-65.42,-24.8065
+San Carlos (Mendoza),geonames,-69.043,-33.7746
+San Carlos de Bariloche (Río Negro),geonames,-71.3082,-41.1456
+San Fernando del Valle de Catamarca (Catamarca),manual,-65.779,-28.469
+San Francisco (Córdoba),geonames,-62.084,-31.425
+San Genaro (Santa Fe),centro do departamento,-61.04818,-32.15602
+San José de Jáchal (San Juan),geonames,-68.7466,-30.2416
+San Juan (San Juan),geonames,-68.5257,-31.5373
+San Justo (Buenos Aires),geonames,-58.5638,-34.6811
+San Lorenzo (Santa Fe),geonames,-60.7361,-32.7434
+San Luis (San Luis),geonames,-66.3247,-33.2914
+San Martín de los Andes (Neuquén),geonames,-71.3534,-40.1579
+San Miguel (Corrientes),geonames,-57.5874,-27.9983
+San Miguel de Tucumán (Tucumán),geonames,-65.2105,-26.816
+San Nicolás (Buenos Aires),manual,-60.225,-33.335
+San Pedro (Buenos Aires),geonames,-59.6663,-33.6792
+San Rafael (Mendoza),geonames,-68.3324,-34.6153
+San Salvador de Jujuy (Jujuy),geonames,-65.2934,-24.1928
+Santa Fe (Santa Fe),geonames,-60.7087,-31.6488
+Santa Rosa (La Pampa),geonames,-64.2899,-36.6162
+Santiago del Estero (Santiago del Estero),geonames,-64.2629,-27.8005
+Santo Tomé (Santa Fe),geonames,-60.7653,-31.6627
+Sarmiento (Chubut),geonames,-69.0689,-45.5869
+Sunchales (Santa Fe),geonames,-61.5597,-30.9448
+Tandil (Buenos Aires),geonames,-59.1369,-37.3287
+Tierra del Fuego (Tierra del Fuego),não localizada,,
+Trelew (Chubut),geonames,-65.305,-43.249
+Tres Arroyos (Buenos Aires),geonames,-60.2756,-38.3769
+Ushuaia (Tierra del Fuego),geonames,-68.3159,-54.8108
+Venado Tuerto (Santa Fe),geonames,-61.9671,-33.7458
+Viedma (Río Negro),geonames,-63.0004,-40.8152
+Villa Constitución (Santa Fe),geonames,-60.3299,-33.2279
+Villa La Angostura (Neuquén),geonames,-71.6463,-40.7617
+Villa María (Córdoba),geonames,-63.2402,-32.4075
+Villa Mercedes (San Luis),geonames,-65.4578,-33.6757
+Villa de Merlo (San Luis),manual,-65.014,-32.343
+Villa de Soto (Córdoba),geonames,-64.985,-30.8552
+Vista Alegre (Neuquén),centro do departamento,-68.79301,-38.83253
+Zárate (Buenos Aires),geonames,-59.0242,-34.0958
+Área Metropolitana de Buenos Aires (AMBA) (Buenos Aires),não localizada,,

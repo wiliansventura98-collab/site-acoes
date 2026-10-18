@@ -1,0 +1,513 @@
+id,departamento,provincia,chave_departamento,chave_provincia,regiao,lon,lat
+concordia|entre rios,CONCORDIA,ENTRE RIOS,concordia,entre rios,Pampeana,-58.2269,-31.2705
+san salvador|entre rios,SAN SALVADOR,ENTRE RIOS,san salvador,entre rios,Pampeana,-58.46879,-31.56213
+villaguay|entre rios,VILLAGUAY,ENTRE RIOS,villaguay,entre rios,Pampeana,-59.05688,-31.63441
+colon|entre rios,COLON,ENTRE RIOS,colon,entre rios,Pampeana,-58.36319,-32.0039
+federal|entre rios,FEDERAL,ENTRE RIOS,federal,entre rios,Pampeana,-58.8885,-30.97056
+capital|corrientes,CAPITAL,CORRIENTES,capital,corrientes,Noreste (NEA),-58.74309,-27.47718
+almirante brown|buenos aires,ALMIRANTE BROWN,BUENOS AIRES,almirante brown,buenos aires,Gran Buenos Aires,-58.3674,-34.83557
+nogoya|entre rios,NOGOYA,ENTRE RIOS,nogoya,entre rios,Pampeana,-59.78143,-32.20224
+itati|corrientes,ITATI,CORRIENTES,itati,corrientes,Noreste (NEA),-58.09153,-27.33139
+atreuco|la pampa,ATREUCO,LA PAMPA,atreuco,la pampa,Pampeana,-63.77511,-37.04047
+tala|entre rios,TALA,ENTRE RIOS,tala,entre rios,Pampeana,-59.27926,-32.30927
+cainguas|misiones,CAINGUAS,MISIONES,cainguas,misiones,Noreste (NEA),-54.80221,-27.14293
+leandro n alem|misiones,LEANDRO N. ALEM,MISIONES,leandro n alem,misiones,Noreste (NEA),-55.38568,-27.62555
+presidente roque saenz pena|cordoba,PRESIDENTE ROQUE SAENZ PEÑA,CORDOBA,presidente roque saenz pena,cordoba,Pampeana,-63.4213,-34.13937
+gualeguaychu|entre rios,GUALEGUAYCHU,ENTRE RIOS,gualeguaychu,entre rios,Pampeana,-58.78317,-33.01316
+beron de astrada|corrientes,BERON DE ASTRADA,CORRIENTES,beron de astrada,corrientes,Noreste (NEA),-57.63277,-27.4499
+quitilipi|chaco,QUITILIPI,CHACO,quitilipi,chaco,Noreste (NEA),-60.1735,-26.66851
+islas del ibicuy|entre rios,ISLAS DEL IBICUY,ENTRE RIOS,islas del ibicuy,entre rios,Pampeana,-58.9453,-33.6147
+gualeguay|entre rios,GUALEGUAY,ENTRE RIOS,gualeguay,entre rios,Pampeana,-59.60848,-33.10457
+federacion|entre rios,FEDERACION,ENTRE RIOS,federacion,entre rios,Pampeana,-58.15894,-30.72266
+la paz|entre rios,LA PAZ,ENTRE RIOS,la paz,entre rios,Pampeana,-59.49185,-30.879
+feliciano|entre rios,FELICIANO,ENTRE RIOS,feliciano,entre rios,Pampeana,-58.7153,-30.40165
+general paz|corrientes,GENERAL PAZ,CORRIENTES,general paz,corrientes,Noreste (NEA),-57.81108,-27.68615
+presidencia de la plaza|chaco,PRESIDENCIA DE LA PLAZA,CHACO,presidencia de la plaza,chaco,Noreste (NEA),-59.77517,-27.04682
+victoria|entre rios,VICTORIA,ENTRE RIOS,victoria,entre rios,Pampeana,-60.22576,-32.77106
+san lorenzo|chaco,SAN LORENZO,CHACO,san lorenzo,chaco,Noreste (NEA),-60.36462,-27.39505
+capayan|catamarca,CAPAYAN,CATAMARCA,capayan,catamarca,Noroeste (NOA),-65.90157,-28.90923
+diamante|entre rios,DIAMANTE,ENTRE RIOS,diamante,entre rios,Pampeana,-60.53253,-32.23101
+montecarlo|misiones,MONTECARLO,MISIONES,montecarlo,misiones,Noreste (NEA),-54.56201,-26.6553
+la plata|buenos aires,LA PLATA,BUENOS AIRES,la plata,buenos aires,Pampeana,-58.01753,-35.00526
+coronel felipe varela|la rioja,CORONEL FELIPE VARELA,LA RIOJA,coronel felipe varela,la rioja,Noroeste (NOA),-68.32848,-29.4498
+uruguay|entre rios,URUGUAY,ENTRE RIOS,uruguay,entre rios,Pampeana,-58.58278,-32.44344
+presidente peron|buenos aires,PRESIDENTE PERON,BUENOS AIRES,presidente peron,buenos aires,Pampeana,-58.39809,-34.92983
+parana|entre rios,PARANA,ENTRE RIOS,parana,entre rios,Pampeana,-60.04903,-31.68916
+mercedes|corrientes,MERCEDES,CORRIENTES,mercedes,corrientes,Noreste (NEA),-57.78266,-29.04418
+apostoles|misiones,APOSTOLES,MISIONES,apostoles,misiones,Noreste (NEA),-55.67628,-27.88718
+candelaria|misiones,CANDELARIA,MISIONES,candelaria,misiones,Noreste (NEA),-55.58104,-27.45744
+carlos casares|buenos aires,CARLOS CASARES,BUENOS AIRES,carlos casares,buenos aires,Pampeana,-61.37375,-35.74966
+saladillo|buenos aires,SALADILLO,BUENOS AIRES,saladillo,buenos aires,Pampeana,-59.7037,-35.6766
+libertador general san martin|misiones,LIBERTADOR GENERAL SAN MARTIN,MISIONES,libertador general san martin,misiones,Noreste (NEA),-54.91783,-26.88811
+capital|misiones,CAPITAL,MISIONES,capital,misiones,Noreste (NEA),-55.8552,-27.55067
+concepcion|corrientes,CONCEPCION,CORRIENTES,concepcion,corrientes,Noreste (NEA),-58.00722,-28.36523
+o higgins|chaco,O'HIGGINS,CHACO,o higgins,chaco,Noreste (NEA),-60.68068,-27.25755
+eldorado|misiones,ELDORADO,MISIONES,eldorado,misiones,Noreste (NEA),-54.42284,-26.31651
+san roque|corrientes,SAN ROQUE,CORRIENTES,san roque,corrientes,Noreste (NEA),-58.59226,-28.66189
+saladas|corrientes,SALADAS,CORRIENTES,saladas,corrientes,Noreste (NEA),-58.62342,-28.17857
+mburucuya|corrientes,MBURUCUYA,CORRIENTES,mburucuya,corrientes,Noreste (NEA),-58.18721,-27.97013
+san luis del palmar|corrientes,SAN LUIS DEL PALMAR,CORRIENTES,san luis del palmar,corrientes,Noreste (NEA),-58.27908,-27.55975
+san pedro|misiones,SAN PEDRO,MISIONES,san pedro,misiones,Noreste (NEA),-53.95173,-26.67244
+santo tome|corrientes,SANTO TOME,CORRIENTES,santo tome,corrientes,Noreste (NEA),-56.19843,-28.20513
+pehuajo|buenos aires,PEHUAJO,BUENOS AIRES,pehuajo,buenos aires,Pampeana,-61.9272,-35.88338
+trenque lauquen|buenos aires,TRENQUE LAUQUEN,BUENOS AIRES,trenque lauquen,buenos aires,Pampeana,-62.63463,-36.05644
+general belgrano|buenos aires,GENERAL BELGRANO,BUENOS AIRES,general belgrano,buenos aires,Pampeana,-58.69805,-35.83497
+las flores|buenos aires,LAS FLORES,BUENOS AIRES,las flores,buenos aires,Pampeana,-59.17697,-36.0157
+general alvear|corrientes,GENERAL ALVEAR,CORRIENTES,general alvear,corrientes,Noreste (NEA),-56.48326,-28.7566
+san martin|corrientes,SAN MARTIN,CORRIENTES,san martin,corrientes,Noreste (NEA),-56.89044,-28.77417
+paso de los libres|corrientes,PASO DE LOS LIBRES,CORRIENTES,paso de los libres,corrientes,Noreste (NEA),-57.24905,-29.55772
+monte caseros|corrientes,MONTE CASEROS,CORRIENTES,monte caseros,corrientes,Noreste (NEA),-57.83807,-30.22007
+general guido|buenos aires,GENERAL GUIDO,BUENOS AIRES,general guido,buenos aires,Pampeana,-57.99578,-36.66598
+curuzu cuatia|corrientes,CURUZU CUATIA,CORRIENTES,curuzu cuatia,corrientes,Noreste (NEA),-58.28724,-29.68948
+sauce|corrientes,SAUCE,CORRIENTES,sauce,corrientes,Noreste (NEA),-58.74608,-29.99814
+esquina|corrientes,ESQUINA,CORRIENTES,esquina,corrientes,Noreste (NEA),-59.20121,-29.97974
+ituzaingo|corrientes,ITUZAINGO,CORRIENTES,ituzaingo,corrientes,Noreste (NEA),-56.78825,-27.90761
+olavarria|buenos aires,OLAVARRIA,BUENOS AIRES,olavarria,buenos aires,Pampeana,-60.67073,-36.8567
+san miguel|corrientes,SAN MIGUEL,CORRIENTES,san miguel,corrientes,Noreste (NEA),-57.40512,-27.84195
+goya|corrientes,GOYA,CORRIENTES,goya,corrientes,Noreste (NEA),-59.24411,-29.45498
+lavalle|corrientes,LAVALLE,CORRIENTES,lavalle,corrientes,Noreste (NEA),-58.90821,-28.95494
+bella vista|corrientes,BELLA VISTA,CORRIENTES,bella vista,corrientes,Noreste (NEA),-58.92161,-28.47789
+empedrado|corrientes,EMPEDRADO,CORRIENTES,empedrado,corrientes,Noreste (NEA),-58.66844,-27.84166
+rojas|buenos aires,ROJAS,BUENOS AIRES,rojas,buenos aires,Pampeana,-60.78797,-34.1926
+san antonio de areco|buenos aires,SAN ANTONIO DE ARECO,BUENOS AIRES,san antonio de areco,buenos aires,Pampeana,-59.51938,-34.22066
+maipu|buenos aires,MAIPU,BUENOS AIRES,maipu,buenos aires,Pampeana,-57.58617,-36.88657
+9 de julio|chaco,9 DE JULIO,CHACO,9 de julio,chaco,Noreste (NEA),-61.26531,-26.94551
+arrecifes|buenos aires,ARRECIFES,BUENOS AIRES,arrecifes,buenos aires,Pampeana,-60.06276,-34.01132
+2 de abril|chaco,2 DE ABRIL,CHACO,2 de abril,chaco,Noreste (NEA),-61.32952,-27.62191
+capitan sarmiento|buenos aires,CAPITAN SARMIENTO,BUENOS AIRES,capitan sarmiento,buenos aires,Pampeana,-59.8548,-34.14971
+carmen de areco|buenos aires,CARMEN DE ARECO,BUENOS AIRES,carmen de areco,buenos aires,Pampeana,-59.88424,-34.4068
+pinamar|buenos aires,PINAMAR,BUENOS AIRES,pinamar,buenos aires,Pampeana,-56.86976,-37.10999
+salto|buenos aires,SALTO,BUENOS AIRES,salto,buenos aires,Pampeana,-60.30518,-34.27084
+exaltacion de la cruz|buenos aires,EXALTACION DE LA CRUZ,BUENOS AIRES,exaltacion de la cruz,buenos aires,Pampeana,-59.15591,-34.29515
+tapenaga|chaco,TAPENAGA,CHACO,tapenaga,chaco,Noreste (NEA),-59.82884,-27.65987
+escobar|buenos aires,ESCOBAR,BUENOS AIRES,escobar,buenos aires,Pampeana,-58.77113,-34.32872
+san miguel|buenos aires,SAN MIGUEL,BUENOS AIRES,san miguel,buenos aires,Gran Buenos Aires,-58.69171,-34.55209
+san andres de giles|buenos aires,SAN ANDRES DE GILES,BUENOS AIRES,san andres de giles,buenos aires,Pampeana,-59.47329,-34.43779
+junin|buenos aires,JUNIN,BUENOS AIRES,junin,buenos aires,Pampeana,-61.00549,-34.54613
+mercedes|buenos aires,MERCEDES,BUENOS AIRES,mercedes,buenos aires,Pampeana,-59.42081,-34.69719
+general villegas|buenos aires,GENERAL VILLEGAS,BUENOS AIRES,general villegas,buenos aires,Pampeana,-62.9526,-34.76854
+pilar|buenos aires,PILAR,BUENOS AIRES,pilar,buenos aires,Pampeana,-58.90344,-34.4482
+lujan|buenos aires,LUJAN,BUENOS AIRES,lujan,buenos aires,Pampeana,-59.15851,-34.56762
+hurlingham|buenos aires,HURLINGHAM,BUENOS AIRES,hurlingham,buenos aires,Gran Buenos Aires,-58.64969,-34.59921
+moron|buenos aires,MORON,BUENOS AIRES,moron,buenos aires,Gran Buenos Aires,-58.61984,-34.64914
+chacabuco|buenos aires,CHACABUCO,BUENOS AIRES,chacabuco,buenos aires,Pampeana,-60.35393,-34.6184
+malvinas argentinas|buenos aires,MALVINAS ARGENTINAS,BUENOS AIRES,malvinas argentinas,buenos aires,Gran Buenos Aires,-58.71213,-34.4873
+jose c paz|buenos aires,JOSE C PAZ,BUENOS AIRES,jose c paz,buenos aires,Gran Buenos Aires,-58.77767,-34.51188
+general san martin|buenos aires,GENERAL SAN MARTIN,BUENOS AIRES,general san martin,buenos aires,Gran Buenos Aires,-58.56431,-34.55265
+moreno|buenos aires,MORENO,BUENOS AIRES,moreno,buenos aires,Gran Buenos Aires,-58.81092,-34.61062
+lincoln|buenos aires,LINCOLN,BUENOS AIRES,lincoln,buenos aires,Pampeana,-61.68276,-35.07038
+ituzaingo|buenos aires,ITUZAINGO,BUENOS AIRES,ituzaingo,buenos aires,Gran Buenos Aires,-58.68876,-34.636
+florentino ameghino|buenos aires,FLORENTINO AMEGHINO,BUENOS AIRES,florentino ameghino,buenos aires,Pampeana,-62.40135,-34.8739
+la matanza|buenos aires,LA MATANZA,BUENOS AIRES,la matanza,buenos aires,Gran Buenos Aires,-58.62545,-34.77017
+rivadavia|san juan,RIVADAVIA,SAN JUAN,rivadavia,san juan,Cuyo,-68.63822,-31.54838
+general rodriguez|buenos aires,GENERAL RODRIGUEZ,BUENOS AIRES,general rodriguez,buenos aires,Pampeana,-58.98795,-34.65035
+suipacha|buenos aires,SUIPACHA,BUENOS AIRES,suipacha,buenos aires,Pampeana,-59.70347,-34.74856
+tres de febrero|buenos aires,TRES DE FEBRERO,BUENOS AIRES,tres de febrero,buenos aires,Gran Buenos Aires,-58.57909,-34.59599
+merlo|buenos aires,MERLO,BUENOS AIRES,merlo,buenos aires,Gran Buenos Aires,-58.74188,-34.71089
+chivilcoy|buenos aires,CHIVILCOY,BUENOS AIRES,chivilcoy,buenos aires,Pampeana,-59.95848,-34.91571
+bragado|buenos aires,BRAGADO,BUENOS AIRES,bragado,buenos aires,Pampeana,-60.60423,-35.06109
+lanus|buenos aires,LANUS,BUENOS AIRES,lanus,buenos aires,Gran Buenos Aires,-58.39545,-34.70578
+general las heras|buenos aires,GENERAL LAS HERAS,BUENOS AIRES,general las heras,buenos aires,Pampeana,-58.99587,-34.90943
+marcos paz|buenos aires,MARCOS PAZ,BUENOS AIRES,marcos paz,buenos aires,Pampeana,-58.84806,-34.81372
+lomas de zamora|buenos aires,LOMAS DE ZAMORA,BUENOS AIRES,lomas de zamora,buenos aires,Gran Buenos Aires,-58.42408,-34.75546
+general viamonte|buenos aires,GENERAL VIAMONTE,BUENOS AIRES,general viamonte,buenos aires,Pampeana,-61.0502,-34.99757
+esteban echeverria|buenos aires,ESTEBAN ECHEVERRIA,BUENOS AIRES,esteban echeverria,buenos aires,Gran Buenos Aires,-58.47697,-34.83121
+ezeiza|buenos aires,EZEIZA,BUENOS AIRES,ezeiza,buenos aires,Gran Buenos Aires,-58.56484,-34.87582
+alberti|buenos aires,ALBERTI,BUENOS AIRES,alberti,buenos aires,Pampeana,-60.28287,-35.03638
+florencio varela|buenos aires,FLORENCIO VARELA,BUENOS AIRES,florencio varela,buenos aires,Gran Buenos Aires,-58.25864,-34.87787
+navarro|buenos aires,NAVARRO,BUENOS AIRES,navarro,buenos aires,Pampeana,-59.42979,-35.03041
+santa lucia|san juan,SANTA LUCIA,SAN JUAN,santa lucia,san juan,Cuyo,-68.46142,-31.51996
+canuelas|buenos aires,CAÑUELAS,BUENOS AIRES,canuelas,buenos aires,Pampeana,-58.69078,-35.14503
+san vicente|buenos aires,SAN VICENTE,BUENOS AIRES,san vicente,buenos aires,Pampeana,-58.43192,-35.07046
+lobos|buenos aires,LOBOS,BUENOS AIRES,lobos,buenos aires,Pampeana,-59.14581,-35.21956
+brandsen|buenos aires,BRANDSEN,BUENOS AIRES,brandsen,buenos aires,Pampeana,-58.17607,-35.22211
+carlos tejedor|buenos aires,CARLOS TEJEDOR,BUENOS AIRES,carlos tejedor,buenos aires,Pampeana,-62.42956,-35.37949
+25 de mayo|buenos aires,25 DE MAYO,BUENOS AIRES,25 de mayo,buenos aires,Pampeana,-60.23016,-35.52651
+9 de julio|buenos aires,9 DE JULIO,BUENOS AIRES,9 de julio,buenos aires,Pampeana,-60.97512,-35.48119
+general paz|buenos aires,GENERAL PAZ,BUENOS AIRES,general paz,buenos aires,Pampeana,-58.39001,-35.4662
+monte|buenos aires,MONTE,BUENOS AIRES,monte,buenos aires,Pampeana,-58.76946,-35.51037
+roque perez|buenos aires,ROQUE PEREZ,BUENOS AIRES,roque perez,buenos aires,Pampeana,-59.35959,-35.48111
+general alvear|buenos aires,GENERAL ALVEAR,BUENOS AIRES,general alvear,buenos aires,Pampeana,-60.13336,-36.03452
+quilmes|buenos aires,QUILMES,BUENOS AIRES,quilmes,buenos aires,Gran Buenos Aires,-58.27673,-34.73505
+pila|buenos aires,PILA,BUENOS AIRES,pila,buenos aires,Pampeana,-58.3409,-36.20235
+general la madrid|buenos aires,GENERAL LA MADRID,BUENOS AIRES,general la madrid,buenos aires,Pampeana,-61.34424,-37.35571
+bolivar|buenos aires,BOLIVAR,BUENOS AIRES,bolivar,buenos aires,Pampeana,-61.14968,-36.29822
+balcarce|buenos aires,BALCARCE,BUENOS AIRES,balcarce,buenos aires,Pampeana,-58.27208,-37.71427
+vicente lopez|buenos aires,VICENTE LOPEZ,BUENOS AIRES,vicente lopez,buenos aires,Gran Buenos Aires,-58.50451,-34.52663
+capital|san juan,CAPITAL,SAN JUAN,capital,san juan,Cuyo,-68.53223,-31.52282
+tapalque|buenos aires,TAPALQUE,BUENOS AIRES,tapalque,buenos aires,Pampeana,-60.13088,-36.34714
+hipolito yrigoyen|buenos aires,HIPOLITO YRIGOYEN,BUENOS AIRES,hipolito yrigoyen,buenos aires,Pampeana,-61.66009,-36.25933
+dolores|buenos aires,DOLORES,BUENOS AIRES,dolores,buenos aires,Pampeana,-57.63261,-36.39866
+rauch|buenos aires,RAUCH,BUENOS AIRES,rauch,buenos aires,Pampeana,-58.94441,-36.57225
+azul|buenos aires,AZUL,BUENOS AIRES,azul,buenos aires,Pampeana,-59.69665,-36.78577
+daireaux|buenos aires,DAIREAUX,BUENOS AIRES,daireaux,buenos aires,Pampeana,-61.89142,-36.64055
+tres lomas|buenos aires,TRES LOMAS,BUENOS AIRES,tres lomas,buenos aires,Pampeana,-62.86344,-36.49732
+ayacucho|buenos aires,AYACUCHO,BUENOS AIRES,ayacucho,buenos aires,Pampeana,-58.44258,-37.03478
+guamini|buenos aires,GUAMINI,BUENOS AIRES,guamini,buenos aires,Pampeana,-62.41877,-36.89055
+salliquelo|buenos aires,SALLIQUELO,BUENOS AIRES,salliquelo,buenos aires,Pampeana,-63.04913,-36.67101
+general juan madariaga|buenos aires,GENERAL JUAN MADARIAGA,BUENOS AIRES,general juan madariaga,buenos aires,Pampeana,-57.23079,-37.15321
+ensenada|buenos aires,ENSENADA,BUENOS AIRES,ensenada,buenos aires,Pampeana,-57.97887,-34.84222
+berazategui|buenos aires,BERAZATEGUI,BUENOS AIRES,berazategui,buenos aires,Gran Buenos Aires,-58.15525,-34.81792
+tandil|buenos aires,TANDIL,BUENOS AIRES,tandil,buenos aires,Pampeana,-59.18181,-37.33566
+guaymallen|mendoza,GUAYMALLEN,MENDOZA,guaymallen,mendoza,Cuyo,-68.73237,-32.89104
+coronel suarez|buenos aires,CORONEL SUAREZ,BUENOS AIRES,coronel suarez,buenos aires,Pampeana,-61.88931,-37.53255
+laprida|buenos aires,LAPRIDA,BUENOS AIRES,laprida,buenos aires,Pampeana,-60.76806,-37.51555
+avellaneda|buenos aires,AVELLANEDA,BUENOS AIRES,avellaneda,buenos aires,Gran Buenos Aires,-58.34124,-34.67823
+san isidro|buenos aires,SAN ISIDRO,BUENOS AIRES,san isidro,buenos aires,Gran Buenos Aires,-58.53728,-34.4869
+benito juarez|buenos aires,BENITO JUAREZ,BUENOS AIRES,benito juarez,buenos aires,Pampeana,-59.8883,-37.58528
+saavedra|buenos aires,SAAVEDRA,BUENOS AIRES,saavedra,buenos aires,Pampeana,-62.43515,-37.77106
+adolfo gonzales chaves|buenos aires,ADOLFO GONZALES CHAVES,BUENOS AIRES,adolfo gonzales chaves,buenos aires,Pampeana,-60.24908,-37.96423
+coronel pringles|buenos aires,CORONEL PRINGLES,BUENOS AIRES,coronel pringles,buenos aires,Pampeana,-61.26466,-38.14774
+tornquist|buenos aires,TORNQUIST,BUENOS AIRES,tornquist,buenos aires,Pampeana,-62.29042,-38.25579
+tigre|buenos aires,TIGRE,BUENOS AIRES,tigre,buenos aires,Gran Buenos Aires,-58.60367,-34.38264
+general pinto|buenos aires,GENERAL PINTO,BUENOS AIRES,general pinto,buenos aires,Pampeana,-62.03975,-34.66831
+san cayetano|buenos aires,SAN CAYETANO,BUENOS AIRES,san cayetano,buenos aires,Pampeana,-59.58661,-38.38868
+tres arroyos|buenos aires,TRES ARROYOS,BUENOS AIRES,tres arroyos,buenos aires,Pampeana,-60.23758,-38.51167
+coronel de marina leonardo rosales|buenos aires,CORONEL DE MARINA LEONARDO ROSALES,BUENOS AIRES,coronel de marina leonardo rosales,buenos aires,Pampeana,-61.83551,-38.84974
+villa gesell|buenos aires,VILLA GESELL,BUENOS AIRES,villa gesell,buenos aires,Pampeana,-57.0655,-37.36975
+bahia blanca|buenos aires,BAHIA BLANCA,BUENOS AIRES,bahia blanca,buenos aires,Pampeana,-62.16572,-38.58097
+monte hermoso|buenos aires,MONTE HERMOSO,BUENOS AIRES,monte hermoso,buenos aires,Pampeana,-61.29051,-38.96255
+coronel dorrego|buenos aires,CORONEL DORREGO,BUENOS AIRES,coronel dorrego,buenos aires,Pampeana,-61.09558,-38.67058
+necochea|buenos aires,NECOCHEA,BUENOS AIRES,necochea,buenos aires,Pampeana,-59.16738,-38.25551
+loberia|buenos aires,LOBERIA,BUENOS AIRES,loberia,buenos aires,Pampeana,-58.69396,-38.08972
+general alvarado|buenos aires,GENERAL ALVARADO,BUENOS AIRES,general alvarado,buenos aires,Pampeana,-58.07222,-38.20279
+chascomus|buenos aires,CHASCOMUS,BUENOS AIRES,chascomus,buenos aires,Pampeana,-57.90215,-35.67603
+berisso|buenos aires,BERISSO,BUENOS AIRES,berisso,buenos aires,Pampeana,-57.82814,-34.90946
+general pueyrredon|buenos aires,GENERAL PUEYRREDON,BUENOS AIRES,general pueyrredon,buenos aires,Pampeana,-57.7431,-37.96583
+mar chiquita|buenos aires,MAR CHIQUITA,BUENOS AIRES,mar chiquita,buenos aires,Pampeana,-57.6438,-37.49832
+la costa|buenos aires,LA COSTA,BUENOS AIRES,la costa,buenos aires,Pampeana,-56.71803,-36.68127
+general lavalle|buenos aires,GENERAL LAVALLE,BUENOS AIRES,general lavalle,buenos aires,Pampeana,-56.94227,-36.65195
+tordillo|buenos aires,TORDILLO,BUENOS AIRES,tordillo,buenos aires,Pampeana,-57.27482,-36.39085
+castelli|buenos aires,CASTELLI,BUENOS AIRES,castelli,buenos aires,Pampeana,-57.65718,-36.0413
+punta indio|buenos aires,PUNTA INDIO,BUENOS AIRES,punta indio,buenos aires,Pampeana,-57.39945,-35.42637
+magdalena|buenos aires,MAGDALENA,BUENOS AIRES,magdalena,buenos aires,Pampeana,-57.68622,-35.18494
+san fernando|buenos aires,SAN FERNANDO,BUENOS AIRES,san fernando,buenos aires,Gran Buenos Aires,-58.55354,-34.1419
+campana|buenos aires,CAMPANA,BUENOS AIRES,campana,buenos aires,Pampeana,-58.88302,-34.1382
+baradero|buenos aires,BARADERO,BUENOS AIRES,baradero,buenos aires,Pampeana,-59.49295,-33.93219
+zarate|buenos aires,ZARATE,BUENOS AIRES,zarate,buenos aires,Pampeana,-59.12847,-33.99714
+san pedro|buenos aires,SAN PEDRO,BUENOS AIRES,san pedro,buenos aires,Pampeana,-59.78259,-33.78194
+ramallo|buenos aires,RAMALLO,BUENOS AIRES,ramallo,buenos aires,Pampeana,-60.05748,-33.5873
+san nicolas|buenos aires,SAN NICOLAS,BUENOS AIRES,san nicolas,buenos aires,Pampeana,-60.29295,-33.48255
+pergamino|buenos aires,PERGAMINO,BUENOS AIRES,pergamino,buenos aires,Pampeana,-60.54507,-33.83582
+figueroa|santiago del estero,FIGUEROA,SANTIAGO DEL ESTERO,figueroa,santiago del estero,Noroeste (NOA),-63.55947,-27.32861
+colon|buenos aires,COLON,BUENOS AIRES,colon,buenos aires,Pampeana,-61.06337,-33.88602
+avellaneda|santiago del estero,AVELLANEDA,SANTIAGO DEL ESTERO,avellaneda,santiago del estero,Noroeste (NOA),-63.18745,-28.5633
+pellegrini|santiago del estero,PELLEGRINI,SANTIAGO DEL ESTERO,pellegrini,santiago del estero,Noroeste (NOA),-64.09,-26.26665
+salavina|santiago del estero,SALAVINA,SANTIAGO DEL ESTERO,salavina,santiago del estero,Noroeste (NOA),-63.29532,-28.90457
+general taboada|santiago del estero,GENERAL TABOADA,SANTIAGO DEL ESTERO,general taboada,santiago del estero,Noroeste (NOA),-62.32904,-28.58275
+alberdi|santiago del estero,ALBERDI,SANTIAGO DEL ESTERO,alberdi,santiago del estero,Noroeste (NOA),-62.73106,-26.53714
+moreno|santiago del estero,MORENO,SANTIAGO DEL ESTERO,moreno,santiago del estero,Noroeste (NOA),-62.45798,-27.29542
+zonda|san juan,ZONDA,SAN JUAN,zonda,san juan,Cuyo,-68.9582,-31.62503
+juan f ibarra|santiago del estero,JUAN F IBARRA,SANTIAGO DEL ESTERO,juan f ibarra,santiago del estero,Noroeste (NOA),-62.54277,-28.04417
+choya|santiago del estero,CHOYA,SANTIAGO DEL ESTERO,choya,santiago del estero,Noroeste (NOA),-64.75984,-28.77171
+ayacucho|san luis,AYACUCHO,SAN LUIS,ayacucho,san luis,Cuyo,-66.57098,-32.16141
+rivadavia|santiago del estero,RIVADAVIA,SANTIAGO DEL ESTERO,rivadavia,santiago del estero,Noroeste (NOA),-62.35283,-29.9844
+ojo de agua|santiago del estero,OJO DE AGUA,SANTIAGO DEL ESTERO,ojo de agua,santiago del estero,Noroeste (NOA),-64.00027,-29.29824
+gobernador dupuy|san luis,GOBERNADOR DUPUY,SAN LUIS,gobernador dupuy,san luis,Cuyo,-65.81482,-35.36909
+ullum|san juan,ULLUM,SAN JUAN,ullum,san juan,Cuyo,-68.88412,-31.08173
+angaco|san juan,ANGACO,SAN JUAN,angaco,san juan,Cuyo,-68.12293,-31.18275
+albardon|san juan,ALBARDON,SAN JUAN,albardon,san juan,Cuyo,-68.44877,-31.2025
+chimbas|san juan,CHIMBAS,SAN JUAN,chimbas,san juan,Cuyo,-68.52135,-31.47804
+9 de julio|san juan,9 DE JULIO,SAN JUAN,9 de julio,san juan,Cuyo,-68.38966,-31.6396
+rawson|san juan,RAWSON,SAN JUAN,rawson,san juan,Cuyo,-68.46753,-31.68012
+pocito|san juan,POCITO,SAN JUAN,pocito,san juan,Cuyo,-68.58252,-31.73901
+san martin|san juan,SAN MARTIN,SAN JUAN,san martin,san juan,Cuyo,-68.19963,-31.51792
+caucete|san juan,CAUCETE,SAN JUAN,caucete,san juan,Cuyo,-67.54307,-31.50383
+jachal|san juan,JACHAL,SAN JUAN,jachal,san juan,Cuyo,-68.4332,-30.35425
+tercero arriba|cordoba,TERCERO ARRIBA,CORDOBA,tercero arriba,cordoba,Pampeana,-63.7773,-32.29488
+25 de mayo|san juan,25 DE MAYO,SAN JUAN,25 de mayo,san juan,Cuyo,-67.86341,-31.98788
+juarez celman|cordoba,JUAREZ CELMAN,CORDOBA,juarez celman,cordoba,Pampeana,-63.61109,-33.34152
+capital|salta,CAPITAL,SALTA,capital,salta,Noroeste (NOA),-65.27182,-24.89996
+cachi|salta,CACHI,SALTA,cachi,salta,Noroeste (NOA),-66.19472,-25.04472
+cerrillos|salta,CERRILLOS,SALTA,cerrillos,salta,Noroeste (NOA),-65.39798,-24.99233
+chicoana|salta,CHICOANA,SALTA,chicoana,salta,Noroeste (NOA),-65.60873,-25.14556
+la vina|salta,LA VIÑA,SALTA,la vina,salta,Noroeste (NOA),-65.58141,-25.43744
+santa victoria|salta,SANTA VICTORIA,SALTA,santa victoria,salta,Noroeste (NOA),-64.90492,-22.37609
+general jose de san martin|salta,GENERAL JOSE DE SAN MARTIN,SALTA,general jose de san martin,salta,Noroeste (NOA),-63.65575,-22.70784
+santa rosa|mendoza,SANTA ROSA,MENDOZA,santa rosa,mendoza,Cuyo,-67.96366,-33.61779
+rivadavia|salta,RIVADAVIA,SALTA,rivadavia,salta,Noroeste (NOA),-62.8299,-23.53049
+metan|salta,METAN,SALTA,metan,salta,Noroeste (NOA),-64.58117,-25.41575
+la candelaria|salta,LA CANDELARIA,SALTA,la candelaria,salta,Noroeste (NOA),-65.16505,-26.0852
+maipu|mendoza,MAIPU,MENDOZA,maipu,mendoza,Cuyo,-68.65217,-32.97751
+guachipas|salta,GUACHIPAS,SALTA,guachipas,salta,Noroeste (NOA),-65.43997,-25.71409
+capital|mendoza,CAPITAL,MENDOZA,capital,mendoza,Cuyo,-68.89217,-32.88065
+godoy cruz|mendoza,GODOY CRUZ,MENDOZA,godoy cruz,mendoza,Cuyo,-68.88908,-32.92976
+cafayate|salta,CAFAYATE,SALTA,cafayate,salta,Noroeste (NOA),-65.85962,-26.1367
+junin|mendoza,JUNIN,MENDOZA,junin,mendoza,Cuyo,-68.48034,-33.14621
+rivadavia|mendoza,RIVADAVIA,MENDOZA,rivadavia,mendoza,Cuyo,-68.61218,-33.41971
+general alvear|mendoza,GENERAL ALVEAR,MENDOZA,general alvear,mendoza,Cuyo,-67.08045,-35.21784
+molinos|salta,MOLINOS,SALTA,molinos,salta,Noroeste (NOA),-66.46871,-25.54412
+castro barros|la rioja,CASTRO BARROS,LA RIOJA,castro barros,la rioja,Noroeste (NOA),-66.91858,-28.85998
+general guemes|salta,GENERAL GÜEMES,SALTA,general guemes,salta,Noroeste (NOA),-64.96632,-24.76854
+sanagasta|la rioja,SANAGASTA,LA RIOJA,sanagasta,la rioja,Noroeste (NOA),-67.06588,-29.15853
+san carlos|salta,SAN CARLOS,SALTA,san carlos,salta,Noroeste (NOA),-66.18639,-25.82984
+general ocampo|la rioja,GENERAL OCAMPO,LA RIOJA,general ocampo,la rioja,Noroeste (NOA),-66.05905,-31.00664
+rosario de lerma|salta,ROSARIO DE LERMA,SALTA,rosario de lerma,salta,Noroeste (NOA),-65.85411,-24.5481
+san martin|mendoza,SAN MARTIN,MENDOZA,san martin,mendoza,Cuyo,-68.28442,-32.90888
+la paz|mendoza,LA PAZ,MENDOZA,la paz,mendoza,Cuyo,-67.24754,-33.71147
+san rafael|mendoza,SAN RAFAEL,MENDOZA,san rafael,mendoza,Cuyo,-68.38254,-34.94459
+chilecito|la rioja,CHILECITO,LA RIOJA,chilecito,la rioja,Noroeste (NOA),-67.42789,-29.39594
+general angel v penaloza|la rioja,GENERAL ANGEL V. PEÑALOZA,LA RIOJA,general angel v penaloza,la rioja,Noroeste (NOA),-66.66305,-30.3129
+general belgrano|la rioja,GENERAL BELGRANO,LA RIOJA,general belgrano,la rioja,Noroeste (NOA),-65.93163,-30.57769
+chamical|la rioja,CHAMICAL,LA RIOJA,chamical,la rioja,Noroeste (NOA),-65.95629,-30.16771
+independencia|la rioja,INDEPENDENCIA,LA RIOJA,independencia,la rioja,Noroeste (NOA),-67.33552,-30.11446
+general juan f quiroga|la rioja,GENERAL JUAN F. QUIROGA,LA RIOJA,general juan f quiroga,la rioja,Noroeste (NOA),-66.8681,-30.80096
+rosario vera penaloza|la rioja,ROSARIO VERA PEÑALOZA,LA RIOJA,rosario vera penaloza,la rioja,Noroeste (NOA),-66.67886,-31.4206
+general san martin|la rioja,GENERAL SAN MARTIN,LA RIOJA,general san martin,la rioja,Noroeste (NOA),-66.14598,-31.64131
+vinchina|la rioja,VINCHINA,LA RIOJA,vinchina,la rioja,Noroeste (NOA),-68.52529,-28.31645
+famatina|la rioja,FAMATINA,LA RIOJA,famatina,la rioja,Noroeste (NOA),-67.55929,-28.6973
+libertad|chaco,LIBERTAD,CHACO,libertad,chaco,Noreste (NEA),-59.26022,-27.35144
+san blas de los sauces|la rioja,SAN BLAS DE LOS SAUCES,LA RIOJA,san blas de los sauces,la rioja,Noroeste (NOA),-67.15815,-28.54333
+arauco|la rioja,ARAUCO,LA RIOJA,arauco,la rioja,Noroeste (NOA),-66.71915,-28.53307
+realico|la pampa,REALICO,LA PAMPA,realico,la pampa,Pampeana,-64.21161,-35.23012
+trenel|la pampa,TRENEL,LA PAMPA,trenel,la pampa,Pampeana,-64.21162,-35.63824
+chalileo|la pampa,CHALILEO,LA PAMPA,chalileo,la pampa,Pampeana,-66.55661,-36.3959
+loventue|la pampa,LOVENTUE,LA PAMPA,loventue,la pampa,Pampeana,-65.51791,-36.48245
+toay|la pampa,TOAY,LA PAMPA,toay,la pampa,Pampeana,-64.68276,-36.67054
+capital|la pampa,CAPITAL,LA PAMPA,capital,la pampa,Pampeana,-64.1895,-36.50451
+limay mahuida|la pampa,LIMAY MAHUIDA,LA PAMPA,limay mahuida,la pampa,Pampeana,-66.53652,-37.24623
+utracan|la pampa,UTRACAN,LA PAMPA,utracan,la pampa,Pampeana,-65.06845,-37.34303
+mayor luis j fontana|chaco,MAYOR LUIS J. FONTANA,CHACO,mayor luis j fontana,chaco,Noreste (NEA),-60.65815,-27.74368
+curaco|la pampa,CURACO,LA PAMPA,curaco,la pampa,Pampeana,-66.31174,-38.18661
+fray justo santa maria de oro|chaco,FRAY JUSTO SANTA MARIA DE ORO,CHACO,fray justo santa maria de oro,chaco,Noreste (NEA),-61.30096,-27.86625
+lihuel calel|la pampa,LIHUEL CALEL,LA PAMPA,lihuel calel,la pampa,Pampeana,-65.07776,-38.26746
+rancul|la pampa,RANCUL,LA PAMPA,rancul,la pampa,Pampeana,-64.8014,-35.40509
+conhelo|la pampa,CONHELO,LA PAMPA,conhelo,la pampa,Pampeana,-64.50659,-36.03724
+tilcara|jujuy,TILCARA,JUJUY,tilcara,jujuy,Noroeste (NOA),-65.32001,-23.5604
+palpala|jujuy,PALPALA,JUJUY,palpala,jujuy,Noroeste (NOA),-65.12645,-24.19492
+cochinoca|jujuy,COCHINOCA,JUJUY,cochinoca,jujuy,Noroeste (NOA),-65.93472,-22.9392
+tumbaya|jujuy,TUMBAYA,JUJUY,tumbaya,jujuy,Noroeste (NOA),-65.69621,-23.74347
+doctor manuel belgrano|jujuy,DOCTOR MANUEL BELGRANO,JUJUY,doctor manuel belgrano,jujuy,Noroeste (NOA),-65.44841,-24.08927
+san antonio|jujuy,SAN ANTONIO,JUJUY,san antonio,jujuy,Noroeste (NOA),-65.44685,-24.34673
+el carmen|jujuy,EL CARMEN,JUJUY,el carmen,jujuy,Noroeste (NOA),-65.10113,-24.44782
+santa barbara|jujuy,SANTA BARBARA,JUJUY,santa barbara,jujuy,Noroeste (NOA),-64.40229,-24.00725
+ledesma|jujuy,LEDESMA,JUJUY,ledesma,jujuy,Noroeste (NOA),-64.82876,-23.78528
+humahuaca|jujuy,HUMAHUACA,JUJUY,humahuaca,jujuy,Noroeste (NOA),-65.40888,-23.08215
+yavi|jujuy,YAVI,JUJUY,yavi,jujuy,Noroeste (NOA),-65.5671,-22.29018
+santa catalina|jujuy,SANTA CATALINA,JUJUY,santa catalina,jujuy,Noroeste (NOA),-66.22777,-22.13736
+san pedro|jujuy,SAN PEDRO,JUJUY,san pedro,jujuy,Noroeste (NOA),-64.81101,-24.29856
+12 de octubre|chaco,12 DE OCTUBRE,CHACO,12 de octubre,chaco,Noreste (NEA),-61.47477,-27.33624
+valle grande|jujuy,VALLE GRANDE,JUJUY,valle grande,jujuy,Noroeste (NOA),-65.01189,-23.46694
+rinconada|jujuy,RINCONADA,JUJUY,rinconada,jujuy,Noroeste (NOA),-66.54197,-22.62143
+chacabuco|chaco,CHACABUCO,CHACO,chacabuco,chaco,Noreste (NEA),-61.30891,-27.11792
+ramon lista|formosa,RAMON LISTA,FORMOSA,ramon lista,formosa,Noreste (NEA),-62.13854,-23.11868
+pilcomayo|formosa,PILCOMAYO,FORMOSA,pilcomayo,formosa,Noreste (NEA),-58.06289,-25.36962
+formosa|formosa,FORMOSA,FORMOSA,formosa,formosa,Noreste (NEA),-58.37744,-25.93988
+capital|catamarca,CAPITAL,CATAMARCA,capital,catamarca,Noroeste (NOA),-65.8362,-28.41046
+ancasti|catamarca,ANCASTI,CATAMARCA,ancasti,catamarca,Noroeste (NOA),-65.50381,-28.92667
+belen|catamarca,BELEN,CATAMARCA,belen,catamarca,Noroeste (NOA),-66.92238,-27.10005
+santa maria|catamarca,SANTA MARIA,CATAMARCA,santa maria,catamarca,Noroeste (NOA),-66.26188,-26.7859
+andalgala|catamarca,ANDALGALA,CATAMARCA,andalgala,catamarca,Noroeste (NOA),-66.35601,-27.54451
+ambato|catamarca,AMBATO,CATAMARCA,ambato,catamarca,Noroeste (NOA),-65.9223,-28.01893
+paclin|catamarca,PACLIN,CATAMARCA,paclin,catamarca,Noroeste (NOA),-65.67388,-28.11005
+santa rosa|catamarca,SANTA ROSA,CATAMARCA,santa rosa,catamarca,Noroeste (NOA),-65.33495,-28.08147
+el alto|catamarca,EL ALTO,CATAMARCA,el alto,catamarca,Noroeste (NOA),-65.35993,-28.43038
+sobremonte|cordoba,SOBREMONTE,CORDOBA,sobremonte,cordoba,Pampeana,-64.13161,-29.77132
+la paz|catamarca,LA PAZ,CATAMARCA,la paz,catamarca,Noroeste (NOA),-65.19195,-29.3952
+poman|catamarca,POMAN,CATAMARCA,poman,catamarca,Noroeste (NOA),-66.4073,-28.2056
+rio grande|tierra del fuego,RIO GRANDE,TIERRA DEL FUEGO,rio grande,tierra del fuego,Patagonia,-67.90067,-54.02968
+martires|chubut,MARTIRES,CHUBUT,martires,chubut,Patagonia,-67.24002,-43.81384
+paso de indios|chubut,PASO DE INDIOS,CHUBUT,paso de indios,chubut,Patagonia,-68.68586,-44.03018
+magallanes|santa cruz,MAGALLANES,SANTA CRUZ,magallanes,santa cruz,Patagonia,-68.46806,-48.83821
+sargento cabral|chaco,SARGENTO CABRAL,CHACO,sargento cabral,chaco,Noreste (NEA),-59.51965,-26.80169
+comandante fernandez|chaco,COMANDANTE FERNANDEZ,CHACO,comandante fernandez,chaco,Noreste (NEA),-60.46187,-26.78714
+independencia|chaco,INDEPENDENCIA,CHACO,independencia,chaco,Noreste (NEA),-60.75702,-26.737
+corpen aike|santa cruz,CORPEN AIKE,SANTA CRUZ,corpen aike,santa cruz,Patagonia,-69.44695,-49.94753
+deseado|santa cruz,DESEADO,SANTA CRUZ,deseado,santa cruz,Patagonia,-68.02986,-47.33075
+conesa|rio negro,CONESA,RIO NEGRO,conesa,rio negro,Patagonia,-64.30469,-40.14871
+languineo|chubut,LANGUIÑEO,CHUBUT,languineo,chubut,Patagonia,-70.34831,-43.32346
+gaiman|chubut,GAIMAN,CHUBUT,gaiman,chubut,Patagonia,-66.17216,-43.27276
+general belgrano|chaco,GENERAL BELGRANO,CHACO,general belgrano,chaco,Noreste (NEA),-61.07197,-26.84953
+general donovan|chaco,GENERAL DONOVAN,CHACO,general donovan,chaco,Noreste (NEA),-59.34744,-27.14084
+rawson|chubut,RAWSON,CHUBUT,rawson,chubut,Patagonia,-65.07457,-43.13716
+tehuelches|chubut,TEHUELCHES,CHUBUT,tehuelches,chubut,Patagonia,-70.57663,-44.2
+escalante|chubut,ESCALANTE,CHUBUT,escalante,chubut,Patagonia,-67.70819,-45.28298
+florentino ameghino|chubut,FLORENTINO AMEGHINO,CHUBUT,florentino ameghino,chubut,Patagonia,-66.12941,-44.42287
+25 de mayo|chaco,25 DE MAYO,CHACO,25 de mayo,chaco,Noreste (NEA),-60.01877,-26.81903
+general lamadrid|la rioja,GENERAL LAMADRID,LA RIOJA,general lamadrid,la rioja,Noroeste (NOA),-68.69777,-28.79041
+calingasta|san juan,CALINGASTA,SAN JUAN,calingasta,san juan,Cuyo,-69.83568,-31.45831
+maipu|chaco,MAIPU,CHACO,maipu,chaco,Noreste (NEA),-60.45535,-26.32103
+1 de mayo|chaco,1° DE MAYO,CHACO,1 de mayo,chaco,Noreste (NEA),-58.9595,-27.16924
+tulumba|cordoba,TULUMBA,CORDOBA,tulumba,cordoba,Pampeana,-63.83198,-30.21132
+ischilin|cordoba,ISCHILIN,CORDOBA,ischilin,cordoba,Pampeana,-64.59836,-30.39932
+totoral|cordoba,TOTORAL,CORDOBA,totoral,cordoba,Pampeana,-63.9837,-30.72787
+cruz del eje|cordoba,CRUZ DEL EJE,CORDOBA,cruz del eje,cordoba,Pampeana,-65.07346,-30.64694
+colon|cordoba,COLON,CORDOBA,colon,cordoba,Pampeana,-64.15003,-31.14919
+punilla|cordoba,PUNILLA,CORDOBA,punilla,cordoba,Pampeana,-64.59101,-31.22058
+capital|cordoba,CAPITAL,CORDOBA,capital,cordoba,Pampeana,-64.18242,-31.41414
+general san martin|cordoba,GENERAL SAN MARTIN,CORDOBA,general san martin,cordoba,Pampeana,-63.25719,-32.52509
+santa maria|cordoba,SANTA MARIA,CORDOBA,santa maria,cordoba,Pampeana,-64.30394,-31.71058
+minas|cordoba,MINAS,CORDOBA,minas,cordoba,Pampeana,-65.412,-31.01854
+pocho|cordoba,POCHO,CORDOBA,pocho,cordoba,Pampeana,-65.4358,-31.45185
+san alberto|cordoba,SAN ALBERTO,CORDOBA,san alberto,cordoba,Pampeana,-65.15863,-31.70798
+san javier|cordoba,SAN JAVIER,CORDOBA,san javier,cordoba,Pampeana,-65.14324,-32.07052
+rio segundo|cordoba,RIO SEGUNDO,CORDOBA,rio segundo,cordoba,Pampeana,-63.48354,-31.73973
+san justo|cordoba,SAN JUSTO,CORDOBA,san justo,cordoba,Pampeana,-62.53416,-31.24412
+union|cordoba,UNION,CORDOBA,union,cordoba,Pampeana,-62.79912,-32.89266
+rio primero|cordoba,RIO PRIMERO,CORDOBA,rio primero,cordoba,Pampeana,-63.44138,-31.03482
+marcos juarez|cordoba,MARCOS JUAREZ,CORDOBA,marcos juarez,cordoba,Pampeana,-62.28035,-33.02884
+rio cuarto|cordoba,RIO CUARTO,CORDOBA,rio cuarto,cordoba,Pampeana,-64.49458,-33.32872
+antofagasta de la sierra|catamarca,ANTOFAGASTA DE LA SIERRA,CATAMARCA,antofagasta de la sierra,catamarca,Noroeste (NOA),-67.67779,-25.94559
+tinogasta|catamarca,TINOGASTA,CATAMARCA,tinogasta,catamarca,Noroeste (NOA),-67.92926,-27.54051
+general roca|cordoba,GENERAL ROCA,CORDOBA,general roca,cordoba,Pampeana,-64.37633,-34.61476
+leandro n alem|buenos aires,LEANDRO N ALEM,BUENOS AIRES,leandro n alem,buenos aires,Pampeana,-61.61293,-34.49796
+tupungato|mendoza,TUPUNGATO,MENDOZA,tupungato,mendoza,Cuyo,-69.30198,-33.29151
+tunuyan|mendoza,TUNUYAN,MENDOZA,tunuyan,mendoza,Cuyo,-69.50785,-33.62235
+lujan de cuyo|mendoza,LUJAN DE CUYO,MENDOZA,lujan de cuyo,mendoza,Cuyo,-69.44329,-33.03812
+futaleufu|chubut,FUTALEUFU,CHUBUT,futaleufu,chubut,Patagonia,-71.4553,-43.07054
+rio chico|santa cruz,RIO CHICO,SANTA CRUZ,rio chico,santa cruz,Patagonia,-71.11391,-48.2873
+lago argentino|santa cruz,LAGO ARGENTINO,SANTA CRUZ,lago argentino,santa cruz,Patagonia,-72.0655,-49.83641
+san javier|misiones,SAN JAVIER,MISIONES,san javier,misiones,Noreste (NEA),-55.1661,-27.77436
+concepcion|misiones,CONCEPCION,MISIONES,concepcion,misiones,Noreste (NEA),-55.46555,-27.92928
+guarani|misiones,GUARANI,MISIONES,guarani,misiones,Noreste (NEA),-54.26751,-27.02686
+general arenales|buenos aires,GENERAL ARENALES,BUENOS AIRES,general arenales,buenos aires,Pampeana,-61.2838,-34.23746
+25 de mayo|misiones,25 DE MAYO,MISIONES,25 de mayo,misiones,Noreste (NEA),-54.63511,-27.37653
+obera|misiones,OBERA,MISIONES,obera,misiones,Noreste (NEA),-55.06953,-27.47182
+general manuel belgrano|misiones,GENERAL MANUEL BELGRANO,MISIONES,general manuel belgrano,misiones,Noreste (NEA),-53.96696,-26.00755
+san ignacio|misiones,SAN IGNACIO,MISIONES,san ignacio,misiones,Noreste (NEA),-55.33808,-27.173
+pirane|formosa,PIRANE,FORMOSA,pirane,formosa,Noreste (NEA),-59.15926,-25.76729
+patino|formosa,PATIÑO,FORMOSA,patino,formosa,Noreste (NEA),-59.95776,-24.87378
+bermejo|formosa,BERMEJO,FORMOSA,bermejo,formosa,Noreste (NEA),-61.28133,-24.02522
+bermejo|chaco,BERMEJO,CHACO,bermejo,chaco,Noreste (NEA),-58.70976,-26.95854
+libertador general san martin|chaco,LIBERTADOR GENERAL SAN MARTIN,CHACO,libertador general san martin,chaco,Noreste (NEA),-59.48788,-26.37852
+general guemes|chaco,GENERAL GUEMES,CHACO,general guemes,chaco,Noreste (NEA),-61.33758,-25.21379
+pilagas|formosa,PILAGAS,FORMOSA,pilagas,formosa,Noreste (NEA),-58.66189,-25.10407
+valcheta|rio negro,VALCHETA,RIO NEGRO,valcheta,rio negro,Patagonia,-66.31089,-40.97458
+san antonio|rio negro,SAN ANTONIO,RIO NEGRO,san antonio,rio negro,Patagonia,-65.37128,-40.9528
+laishi|formosa,LAISHI,FORMOSA,laishi,formosa,Noreste (NEA),-58.5651,-26.46791
+9 de julio|rio negro,9 DE JULIO,RIO NEGRO,9 de julio,rio negro,Patagonia,-67.45749,-40.92564
+norquinco|rio negro,ÑORQUINCO,RIO NEGRO,norquinco,rio negro,Patagonia,-70.40111,-41.73983
+25 de mayo|rio negro,25 DE MAYO,RIO NEGRO,25 de mayo,rio negro,Patagonia,-68.90632,-41.13308
+biedma|chubut,BIEDMA,CHUBUT,biedma,chubut,Patagonia,-64.93321,-42.44386
+telsen|chubut,TELSEN,CHUBUT,telsen,chubut,Patagonia,-67.17691,-42.43894
+gastre|chubut,GASTRE,CHUBUT,gastre,chubut,Patagonia,-68.80232,-42.74907
+el cuy|rio negro,EL CUY,RIO NEGRO,el cuy,rio negro,Patagonia,-68.4846,-39.70164
+pilcaniyeu|rio negro,PILCANIYEU,RIO NEGRO,pilcaniyeu,rio negro,Patagonia,-70.46269,-40.88758
+calamuchita|cordoba,CALAMUCHITA,CORDOBA,calamuchita,cordoba,Pampeana,-64.60729,-32.20841
+adolfo alsina|buenos aires,ADOLFO ALSINA,BUENOS AIRES,adolfo alsina,buenos aires,Pampeana,-63.05498,-37.19631
+rivadavia|buenos aires,RIVADAVIA,BUENOS AIRES,rivadavia,buenos aires,Pampeana,-63.09404,-35.58088
+pellegrini|buenos aires,PELLEGRINI,BUENOS AIRES,pellegrini,buenos aires,Pampeana,-63.22498,-36.2712
+puan|buenos aires,PUAN,BUENOS AIRES,puan,buenos aires,Pampeana,-63.057,-38.0742
+villarino|buenos aires,VILLARINO,BUENOS AIRES,villarino,buenos aires,Pampeana,-62.74859,-39.13591
+maraco|la pampa,MARACO,LA PAMPA,maraco,la pampa,Pampeana,-63.66003,-35.68644
+quemu quemu|la pampa,QUEMU QUEMU,LA PAMPA,quemu quemu,la pampa,Pampeana,-63.66037,-36.13894
+catrilo|la pampa,CATRILO,LA PAMPA,catrilo,la pampa,Pampeana,-63.6605,-36.58873
+caleu caleu|la pampa,CALEU CALEU,LA PAMPA,caleu caleu,la pampa,Pampeana,-63.88839,-38.6794
+guatrache|la pampa,GUATRACHE,LA PAMPA,guatrache,la pampa,Pampeana,-63.776,-37.49397
+hucal|la pampa,HUCAL,LA PAMPA,hucal,la pampa,Pampeana,-63.94687,-37.98696
+patagones|buenos aires,PATAGONES,BUENOS AIRES,patagones,buenos aires,Pampeana,-62.85684,-40.19637
+chapaleufu|la pampa,CHAPALEUFU,LA PAMPA,chapaleufu,la pampa,Pampeana,-63.66122,-35.22981
+iguazu|misiones,IGUAZU,MISIONES,iguazu,misiones,Noreste (NEA),-54.40543,-25.87685
+iriondo|santa fe,IRIONDO,SANTA FE,iriondo,santa fe,Pampeana,-61.27336,-32.70848
+san justo|santa fe,SAN JUSTO,SANTA FE,san justo,santa fe,Pampeana,-60.48861,-30.53283
+las colonias|santa fe,LAS COLONIAS,SANTA FE,las colonias,santa fe,Pampeana,-61.10946,-31.31778
+sarmiento|san juan,SARMIENTO,SAN JUAN,sarmiento,san juan,Cuyo,-68.69051,-32.0696
+las heras|mendoza,LAS HERAS,MENDOZA,las heras,mendoza,Cuyo,-69.26716,-32.52476
+lavalle|mendoza,LAVALLE,MENDOZA,lavalle,mendoza,Cuyo,-67.88907,-32.58259
+malargue|mendoza,MALARGÜE,MENDOZA,malargue,mendoza,Cuyo,-69.31354,-36.15728
+san jeronimo|santa fe,SAN JERONIMO,SANTA FE,san jeronimo,santa fe,Pampeana,-61.04818,-32.15602
+general lopez|santa fe,GENERAL LOPEZ,SANTA FE,general lopez,santa fe,Pampeana,-61.94581,-33.92607
+rosario|santa fe,ROSARIO,SANTA FE,rosario,santa fe,Pampeana,-60.71029,-33.13007
+san lorenzo|santa fe,SAN LORENZO,SANTA FE,san lorenzo,santa fe,Pampeana,-60.96114,-32.9444
+pichi mahuida|rio negro,PICHI MAHUIDA,RIO NEGRO,pichi mahuida,rio negro,Patagonia,-64.40054,-39.40771
+adolfo alsina|rio negro,ADOLFO ALSINA,RIO NEGRO,adolfo alsina,rio negro,Patagonia,-63.76534,-40.79171
+ushuaia|tierra del fuego,USHUAIA,TIERRA DEL FUEGO,ushuaia,tierra del fuego,Patagonia,-66.87103,-54.74961
+rio senguer|chubut,RIO SENGUER,CHUBUT,rio senguer,chubut,Patagonia,-70.63989,-45.34052
+bariloche|rio negro,BARILOCHE,RIO NEGRO,bariloche,rio negro,Patagonia,-71.53109,-41.49818
+garay|santa fe,GARAY,SANTA FE,garay,santa fe,Pampeana,-60.12647,-31.05663
+san javier|santa fe,SAN JAVIER,SANTA FE,san javier,santa fe,Pampeana,-59.89799,-30.10663
+vera|santa fe,VERA,SANTA FE,vera,santa fe,Pampeana,-60.41329,-28.97234
+castellanos|santa fe,CASTELLANOS,SANTA FE,castellanos,santa fe,Pampeana,-61.65732,-31.23382
+belgrano|santa fe,BELGRANO,SANTA FE,belgrano,santa fe,Pampeana,-61.70384,-32.6128
+caseros|santa fe,CASEROS,SANTA FE,caseros,santa fe,Pampeana,-61.53187,-33.22343
+9 de julio|santa fe,9 DE JULIO,SANTA FE,9 de julio,santa fe,Pampeana,-61.39773,-28.85046
+san martin|santa fe,SAN MARTIN,SANTA FE,san martin,santa fe,Pampeana,-61.80808,-32.01467
+general obligado|santa fe,GENERAL OBLIGADO,SANTA FE,general obligado,santa fe,Pampeana,-59.52674,-28.67269
+la capital|santa fe,LA CAPITAL,SANTA FE,la capital,santa fe,Pampeana,-60.67002,-31.47688
+constitucion|santa fe,CONSTITUCION,SANTA FE,constitucion,santa fe,Pampeana,-60.85288,-33.48672
+los andes|salta,LOS ANDES,SALTA,los andes,salta,Noroeste (NOA),-67.33963,-24.64313
+susques|jujuy,SUSQUES,JUJUY,susques,jujuy,Noroeste (NOA),-66.66178,-23.52043
+san fernando|chaco,SAN FERNANDO,CHACO,san fernando,chaco,Noreste (NEA),-59.11573,-27.7164
+san cosme|corrientes,SAN COSME,CORRIENTES,san cosme,corrientes,Noreste (NEA),-58.51649,-27.34592
+la poma|salta,LA POMA,SALTA,la poma,salta,Noroeste (NOA),-66.20821,-24.14116
+chacabuco|san luis,CHACABUCO,SAN LUIS,chacabuco,san luis,Cuyo,-65.19824,-32.72697
+juan martin de pueyrredon|san luis,JUAN MARTIN DE PUEYRREDON,SAN LUIS,juan martin de pueyrredon,san luis,Cuyo,-66.50258,-33.90088
+general pedernera|san luis,GENERAL PEDERNERA,SAN LUIS,general pedernera,san luis,Cuyo,-65.56285,-33.89055
+libertador general san martin|san luis,LIBERTADOR GENERAL SAN MARTIN,SAN LUIS,libertador general san martin,san luis,Cuyo,-65.70959,-32.57842
+coronel pringles|san luis,CORONEL PRINGLES,SAN LUIS,coronel pringles,san luis,Cuyo,-65.90079,-33.10688
+junin|san luis,JUNIN,SAN LUIS,junin,san luis,Cuyo,-65.39396,-32.21655
+la caldera|salta,LA CALDERA,SALTA,la caldera,salta,Noroeste (NOA),-65.43675,-24.5636
+capital|la rioja,CAPITAL,LA RIOJA,capital,la rioja,Noroeste (NOA),-66.35251,-29.46049
+huiliches|neuquen,HUILICHES,NEUQUEN,huiliches,neuquen,Patagonia,-71.25904,-39.79467
+catan lil|neuquen,CATAN LIL,NEUQUEN,catan lil,neuquen,Patagonia,-70.43262,-39.4875
+iruya|salta,IRUYA,SALTA,iruya,salta,Noroeste (NOA),-64.91523,-22.79535
+oran|salta,ORAN,SALTA,oran,salta,Noroeste (NOA),-64.16449,-23.48206
+matacos|formosa,MATACOS,FORMOSA,matacos,formosa,Noreste (NEA),-62.07689,-23.85486
+silipica|santiago del estero,SILIPICA,SANTIAGO DEL ESTERO,silipica,santiago del estero,Noroeste (NOA),-64.2771,-28.17747
+anta|salta,ANTA,SALTA,anta,salta,Noroeste (NOA),-63.83831,-24.86502
+almirante brown|chaco,ALMIRANTE BROWN,CHACO,almirante brown,chaco,Noreste (NEA),-61.96052,-25.74786
+copo|santiago del estero,COPO,SANTIAGO DEL ESTERO,copo,santiago del estero,Noroeste (NOA),-62.74664,-25.94968
+rio hondo|santiago del estero,RIO HONDO,SANTIAGO DEL ESTERO,rio hondo,santiago del estero,Noroeste (NOA),-64.76009,-27.48787
+rosario de la frontera|salta,ROSARIO DE LA FRONTERA,SALTA,rosario de la frontera,salta,Noroeste (NOA),-64.72547,-25.87168
+rio seco|cordoba,RIO SECO,CORDOBA,rio seco,cordoba,Pampeana,-63.22284,-30.03276
+valle fertil|san juan,VALLE FERTIL,SAN JUAN,valle fertil,san juan,Cuyo,-67.5314,-30.69835
+iglesia|san juan,IGLESIA,SAN JUAN,iglesia,san juan,Cuyo,-69.43897,-29.61195
+avellaneda|rio negro,AVELLANEDA,RIO NEGRO,avellaneda,rio negro,Patagonia,-66.20626,-39.41019
+general roca|rio negro,GENERAL ROCA,RIO NEGRO,general roca,rio negro,Patagonia,-67.55448,-38.53249
+belgrano|san luis,BELGRANO,SAN LUIS,belgrano,san luis,Cuyo,-66.716,-32.73499
+los lagos|neuquen,LOS LAGOS,NEUQUEN,los lagos,neuquen,Patagonia,-71.48674,-40.77436
+lacar|neuquen,LACAR,NEUQUEN,lacar,neuquen,Patagonia,-71.18427,-40.31423
+collon cura|neuquen,COLLON CURA,NEUQUEN,collon cura,neuquen,Patagonia,-70.28135,-40.05292
+picun leufu|neuquen,PICUN LEUFU,NEUQUEN,picun leufu,neuquen,Patagonia,-69.42719,-39.40399
+alumine|neuquen,ALUMINE,NEUQUEN,alumine,neuquen,Patagonia,-71.04631,-39.13149
+zapala|neuquen,ZAPALA,NEUQUEN,zapala,neuquen,Patagonia,-69.84088,-38.9252
+confluencia|neuquen,CONFLUENCIA,NEUQUEN,confluencia,neuquen,Patagonia,-68.79301,-38.83253
+picunches|neuquen,PICUNCHES,NEUQUEN,picunches,neuquen,Patagonia,-70.37322,-38.57008
+anelo|neuquen,AÑELO,NEUQUEN,anelo,neuquen,Patagonia,-69.01276,-38.09865
+loncopue|neuquen,LONCOPUE,NEUQUEN,loncopue,neuquen,Patagonia,-70.314,-38.06591
+norquin|neuquen,ÑORQUIN,NEUQUEN,norquin,neuquen,Patagonia,-70.67784,-37.63787
+pehuenches|neuquen,PEHUENCHES,NEUQUEN,pehuenches,neuquen,Patagonia,-69.40195,-37.39844
+minas|neuquen,MINAS,NEUQUEN,minas,neuquen,Patagonia,-70.78377,-36.85834
+chos malal|neuquen,CHOS MALAL,NEUQUEN,chos malal,neuquen,Patagonia,-70.28628,-36.8805
+la cocha|tucuman,LA COCHA,TUCUMAN,la cocha,tucuman,Noroeste (NOA),-65.59814,-27.7937
+graneros|tucuman,GRANEROS,TUCUMAN,graneros,tucuman,Noroeste (NOA),-65.25548,-27.71346
+juan bautista alberdi|tucuman,JUAN BAUTISTA ALBERDI,TUCUMAN,juan bautista alberdi,tucuman,Noroeste (NOA),-65.7832,-27.60589
+rio chico|tucuman,RIO CHICO,TUCUMAN,rio chico,tucuman,Noroeste (NOA),-65.75173,-27.45013
+chicligasta|tucuman,CHICLIGASTA,TUCUMAN,chicligasta,tucuman,Noroeste (NOA),-65.81101,-27.26958
+simoca|tucuman,SIMOCA,TUCUMAN,simoca,tucuman,Noroeste (NOA),-65.29187,-27.42416
+lules|tucuman,LULES,TUCUMAN,lules,tucuman,Noroeste (NOA),-65.43244,-26.8621
+monteros|tucuman,MONTEROS,TUCUMAN,monteros,tucuman,Noroeste (NOA),-65.64185,-27.11261
+leales|tucuman,LEALES,TUCUMAN,leales,tucuman,Noroeste (NOA),-65.08502,-27.19178
+famailla|tucuman,FAMAILLA,TUCUMAN,famailla,tucuman,Noroeste (NOA),-65.47901,-26.97594
+yerba buena|tucuman,YERBA BUENA,TUCUMAN,yerba buena,tucuman,Noroeste (NOA),-65.33802,-26.7881
+burruyacu|tucuman,BURRUYACU,TUCUMAN,burruyacu,tucuman,Noroeste (NOA),-64.81977,-26.53091
+tafi viejo|tucuman,TAFI VIEJO,TUCUMAN,tafi viejo,tucuman,Noroeste (NOA),-65.4632,-26.66102
+tafi del valle|tucuman,TAFI DEL VALLE,TUCUMAN,tafi del valle,tucuman,Noroeste (NOA),-65.88845,-26.5944
+capital|tucuman,CAPITAL,TUCUMAN,capital,tucuman,Noroeste (NOA),-65.21688,-26.83337
+cruz alta|tucuman,CRUZ ALTA,TUCUMAN,cruz alta,tucuman,Noroeste (NOA),-64.97527,-26.91833
+CABA|ciudad autonoma de buenos aires,CIUDAD AUTONOMA DE BUENOS AIRES,CIUDAD AUTONOMA DE BUENOS AIRES,caba,ciudad autonoma de buenos aires,Gran Buenos Aires,-58.437,-34.6075
+trancas|tucuman,TRANCAS,TUCUMAN,trancas,tucuman,Noroeste (NOA),-65.40548,-26.34326
+sarmiento|chubut,SARMIENTO,CHUBUT,sarmiento,chubut,Patagonia,-69.00284,-45.34509
+san cristobal|santa fe,SAN CRISTOBAL,SANTA FE,san cristobal,santa fe,Pampeana,-61.36058,-30.23107
+cushamen|chubut,CUSHAMEN,CHUBUT,cushamen,chubut,Patagonia,-70.71192,-42.36637
+lago buenos aires|santa cruz,LAGO BUENOS AIRES,SANTA CRUZ,lago buenos aires,santa cruz,Patagonia,-70.63133,-46.83426
+chical co|la pampa,CHICAL CO,LA PAMPA,chical co,la pampa,Pampeana,-67.68916,-36.40054
+puelen|la pampa,PUELEN,LA PAMPA,puelen,la pampa,Pampeana,-67.59503,-37.43935
+islas malvinas|tierra del fuego,ISLAS MALVINAS,TIERRA DEL FUEGO,islas malvinas,tierra del fuego,Patagonia,-58.75266,-51.74075
+banda|santiago del estero,BANDA,SANTIAGO DEL ESTERO,banda,santiago del estero,Noroeste (NOA),-64.19841,-27.43315
+robles|santiago del estero,ROBLES,SANTIAGO DEL ESTERO,robles,santiago del estero,Noroeste (NOA),-63.90319,-27.85338
+capital|santiago del estero,CAPITAL,SANTIAGO DEL ESTERO,capital,santiago del estero,Noroeste (NOA),-64.43859,-27.87601
+valle viejo|catamarca,VALLE VIEJO,CATAMARCA,valle viejo,catamarca,Noroeste (NOA),-65.70718,-28.59871
+fray mamerto esquiu|catamarca,FRAY MAMERTO ESQUIU,CATAMARCA,fray mamerto esquiu,catamarca,Noroeste (NOA),-65.7309,-28.33294
+guer aike|santa cruz,GÜER AIKE,SANTA CRUZ,guer aike,santa cruz,Patagonia,-70.56194,-51.41363
+san martin|santiago del estero,SAN MARTIN,SANTIAGO DEL ESTERO,san martin,santiago del estero,Noroeste (NOA),-63.81903,-28.19199
+mitre|santiago del estero,MITRE,SANTIAGO DEL ESTERO,mitre,santiago del estero,Noroeste (NOA),-62.79977,-29.47974
+sarmiento|santiago del estero,SARMIENTO,SANTIAGO DEL ESTERO,sarmiento,santiago del estero,Noroeste (NOA),-63.42997,-28.09984
+atamisqui|santiago del estero,ATAMISQUI,SANTIAGO DEL ESTERO,atamisqui,santiago del estero,Noroeste (NOA),-63.899,-28.67245
+loreto|santiago del estero,LORETO,SANTIAGO DEL ESTERO,loreto,santiago del estero,Noroeste (NOA),-64.31678,-28.60028
+guasayan|santiago del estero,GUASAYAN,SANTIAGO DEL ESTERO,guasayan,santiago del estero,Noroeste (NOA),-64.86871,-27.98448
+jimenez|santiago del estero,JIMENEZ,SANTIAGO DEL ESTERO,jimenez,santiago del estero,Noroeste (NOA),-64.29973,-26.93043
+quebrachos|santiago del estero,QUEBRACHOS,SANTIAGO DEL ESTERO,quebrachos,santiago del estero,Noroeste (NOA),-63.33475,-29.3903
+belgrano|santiago del estero,BELGRANO,SANTIAGO DEL ESTERO,belgrano,santiago del estero,Noroeste (NOA),-62.2143,-29.08689
+aguirre|santiago del estero,AGUIRRE,SANTIAGO DEL ESTERO,aguirre,santiago del estero,Noroeste (NOA),-62.46986,-29.31418
+san carlos|mendoza,SAN CARLOS,MENDOZA,san carlos,mendoza,Cuyo,-69.0977,-34.07537

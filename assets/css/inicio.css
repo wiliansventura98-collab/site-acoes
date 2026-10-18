@@ -1,0 +1,24 @@
+/* Página inicial · Ações Socioespaciais na Argentina */
+/* Provisional home: header band, short intro, three entry points. */
+:root{ --bg:#f3f5f8; --panel:#ffffff; --ink:#18202e; --ink-2:#4a5568; --ink-3:#7a8597; --line:#dde2ea;
+  --celeste:#74acdf; --deep:#1c4f8a; --sol:#f6b40e; --sol-dark:#85340a;
+  --f-display:"Barlow Condensed","Arial Narrow",Arial,sans-serif; --f-body:"Source Sans 3","Segoe UI",system-ui,sans-serif; --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace; color-scheme:light }
+@media (prefers-color-scheme: dark){ :root{ --bg:#11161f; --panel:#18202c; --ink:#e7ebf2; --ink-2:#aab4c4; --ink-3:#7f8a9c; --line:#273142; --deep:#9cc6ef; color-scheme:dark } }
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.55}
+.band{background:var(--celeste);height:6px}
+.wrap{max-width:1040px;margin:0 auto;padding:48px max(20px,env(safe-area-inset-right,0px)) 72px max(20px,env(safe-area-inset-left,0px));display:grid;gap:40px}
+.eyebrow{font-family:var(--f-mono);font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
+h1{font-family:var(--f-display);font-size:clamp(42px,8vw,76px);line-height:.98;margin:8px 0 16px;letter-spacing:.01em;text-wrap:balance}
+.lede{max-width:62ch;color:var(--ink-2);margin:0}
+.cta{display:inline-flex;align-items:center;gap:10px;margin-top:24px;background:var(--deep);color:#fff;text-decoration:none;font-weight:600;padding:12px 20px;border-radius:8px}
+@media (prefers-color-scheme: dark){ .cta{color:#11161f} }
+.cta:hover{filter:brightness(1.1)}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:20px;text-decoration:none;color:inherit;display:grid;gap:6px;align-content:start}
+.card:hover{border-color:var(--celeste)}
+.card h2{font-family:var(--f-display);font-size:26px;margin:0}
+.card p{margin:0;color:var(--ink-2);font-size:15.5px}
+.dot{width:14px;height:14px;border-radius:50%;background:var(--sol);border:1.5px solid var(--sol-dark)}
+footer{color:var(--ink-3);font-size:14px;border-top:1px solid var(--line);padding-top:20px}
+a:focus-visible{outline:2px solid var(--celeste);outline-offset:3px}
