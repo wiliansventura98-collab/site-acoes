@@ -8,12 +8,12 @@
 (function(){
   const NS = 'http://www.w3.org/2000/svg';
   const COR = { tinta:'#13294b', celeste:'#6cace4', celesteM:'#9cc6ec', celesteC:'#d4e6f6', sol:'#f2a900', branco:'#ffffff' };
-  const FONTE = '"Geist", "Helvetica Neue", Arial, sans-serif';
+  const FONTE = '"Urbanist", "Helvetica Neue", Arial, sans-serif';
 
   function rng(seed){ return function(){ seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
   function el(tag, attrs, pai){ const e = document.createElementNS(NS, tag); for(const k in attrs) e.setAttribute(k, attrs[k]); if(pai) pai.appendChild(e); return e; }
   const ctx = document.createElement('canvas').getContext('2d');
-  function largura(txt, px){ ctx.font = `700 ${px}px ${FONTE}`; return ctx.measureText(txt).width; }
+  function largura(txt, px){ ctx.font = `800 ${px}px ${FONTE}`; return ctx.measureText(txt).width; }
 
   // Uma pessoa em silhueta, com os pés em (x, y) e altura s. pose: 'livre' | 'punho' | 'segura' (mãos no mastro em hx)
   function pessoa(g, x, y, s, cor, pose, r, hx){
@@ -66,7 +66,7 @@
       el('path', {d:`M${x0},${topo} Q${cx},${topo+ond} ${x1},${topo} L${x1},${topo+lh} Q${cx},${topo+lh+ond} ${x0},${topo+lh} Z`, fill:COR.celeste}, g);
       el('path', {d:`M${x0},${topo+h-lh} Q${cx},${topo+h-lh+ond} ${x1},${topo+h-lh} L${x1},${topo+h} Q${cx},${topo+h+ond} ${x0},${topo+h} Z`, fill:COR.celeste}, g);
     }
-    const t = el('text', {x:cx, y:(topo+h/2+fs*0.36+ond*0.5).toFixed(1), 'text-anchor':'middle', 'font-family':FONTE, 'font-weight':700, 'font-size':fs.toFixed(1), fill:estilo.texto, 'letter-spacing':(fs*0.02).toFixed(1)}, g);
+    const t = el('text', {x:cx, y:(topo+h/2+fs*0.36+ond*0.5).toFixed(1), 'text-anchor':'middle', 'font-family':FONTE, 'font-weight':800, 'font-size':fs.toFixed(1), fill:estilo.texto, 'letter-spacing':(fs*0.02).toFixed(1)}, g);
     t.textContent = texto.toUpperCase();
     return [x0 - 0.15*s, x1 + 0.15*s];
   }
@@ -80,7 +80,7 @@
     el('path', {d:`M${x0},${topo} Q${cx},${topo+ond} ${x1},${topo} L${x1},${topo+lh} Q${cx},${topo+lh+ond} ${x0},${topo+lh} Z`, fill:COR.celeste}, g);
     el('path', {d:`M${x0},${topo+h-lh} Q${cx},${topo+h-lh+ond} ${x1},${topo+h-lh} L${x1},${topo+h} Q${cx},${topo+h+ond} ${x0},${topo+h} Z`, fill:COR.celeste}, g);
     [x0, x1].forEach(px => el('path', {d:`M${px},${topo-0.08*s}L${px},${topo+h+0.1*s}`, stroke:COR.tinta, 'stroke-width':(0.03*s).toFixed(1), 'stroke-linecap':'round'}, g));
-    const t = el('text', {x:cx, y:(topo+h/2+fs*0.36+ond*0.5).toFixed(1), 'text-anchor':'middle', 'font-family':FONTE, 'font-weight':700, 'font-size':fs.toFixed(1), fill:COR.tinta}, g);
+    const t = el('text', {x:cx, y:(topo+h/2+fs*0.36+ond*0.5).toFixed(1), 'text-anchor':'middle', 'font-family':FONTE, 'font-weight':800, 'font-size':fs.toFixed(1), fill:COR.tinta}, g);
     t.textContent = texto.toUpperCase();
   }
 
