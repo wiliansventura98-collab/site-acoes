@@ -357,13 +357,25 @@ function legendBlock(g, x, y, w, md, sh, o){
     const d=o.ctx;
     yy += textBlock(g, x, yy, `Contexto: ${d.titulo}`, 12, w, {weight:700}) + 6;
     if(d.nivel==='biv' && o.esp){
-      const B=o.esp.b, cs=Math.min(30, (w-120)/3), gx=x+44, gy=yy+6, f=v=>v.toLocaleString('pt-BR',{maximumFractionDigits:d.dec});
-      for(let yi=0; yi<3; yi++) for(let xi=0; xi<3; xi++){ g.append('rect').attr('x',gx+xi*cs).attr('y',gy+(2-yi)*cs).attr('width',cs).attr('height',cs).attr('fill',BIV[yi][xi]).attr('stroke','#ffffff');
-        g.append('text').attr('x',gx+xi*cs+cs/2).attr('y',gy+(2-yi)*cs+cs/2+3.5).attr('text-anchor','middle').attr('font-size',9.5).attr('font-family',FONT).attr('fill', d3.hsl(BIV[yi][xi]).l<0.5? '#ffffff' : C.ink2).text(B.cel[yi][xi]); }
-      g.append('text').attr('x',gx+1.5*cs).attr('y',gy+3*cs+14).attr('text-anchor','middle').attr('font-size',10.5).attr('font-family',FONT).attr('fill',C.ink2).text('Notícias por 100 mil hab. →');
-      g.append('text').attr('transform',`translate(${gx-8},${gy+1.5*cs}) rotate(-90)`).attr('text-anchor','middle').attr('font-size',10.5).attr('font-family',FONT).attr('fill',C.ink2).text('Indicador →');
-      const tx=gx+3*cs+12;
-      yy += Math.max(3*cs+22, textBlock(g, tx, gy+8, `Colunas: sem notícias · até ${nfmt1(B.med)} · mais de ${nfmt1(B.med)} por 100 mil hab. (mediana dos departamentos com notícias). Linhas: tercis do indicador (até ${f(B.t1)}; até ${f(B.t2)}; acima de ${f(B.t2)} ${d.curto}). Números: departamentos em cada classe.`, 10, Math.max(120, w-(tx-x)), {fill:C.ink2}) + 10);
+      const B=o.esp.b, cs=Math.min(54, (w-110)/3), gx=x+70, gy=yy+4, f=v=>v.toLocaleString('pt-BR',{maximumFractionDigits:d.dec});
+      const ind=d.indTitulo.charAt(0).toLowerCase()+d.indTitulo.slice(1);
+      const txt=(tx,ty,t,o2={})=>g.append('text').attr('x',tx).attr('y',ty).attr('font-size',o2.size||10.5).attr('font-family',FONT).attr('fill',o2.fill||C.ink2).attr('font-weight',o2.w||400).attr('text-anchor',o2.a||'start').text(t);
+      for(let yi=0; yi<3; yi++) for(let xi=0; xi<3; xi++){ g.append('rect').attr('x',gx+xi*cs).attr('y',gy+(2-yi)*cs).attr('width',cs).attr('height',cs).attr('fill',BIV[yi][xi]).attr('stroke','#9aa6b2').attr('stroke-width',.5);
+        g.append('text').attr('x',gx+xi*cs+cs/2).attr('y',gy+(2-yi)*cs+cs/2+3.5).attr('text-anchor','middle').attr('font-size',10).attr('font-family',FONT).attr('fill', d3.hsl(BIV[yi][xi]).l<0.5? '#ffffff' : C.ink2).text(B.cel[yi][xi]); }
+      // rótulos das linhas (indicador) e das colunas (notícias)
+      [['alto',2,`> ${f(B.t2)}`],['médio',1,`${f(B.t1)}–${f(B.t2)}`],['baixo',0,`< ${f(B.t1)}`]].forEach(([l,yi,vv])=>{ txt(gx-6, gy+(2-yi)*cs+cs/2-1, l, {a:'end', fill:C.ink, w:700}); txt(gx-6, gy+(2-yi)*cs+cs/2+10, vv, {a:'end', size:9}); });
+      [['nenhuma',0],['poucas',1],['muitas',2]].forEach(([l,xi])=>txt(gx+xi*cs+cs/2, gy+3*cs+13, l, {a:'middle', fill:C.ink, w:700}));
+      txt(gx+1.5*cs, gy+3*cs+27, `Notícias por 100 mil hab. (poucas: até ${nfmt1(B.med)}; muitas: acima)`, {a:'middle', size:9.5});
+      g.append('text').attr('transform',`translate(${x+8},${gy+1.5*cs}) rotate(-90)`).attr('text-anchor','middle').attr('font-size',9.5).attr('font-family',FONT).attr('fill',C.ink2).text(d.curto);
+      yy = gy+3*cs+50;
+      yy += textBlock(g, x, yy, 'Como ler: cada cor junta duas informações do departamento.', 11, w, {weight:700}) + 6;
+      [[BIV[2][0], `Azul: ${ind} alto e nenhuma notícia de ação coletiva.`],
+       [BIV[2][2], `Verde-escuro: ${ind} alto e muitas notícias.`],
+       [BIV[0][2], `Amarelo: ${ind} baixo e muitas notícias.`],
+       [BIV[0][0], `Branco: ${ind} baixo e nenhuma notícia.`]].forEach(([cor,t])=>{
+        g.append('rect').attr('x',x).attr('y',yy-1).attr('width',16).attr('height',12).attr('fill',cor).attr('stroke','#9aa6b2').attr('stroke-width',.5);
+        yy += textBlock(g, x+24, yy+9, t, 10.5, w-24, {fill:C.ink2}) + 6; });
+      yy += textBlock(g, x, yy+4, 'Os números dentro dos quadrados são quantos departamentos há em cada combinação.', 10, w, {fill:C.ink3}) + 8;
     } else if(d.nivel==='lisa' && o.esp){
       ['HH','LL','HL','LH','ns'].forEach(c=>{ g.append('rect').attr('x',x).attr('y',yy).attr('width',18).attr('height',11).attr('fill',LISA_COR[c]).attr('stroke','#9aa6b2').attr('stroke-width',.5);
         g.append('text').attr('x',x+26).attr('y',yy+9.5).attr('font-size',10.5).attr('font-family',FONT).attr('fill',C.ink2).text(`${LISA_ROT[c]}: ${o.esp.L.n[c]}`); yy += 16; });
@@ -554,7 +566,8 @@ function renderMap(b){
     $('mapTitle').textContent = 'Mapa'; $('mapMeta').textContent = `${fmt(md.mapped)} de ${fmt(md.N)} notícias no mapa`;
     const regSel = st.f.region? [...st.f.region].map(i=>REG_VALS[i]) : [];
     const baWarn = unit==='prov' && regSel.some(r=>r==='Gran Buenos Aires'||r==='Pampeana') ? 'A província de Buenos Aires se divide entre as regiões Gran Buenos Aires e Pampeana; para separar as duas, use Departamentos ou Localidades. ' : '';
-    $('mapNote').textContent = baWarn + (RATE_OK(unit)? '' : 'Para localidades o mapa mostra valores absolutos (círculos); a taxa por habitante está disponível por departamento e por província. ') + `${fmt(md.N-md.mapped)} notícias do recorte ficam fora do mapa por serem de escala nacional, virtuais, sem referência espacial ou no exterior.`;
+    const bivNota = cdef && cdef.nivel==='biv'? `Mapa bivariado: a cor de cada departamento combina o nível de “${cdef.indTitulo}” (do branco ao azul, de baixo a alto) com as notícias por habitante (do branco ao amarelo, de nenhuma a muitas). Onde os dois são altos, a cor fica verde-escura. Veja “Como ler” na legenda. ` : '';
+    $('mapNote').textContent = bivNota + baWarn + (RATE_OK(unit)? '' : 'Para localidades o mapa mostra valores absolutos (círculos); a taxa por habitante está disponível por departamento e por província. ') + `${fmt(md.N-md.mapped)} notícias do recorte ficam fora do mapa por serem de escala nacional, virtuais, sem referência espacial ou no exterior.`;
   } else {
     const cv = mstate.cmp, icv = VI[cv], cvar = VARS[icv];
     const rowsAll = b.filter(r=>match(r, [vid, cv]));
