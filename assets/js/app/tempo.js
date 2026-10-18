@@ -36,6 +36,7 @@ function renderTime(b){
   const data=mesVals.map((lab,i)=>({k:i, label:MES_ABBR[i], n:c.get(i)||0, on:sel.has(i), off:sel.size&&!sel.has(i), full:lab.split('· ')[1]}));
   $('timeMeta').textContent = fmt(rows.length)+' notícias';
   colChart(main, data, {H: 230, onClick:d=>toggleFilter('mes', d.k, !sel.has(d.k)||sel.size>1), tipTitle:d=>d.full+' de 2024'});
+  renderCal(b);
   // small multiples by selected variable
   const vid = st.v==='mes'? null : st.v;
   if(!vid){ $('smTitle').textContent='Por categoria'; $('smNote').textContent='Escolha outra variável no seletor acima para ver as principais categorias mês a mês.'; return; }
@@ -52,3 +53,32 @@ function renderTime(b){
       onClick:d=>{ st.f[vid]=new Set([g.k]); st.f.mes=new Set([d.k]); st.page=40; render(); $('newsSec').scrollIntoView({behavior:'smooth',block:'start'}); }}); });
 }
 let rz; window.addEventListener('resize',()=>{ clearTimeout(rz); rz=setTimeout(()=>{ if(TAB!=='dist') render(); },200); });
+
+/* ---------- calendário diário (data de início da ação) ---------- */
+const DIAS_SEM = ['dom','seg','ter','qua','qui','sex','sáb'];
+function renderCal(b){
+  const box=$('calChart'); box.querySelectorAll('svg').forEach(s=>s.remove());
+  const rows=b.filter(r=>match(r,'mes'));
+  const porDia=new Map(); let fora=0;
+  rows.forEach(r=>{ const m=/^(\d\d)\/(\d\d)\/(\d{4})$/.exec(r.ini||''); if(!m || m[3]!=='2024'){ fora++; return; } const k=`2024-${m[2]}-${m[1]}`; porDia.set(k,(porDia.get(k)||0)+1); });
+  const ini=new Date(2024,0,1), dias=d3.timeDays(ini, new Date(2025,0,1));
+  const W=Math.max(320, box.clientWidth), left=34, top=20, semanas=d3.timeWeek.count(ini, new Date(2024,11,31))+1;
+  const cs=Math.max(6, Math.min(18, Math.floor((W-left-8)/semanas))), H=top+7*cs+30;
+  const max=d3.max([...porDia.values()])||1;
+  const cor=d3.scaleQuantize().domain([1, max]).range(['#d5e6f5','#a9cdeb','#74acdf','#3f7fbf','#1c4f8a']);
+  const svg=d3.select(box).append('svg').attr('viewBox',`0 0 ${W} ${H}`).attr('width','100%').attr('role','img').attr('aria-label','Calendário de ações em 2024');
+  const tip=tipFor(box);
+  const fmtD=d3.timeFormat('%Y-%m-%d'), xw=d=>left+d3.timeWeek.count(ini,d)*cs, yd=d=>top+d.getDay()*cs;
+  svg.append('g').selectAll('rect').data(dias).join('rect').attr('x',xw).attr('y',yd).attr('width',cs-2).attr('height',cs-2).attr('rx',2)
+    .attr('fill',d=>{ const n=porDia.get(fmtD(d)); return n? cor(n) : 'var(--cal-zero)'; })
+    .on('mousemove',(e,d)=>{ const n=porDia.get(fmtD(d))||0; tip.show(e, d.toLocaleDateString('pt-BR',{weekday:'long', day:'2-digit', month:'long'}), [`${fmt(n)} ${n===1?'ação iniciada':'ações iniciadas'}`]); })
+    .on('mouseleave',()=>tip.hide());
+  d3.range(12).forEach(mi=>{ const d=new Date(2024,mi,1); svg.append('text').attr('class','cal-lab').attr('x',xw(d)).attr('y',top-6).text(MES_ABBR[mi]); });
+  [1,3,5].forEach(i=>svg.append('text').attr('class','cal-lab').attr('x',left-6).attr('y',top+i*cs+cs*0.7).attr('text-anchor','end').text(DIAS_SEM[i]));
+  const lg=svg.append('g').attr('transform',`translate(${left},${top+7*cs+12})`);
+  lg.append('text').attr('class','cal-lab').attr('x',0).attr('y',9).text('menos');
+  ['var(--cal-zero)',...cor.range()].forEach((c,i)=>lg.append('rect').attr('x',40+i*(cs)).attr('y',0).attr('width',cs-2).attr('height',cs-2).attr('rx',2).attr('fill',c));
+  lg.append('text').attr('class','cal-lab').attr('x',40+6*cs+4).attr('y',9).text(`mais (máx. ${fmt(max)} por dia)`);
+  const top3=[...porDia].sort((a,q)=>q[1]-a[1]).slice(0,3).map(([k,n])=>{ const [y,m,d]=k.split('-'); return `${d}/${m} (${n})`; });
+  $('calMeta').textContent = `${fmt(rows.length-fora)} ações com data em 2024` + (top3.length? ` · dias com mais ações: ${top3.join(', ')}` : '');
+}

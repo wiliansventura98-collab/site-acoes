@@ -6,7 +6,7 @@ Base de dados e plataforma de visualização sobre **ações coletivas de movime
 
 A plataforma permite explorar a base sem instalar nada: escolher variáveis, cruzá-las, filtrar, consultar as notícias de origem e produzir mapas temáticos com padrão cartográfico para uso em pesquisa, aulas e publicações.
 
-![Mapa de círculos proporcionais por localidade](docs/mapa-localidades.png)
+![Cabeçalho da base interativa](docs/cabecalho.png)
 
 ## Números da base
 
@@ -20,25 +20,34 @@ A plataforma permite explorar a base sem instalar nada: escolher variáveis, cru
 
 ## O que a plataforma oferece
 
-**Distribuição.** Escolha qualquer variável e veja quantas notícias há em cada categoria, com contagens e percentuais. Clique numa categoria para filtrar a base; os filtros se combinam entre variáveis.
+| Aba | Para quê |
+|---|---|
+| **Distribuição** | Frequência de qualquer variável, cruzamento entre duas variáveis em tabela de calor e filtros combináveis. |
+| **Fluxos** | Diagrama de Sankey com duas ou três variáveis encadeadas (por exemplo, tipo de movimento → ação matriz → objetivos), em contagem fracionada que preserva o total do recorte. |
+| **Tipologias** | Mapa de árvore da ação matriz subdividida pela ação derivada, ou de qualquer par de variáveis. |
+| **Redes** | Rede de coocorrência: movimentos (ou outras categorias) que aparecem juntos nas mesmas notícias, com cor pelo tipo de movimento predominante. |
+| **Mapa** | Pranchas cartográficas com círculos proporcionais (valores absolutos) e coropléticos (taxas), camadas de contexto do INDEC e do SNIC, mapas por categoria, zoom, nota técnica e exportação em PNG e SVG. |
+| **Contexto** | Dispersão por província (notícias por 100 mil hab. × densidade, população ou homicídios, com correlações), panorama provincial ordenável e quadro das regiões estatísticas (pobreza, indigência, desocupação). |
+| **No tempo** | Notícias por mês, calendário diário das ações por data de início e categorias mês a mês. |
 
-**Cruzamento.** Cruze duas variáveis numa tabela de calor (por exemplo, tipo de movimento × província), em contagem, percentual da linha ou percentual da coluna.
+Em todas as abas é possível consultar as notícias do recorte, com link para a matéria original, e baixar o recorte em **CSV**.
 
-**Mapas.** Pranchas cartográficas completas, prontas para publicação:
+![Diagrama de fluxos](docs/fluxos.png)
 
-- *Valores absolutos em círculos proporcionais* por localidade, departamento/partido ou província.
-- *Valores relativos em coroplético*: notícias por 100 mil habitantes, por província.
-- *Combinação* de taxa (coroplético) e valores absolutos (círculos).
-- *Mapas por categoria*: um mapa para cada uma das principais categorias de qualquer variável (movimentos, tipologias de ação, objetivos, regiões…), todos na mesma escala para comparação.
-- Zoom e arraste no estilo dos mapas on-line, com escala gráfica, grade de coordenadas e rótulos recalculados a cada aproximação.
-- Hierarquia de limites (departamentos, províncias e regiões do INDEC), países limítrofes, oceano, detalhe da Área Metropolitana de Buenos Aires, norte, legenda e **nota técnica de produção** gerada automaticamente.
-- Exportação em **PNG** de alta resolução e **SVG** editável.
+![Rede de articulações entre movimentos](docs/rede.png)
 
-**No tempo.** Evolução mensal das notícias e das principais categorias da variável escolhida, em pequenos múltiplos na mesma escala.
+### Camadas de contexto nos mapas
 
-**Notícias.** Lista das notícias do recorte, com data, título, link para a matéria original, fonte e código do documento, e exportação do recorte em **CSV**.
+| Camada | Recorte | Fonte |
+|---|---|---|
+| Densidade demográfica e população absoluta, 2022 | 24 jurisdições | INDEC, Censo 2022, resultados definitivos |
+| Pobreza e indigência, 2º semestre de 2024 | 6 regiões e 31 aglomerados urbanos | INDEC, Encuesta Permanente de Hogares |
+| Desocupação, 4º trimestre de 2024 | 6 regiões e 31 aglomerados urbanos | INDEC, Encuesta Permanente de Hogares |
+| Homicídios dolosos por 100 mil hab., 2023 e 2024 | 24 jurisdições | Ministerio de Seguridad Nacional, SNIC |
 
-![Coroplético de taxa por 100 mil habitantes com círculos de valores absolutos](docs/mapa-provincias-taxa.png)
+Valores relativos aparecem em coroplético por baixo dos círculos de notícias; a população absoluta, em círculos vazados. Detalhes em [`pipeline/referencias/contexto/FONTES.md`](pipeline/referencias/contexto/FONTES.md).
+
+![Notícias por localidade sobre a pobreza por região](docs/mapa-contexto.png)
 
 ## Variáveis
 
@@ -67,11 +76,13 @@ As categorias mantêm os nomes originais da ficha de codificação, em espanhol.
 ## Fontes
 
 - **Dados:** base de notícias de ações coletivas na Argentina, 2024 (planilha “2024_Base_Tratada”), elaborada pelo projeto.
-- **População:** INDEC, *Censo Nacional de Población, Hogares y Viviendas 2022*, resultados definitivos.
+- **População:** INDEC, *Censo Nacional de Población, Hogares y Viviendas 2022*, resultados definitivos (novembro de 2023; total de 45.892.285 habitantes).
+- **Pobreza, indigência e mercado de trabalho:** INDEC, *Encuesta Permanente de Hogares*, 2º semestre e 4º trimestre de 2024.
+- **Homicídios dolosos:** Ministerio de Seguridad Nacional, SNIC-SAT, *Informe de Homicidios Dolosos 2024*.
 - **Limites administrativos:** camada pública de departamentos da Argentina ([mgaitan/departamentos_argentina](https://github.com/mgaitan/departamentos_argentina)), simplificada; províncias e regiões derivadas dela.
 - **Países limítrofes:** Natural Earth 1:50 milhões, via [world-atlas](https://github.com/topojson/world-atlas).
 - **Localidades:** [GeoNames](https://www.geonames.org/).
-- **Bibliotecas:** [D3.js](https://d3js.org/) 7.8.5 e [TopoJSON Client](https://github.com/topojson/topojson-client) 3.1.0.
+- **Bibliotecas:** [D3.js](https://d3js.org/) 7.8.5, [d3-sankey](https://github.com/d3/d3-sankey) 0.12.3 e [TopoJSON Client](https://github.com/topojson/topojson-client) 3.1.0.
 
 ## Dados abertos
 
@@ -79,7 +90,7 @@ As categorias mantêm os nomes originais da ficha de codificação, em espanhol.
 |---|---|
 | [`dados/acoes_2024.csv`](dados/acoes_2024.csv) | Base tratada, uma linha por notícia (Excel, R, Python) |
 | [`dados/dicionario.md`](dados/dicionario.md) | Dicionário de variáveis |
-| [`dados/camadas/acoes_2024.gpkg`](dados/camadas/acoes_2024.gpkg) | Camadas para QGIS: localidades, departamentos, províncias, regiões e notícias por localidade |
+| [`dados/camadas/acoes_2024.gpkg`](dados/camadas/acoes_2024.gpkg) | Camadas para QGIS: localidades, departamentos, províncias (com população, densidade e homicídios), regiões (com pobreza e desocupação), aglomerados da EPH e notícias por localidade |
 | [`dados/relatorio_geocodificacao.csv`](dados/relatorio_geocodificacao.csv) | Como cada localidade foi posicionada |
 
 Detalhes em [`dados/README.md`](dados/README.md).
@@ -100,8 +111,8 @@ python pipeline/construir_site.py --ano 2024
 index.html                    página inicial
 base/index.html               base interativa (estrutura da página)
 assets/css/                   estilos da página inicial e da base
-assets/js/app/                aplicação em módulos: núcleo, distribuição, notícias, mapas, tempo, exportação
-assets/js/vendor/             bibliotecas D3 e TopoJSON (cópias locais)
+assets/js/app/                aplicação em módulos: núcleo, distribuição, fluxos, tipologias, redes, mapas, contexto, tempo
+assets/js/vendor/             bibliotecas D3, d3-sankey e TopoJSON (cópias locais)
 dados/                        dados gerados: JSON do site, CSV, GeoPackage, dicionário
 dados/fonte/                  entrada do pipeline (planilha sem dados pessoais)
 pipeline/                     scripts Python e referências geográficas

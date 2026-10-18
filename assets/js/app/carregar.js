@@ -4,7 +4,7 @@
  * executa os módulos da aplicação na ordem em que dependem uns dos outros.
  */
 (async function carregar() {
-  const MODULOS = ['nucleo', 'distribuicao', 'noticias', 'interface', 'mapas', 'exportar', 'tempo', 'iniciar'];
+  const MODULOS = ['nucleo', 'distribuicao', 'noticias', 'interface', 'mapas', 'fluxos', 'tipologias', 'redes', 'contexto', 'exportar', 'tempo', 'iniciar'];
   const lede = document.getElementById('lede');
 
   const json = async (url) => {

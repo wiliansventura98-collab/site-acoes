@@ -31,9 +31,35 @@ def _json(obj, caminho):
     caminho.write_text(json.dumps(obj, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
 
 
+CONTEXTO = REFERENCIAS / "contexto"
+
+
+def _ler_csv(nome):
+    with open(CONTEXTO / nome, encoding="utf-8") as fh:
+        return list(csv.DictReader(fh))
+
+
+def _num(v):
+    try:
+        return int(v) if str(v).lstrip("-").isdigit() else float(v)
+    except (TypeError, ValueError):
+        return None
+
+
 def _populacao():
-    with open(REFERENCIAS / "populacao_provincias_2022.csv", encoding="utf-8") as fh:
-        return {r["provincia"]: int(r["populacao_2022"]) for r in csv.DictReader(fh)}
+    return {r["provincia"]: int(r["populacao_2022"]) for r in _ler_csv("populacao_provincias_2022.csv")}
+
+
+def contexto():
+    """Indicadores oficiais por província, região e aglomerado (ver referencias/contexto/FONTES.md)."""
+    prov = {}
+    for r in _ler_csv("populacao_provincias_2022.csv"):
+        prov[r["provincia"]] = {k: _num(v) for k, v in r.items() if k != "provincia"}
+    for r in _ler_csv("homicidios_provincias_snic.csv"):
+        prov.setdefault(r["provincia"], {}).update({k: _num(v) for k, v in r.items() if k != "provincia"})
+    reg = {r["regiao"]: {k: _num(v) for k, v in r.items() if k != "regiao"} for r in _ler_csv("eph_regioes_2024.csv")}
+    agl = [{k: (v if k in ("aglomerado", "provincia", "regiao") else _num(v)) for k, v in r.items()} for r in _ler_csv("eph_aglomerados_2024.csv")]
+    return {"provincias": prov, "regioes": reg, "aglomerados": agl}
 
 
 def escrever_csv(res, caminho):
@@ -130,17 +156,22 @@ def escrever_camadas(res, coords, relatorio, caminho):
     gdep = gpd.GeoDataFrame(deps, crs="EPSG:4326")
     gdep.to_file(caminho, layer="departamentos", driver="GPKG")
 
+    ctx = contexto()
     provs = []
     for p, grupo in gdep.groupby("provincia"):
-        n = conta["provincia"].get(p, 0); habitantes = pop.get(p)
-        provs.append({"provincia": p, "populacao_2022": habitantes, "noticias": n,
-                      "taxa_100mil_hab": round(n / habitantes * 1e5, 2) if habitantes else None,
+        n = conta["provincia"].get(p, 0); habitantes = pop.get(p); c = ctx["provincias"].get(p, {})
+        provs.append({"provincia": p, "populacao_2022": habitantes, "area_km2": c.get("area_km2"),
+                      "densidade_hab_km2": c.get("densidade_hab_km2"), "noticias": n,
+                      "noticias_100mil_hab": round(n / habitantes * 1e5, 2) if habitantes else None,
+                      "taxa_homicidios_2023": c.get("taxa_homicidios_2023"), "taxa_homicidios_2024": c.get("taxa_homicidios_2024"),
                       "geometry": unary_union(list(grupo.geometry)).buffer(0)})
     gpd.GeoDataFrame(provs, crs="EPSG:4326").to_file(caminho, layer="provincias", driver="GPKG")
 
-    regs = [{"regiao": r, "noticias": conta["region"].get(r, 0), "geometry": unary_union(list(g.geometry)).buffer(0)}
-            for r, g in gdep.groupby("regiao")]
+    regs = [{"regiao": r, "noticias": conta["region"].get(r, 0), **ctx["regioes"].get(r, {}),
+             "geometry": unary_union(list(g.geometry)).buffer(0)} for r, g in gdep.groupby("regiao")]
     gpd.GeoDataFrame(regs, crs="EPSG:4326").to_file(caminho, layer="regioes", driver="GPKG")
+    agl = [{**{k: v for k, v in a.items() if k not in ("lon", "lat")}, "geometry": Point(a["lon"], a["lat"])} for a in ctx["aglomerados"]]
+    gpd.GeoDataFrame(agl, crs="EPSG:4326").to_file(caminho, layer="aglomerados_eph", driver="GPKG")
 
     pontos = []
     for r in unicas:
@@ -176,7 +207,8 @@ def main():
     limites = REFERENCIAS / "limites"
     _json({"deptos": json.loads((limites / "departamentos.topo.json").read_text(encoding="utf-8")),
            "neigh": json.loads((limites / "paises_vizinhos.topo.json").read_text(encoding="utf-8")),
-           "coords": coords, "pop": _populacao(), "locinfo": res.locinfo, "deptLabels": res.rotulos_departamento},
+           "coords": coords, "pop": _populacao(), "locinfo": res.locinfo, "deptLabels": res.rotulos_departamento,
+           "contexto": contexto()},
           DADOS / "geo.json")
     escrever_csv(res, DADOS / f"acoes_{a.ano}.csv")
     escrever_dicionario(res, DADOS / "dicionario.md", a.ano)
@@ -186,6 +218,15 @@ def main():
         escrever_camadas(res, coords, relatorio, DADOS / "camadas" / f"acoes_{a.ano}.gpkg")
 
     unicas = sum(1 for r in res.linhas if not r[6])
+    # Resumo para a página inicial
+    regs_unicos = [r for r in res.registros if r["status"] != "Repetida"]
+    pop = _populacao()
+    distintos = lambda vid, ok=lambda s: True: len({x for r in regs_unicos for x in r["v"][vid] if ok(x)})
+    sem_info = lambda s: not any(t in s.lower() for t in ("no informa", "nacional", "virtual"))
+    _json({"noticias": len(res.linhas), "unicas": unicas, "variaveis": len(res.variaveis),
+           "movimentos": distintos("nombremov", sem_info), "localidades": distintos("localidad", sem_info),
+           "provincias": distintos("provincia", lambda s: s in pop), "fontes": distintos("fuente", sem_info),
+           "aglomerados_contexto": len(contexto()["aglomerados"]) - 1}, DADOS / "resumo.json")
     metodos = collections.Counter(r["metodo"] for r in relatorio)
     print(f"{len(res.linhas)} notícias ({unicas} únicas), {len(res.variaveis)} variáveis; localidades: {dict(metodos)}")
     for aviso in res.avisos:

@@ -141,3 +141,78 @@ table{border-collapse:collapse;width:100%;font-size:13px}
 .sm .chart{border-top:1px solid var(--line);padding-top:8px}
 .vlab{fill:var(--ink-2);font-size:10.5px;font-family:var(--f-mono)}
 @media (prefers-reduced-motion:no-preference){.row .fill{transition:width .25s ease}}
+
+/* ===================== Identidade argentina e novos gráficos ===================== */
+:root{ --celeste:#74acdf; --celeste-d:#3f7fbf; --sol:#f6b40e; --sol-d:#85340a; --navy:#16304f; --cal-zero:#eef1f4; }
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){ --navy:#2c5d93; --cal-zero:#1f2a38; }}
+:root[data-theme="dark"]{ --navy:#2c5d93; --cal-zero:#1f2a38; }
+
+/* cabeçalho em faixas da bandeira: celeste · branco · celeste */
+header.hero{display:block;gap:0;background:var(--panel)}
+.flagband{height:14px;background:var(--celeste)}
+.hero-in{max-width:1180px;margin:0 auto;padding-block:24px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:20px}
+.brand{display:flex;gap:20px;align-items:center;min-width:0}
+.brand-txt{display:grid;gap:6px;min-width:0}
+.flag{flex:none;display:grid;grid-template-rows:1fr 1fr 1fr;width:90px;height:58px;border-radius:4px;overflow:hidden;box-shadow:0 0 0 1px rgba(16,30,54,.12),0 3px 8px rgba(16,30,54,.14)}
+.flag .fc{background:var(--celeste)}
+.flag .fw{background:#ffffff;display:grid;place-items:center}
+.flag svg{width:22px;height:22px;display:block}
+@media (max-width:560px){.flag{width:58px;height:38px}.flag svg{width:15px;height:15px}.brand{gap:12px;align-items:flex-start}}
+.kpis{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
+@media (max-width:880px){.kpis{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:520px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.kpi{border-left:3px solid var(--celeste);padding:2px 0 2px 12px;min-width:0}
+.kpi:first-child{border-left-color:var(--sol)}
+.kpi b{display:block;font-family:var(--f-display);font-size:32px;font-weight:700;line-height:1.05;font-variant-numeric:tabular-nums;color:var(--ink)}
+.kpi span{font-size:13px;color:var(--ink-2)}
+
+/* abas em barra fixa */
+.tabs{gap:4px;border:1px solid var(--line);border-radius:10px;background:var(--panel);padding:4px;position:sticky;top:env(safe-area-inset-top,0px);z-index:6;box-shadow:0 2px 8px rgba(16,30,54,.06)}
+.tabs a{font-size:18px;padding:6px 14px;border-radius:7px;border-bottom:0;margin:0}
+.tabs a[aria-selected=true]{background:var(--navy);color:#ffffff}
+.tabs a:hover:not([aria-selected=true]){background:var(--accent-soft)}
+.panel{box-shadow:0 1px 2px rgba(16,30,54,.04)}
+
+/* sankey */
+.sk-label{font-size:12px;fill:var(--ink);paint-order:stroke;stroke:var(--panel);stroke-width:3px;stroke-linejoin:round;pointer-events:none}
+.sk-stage{font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;fill:var(--ink-2)}
+/* treemap */
+.tm-head{font-size:12.5px;font-weight:700;fill:#ffffff;pointer-events:none}
+.tm-leaf{font-size:11.5px;fill:#1b2533;pointer-events:none}
+.tm-val{fill:#3a4757;font-family:var(--f-mono);font-size:10.5px}
+/* rede */
+.net-link{stroke:var(--ink-3);stroke-opacity:.38}
+.net-node{stroke:var(--panel);stroke-width:1.5}
+.net-label{font-size:11.5px;font-weight:600;fill:var(--ink);paint-order:stroke;stroke:var(--panel);stroke-width:3px;stroke-linejoin:round;pointer-events:none}
+.net-legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12.5px;color:var(--ink-2);margin-top:10px}
+.net-legend b{width:100%;color:var(--ink);font-weight:600}
+.net-legend i{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:6px;vertical-align:-1px}
+/* dispersão */
+.trend{fill:none;stroke:var(--ink-3);stroke-width:1.5;stroke-dasharray:5 4}
+.sc-pt{stroke:var(--panel);stroke-width:1.2}
+.sc-label{font-size:11px;fill:var(--ink-2);pointer-events:none}
+.sc-leg,.ax-title{font-size:12px;fill:var(--ink-2)}
+/* tabelas de contexto */
+.ctx-table{border-collapse:collapse;width:100%;font-size:13.5px}
+.ctx-table th{text-align:left;font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-3);font-weight:600;padding:8px;border-bottom:1px solid var(--line-2);white-space:nowrap}
+.ctx-table td{padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:middle}
+.ctx-table tbody tr:hover td{background:var(--accent-soft)}
+.ctx-table td.nm{font-weight:600;white-space:nowrap}
+.ctx-table td.mut{color:var(--ink-2);white-space:nowrap}
+.ctx-table td.num{font-family:var(--f-mono);font-size:12.5px;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.ctx-table td.bar{min-width:160px;white-space:nowrap}
+.ctx-table td.bar b{font-family:var(--f-mono);font-weight:500;font-size:12.5px;font-variant-numeric:tabular-nums}
+.cellbar{display:inline-block;width:88px;height:8px;background:var(--line);border-radius:4px;overflow:hidden;vertical-align:middle;margin-right:8px}
+.cellbar span{display:block;height:100%;border-radius:4px}
+i.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:8px}
+/* calendário */
+.cal-lab{font-size:10.5px;fill:var(--ink-3);font-family:var(--f-mono)}
+/* rodapé */
+.site-foot{display:grid;gap:10px;font-size:13px;color:var(--ink-2);border-top:3px solid var(--celeste);padding-top:18px}
+.site-foot p{margin:0;max-width:95ch}
+.site-foot a{color:var(--accent)}
+.foot-brand{display:flex;gap:12px;align-items:center;color:var(--ink)}
+.miniflag{display:grid;grid-template-rows:1fr 1fr 1fr;width:42px;height:27px;border-radius:3px;overflow:hidden;box-shadow:0 0 0 1px rgba(16,30,54,.12);flex:none}
+.miniflag span:nth-child(odd){background:var(--celeste)}
+.miniflag span:nth-child(2){background:#ffffff;display:grid;place-items:center}
+.miniflag svg{width:10px;height:10px;display:block}

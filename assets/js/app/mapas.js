@@ -13,6 +13,7 @@ const provIdx = {}; PROV_VALS.forEach((v,i)=>{ provIdx[v]=i; });
 const deptIdx = {}; DEPT_VALS.forEach((v,i)=>{ deptIdx[v]=i; });
 const POP = {}; Object.entries(GEO.pop).forEach(([k,n])=>{ if(provIdx[k]!=null) POP[provIdx[k]]=n; });
 const DEPT_HAS = new Set();
+let REGS_FC=[];
 let TOPO=null, DEPTS=[], PROVS_FC=[], MESH={}, ALL=null, NEIGH=[], DEPT_XY=[], PROV_XY=[];
 function mainCentroid(f){ // centroid of the largest part, so islands don't pull the symbol into the sea
   const g=f.geometry; if(g.type!=='MultiPolygon') return d3.geoCentroid(f);
@@ -29,6 +30,7 @@ if(HAS_D3){
   MESH.reg  = topojson.mesh(TOPO, OBJ, (a,b)=> a!==b && a.properties.r!==b.properties.r);
   MESH.out  = topojson.mesh(TOPO, OBJ, (a,b)=> a===b);
   ALL = {type:'FeatureCollection', features: PROVS_FC};
+  REGS_FC = [...d3.group(OBJ.geometries, g=>g.properties.r)].map(([r,gs])=>({type:'Feature', properties:{r}, geometry: topojson.merge(TOPO, gs)}));
   const NO = GEO.neigh.objects[Object.keys(GEO.neigh.objects)[0]];
   NEIGH = topojson.feature(GEO.neigh, NO).features;
 }
@@ -57,8 +59,46 @@ const AMBA_BOX = {type:'Feature',geometry:{type:'Polygon',coordinates:[[[-59.05,
 const C = { paper:'#ffffff', sea:'#dbe8f2', grat:'#b7cadb', neigh:'#ece9e3', neighLine:'#9d9a93', land:'#fbfaf7', ink:'#1b2533', ink2:'#4a5767', ink3:'#7b8695',
   dept:'#c3ccd6', prov:'#5f6f82', reg:'#1d3554', ramp:['#e6f1fa','#b9d7f0','#74acdf','#3f7fbf','#1c4f8a'], zero:'#f8f8f5', sol:'#f6b40e', solDark:'#85340a', sel:'#c2410c', label:'#6d7f93' };
 const FONT = 'Arial, Helvetica, sans-serif';
+
+/* ---------- camadas de contexto (indicadores oficiais) ----------
+   Relativos em coroplético (província ou região) ou em símbolos de cor (aglomerados);
+   população absoluta em círculos vazados. Fontes em pipeline/referencias/contexto/FONTES.md */
+const CTX = GEO.contexto || {provincias:{}, regioes:{}, aglomerados:[]};
+const CTX_RAMP = ['#f4efe4','#dfd2b9','#c2ad88','#957d58','#5e4c33'];
+const CTXDEF = {
+  dens:   {nivel:'prov', campo:'densidade_hab_km2', titulo:'Densidade demográfica (hab./km²), 2022', curto:'hab./km²', dec:1,
+           fonte:'INDEC, Censo 2022, resultados definitivos; área calculada pelo projeto (projeção equivalente de Albers)'},
+  hom24:  {nivel:'prov', campo:'taxa_homicidios_2024', titulo:'Homicídios dolosos por 100 mil hab., 2024', curto:'por 100 mil hab.', dec:2,
+           fonte:'Ministerio de Seguridad Nacional, SNIC-SAT, Informe de Homicidios Dolosos 2024'},
+  hom23:  {nivel:'prov', campo:'taxa_homicidios_2023', titulo:'Homicídios dolosos por 100 mil hab., 2023', curto:'por 100 mil hab.', dec:2,
+           fonte:'Ministerio de Seguridad Nacional, SNIC-SAT, Informe de Homicidios Dolosos 2024'},
+  pob:    {nivel:'reg', campo:'pobreza_personas_2s2024', titulo:'Pessoas abaixo da linha de pobreza (%), 2º sem. 2024', curto:'% de pessoas', dec:1,
+           fonte:'INDEC, Encuesta Permanente de Hogares, 31 aglomerados urbanos (por região estatística)'},
+  ind:    {nivel:'reg', campo:'indigencia_personas_2s2024', titulo:'Pessoas abaixo da linha de indigência (%), 2º sem. 2024', curto:'% de pessoas', dec:1,
+           fonte:'INDEC, Encuesta Permanente de Hogares, 31 aglomerados urbanos (por região estatística)'},
+  des:    {nivel:'reg', campo:'desocupacao_4t2024', titulo:'Taxa de desocupação (%), 4º trim. 2024', curto:'%', dec:1,
+           fonte:'INDEC, Encuesta Permanente de Hogares, mercado de trabalho (por região estatística)'},
+  pobAgl: {nivel:'agl', campo:'pobreza_personas_2s2024', titulo:'Pobreza por aglomerado urbano (% de pessoas), 2º sem. 2024', curto:'% de pessoas', dec:1,
+           fonte:'INDEC, Encuesta Permanente de Hogares, quadro 4.1'},
+  desAgl: {nivel:'agl', campo:'desocupacao_4t2024', titulo:'Desocupação por aglomerado urbano (%), 4º trim. 2024', curto:'%', dec:1,
+           fonte:'INDEC, Encuesta Permanente de Hogares, mercado de trabalho'},
+  popAbs: {nivel:'pop', titulo:'População residente, 2022 (absoluto)', fonte:'INDEC, Censo 2022, resultados definitivos'},
+};
+const ctxEscolha = k => (k && CTXDEF[k]) || null;
+function ctxValor(def, chave){ if(!def) return null; const fonte = def.nivel==='prov'? CTX.provincias : def.nivel==='reg'? CTX.regioes : null; const r = fonte && fonte[chave]; return r? r[def.campo] : null; }
+function ctxClasses(def){
+  let vals = def.nivel==='agl'? CTX.aglomerados.map(a=>a[def.campo]) : Object.values(def.nivel==='prov'? CTX.provincias : CTX.regioes).map(r=>r[def.campo]);
+  vals = vals.filter(v=>v!=null && isFinite(v)).sort(d3.ascending);
+  const k = Math.min(5, vals.length), rnd = v => +v.toFixed(def.dec);
+  const th = [...new Set(d3.range(1,k).map(i=>rnd(d3.quantileSorted(vals, i/k))))].filter(x=>x>vals[0] && x<vals[vals.length-1]);
+  const ramp = CTX_RAMP.slice(CTX_RAMP.length-(th.length+1));
+  const color = v => { if(v==null || !isFinite(v)) return '#f1f1ef'; let i=0; while(i<th.length && v>th[i]) i++; return ramp[i]; };
+  const f = v => v.toLocaleString('pt-BR',{minimumFractionDigits:def.dec, maximumFractionDigits:def.dec});
+  const lo=[vals[0], ...th], hi=[...th, vals[vals.length-1]];
+  return { color, items: ramp.map((c,i)=>[c, i===0? `${f(lo[i])} a ${f(hi[i])}` : `mais de ${f(lo[i])} a ${f(hi[i])}`]), fmt:f };
+}
 const PROJ = () => d3.geoConicConformal().parallels([-28,-46]).rotate([64,0]);
-const mstate = { unit:'loc', measure:'abs', mode:'one', cmp:'nombremov', n:6, author:'' };
+const mstate = { unit:'loc', measure:'abs', mode:'one', cmp:'nombremov', n:6, author:'', ctx:'' };
 try{ const s=JSON.parse(localStorage.getItem('as24m2')||'null'); if(s){ Object.assign(mstate, s); if(VI[mstate.cmp]==null) mstate.cmp='nombremov'; } }catch(e){}
 const msave = () => { try{ localStorage.setItem('as24m2', JSON.stringify(mstate)); }catch(e){} };
 const RATE_OK = u => u==='prov';
@@ -67,6 +107,7 @@ document.querySelectorAll('#mapUnit button').forEach(b=>b.onclick=()=>{ mstate.u
 document.querySelectorAll('#mapMeasure button').forEach(b=>b.onclick=()=>{ if(b.disabled) return; mstate.measure=b.dataset.v; render(); });
 document.querySelectorAll('#mapMode button').forEach(b=>b.onclick=()=>{ mstate.mode=b.dataset.v; render(); });
 $('cmpVar').onchange=e=>{ mstate.cmp=e.target.value; render(); };
+$('ctxLayer').onchange=e=>{ mstate.ctx=e.target.value; render(); };
 $('cmpN').onchange=e=>{ mstate.n=+e.target.value; render(); };
 let at; $('author').oninput=e=>{ clearTimeout(at); at=setTimeout(()=>{ mstate.author=e.target.value.trim(); render(); },400); };
 const nfmt1 = x => x.toLocaleString('pt-BR',{maximumFractionDigits:1, minimumFractionDigits:1});
@@ -142,18 +183,26 @@ function drawBase(g, proj, box, md, sh, o){
   m.append('path').datum(d3.geoGraticule().step([o.gstep||5,o.gstep||5]).extent([[-100,-75],[-30,-5]])()).attr('d',path).attr('fill','none').attr('stroke',C.grat).attr('stroke-width',.5);
   m.append('g').selectAll('path').data(NEIGH).join('path').attr('d',path).attr('fill', d=>d.properties.name==='Argentina'? C.land : C.neigh).attr('stroke', d=>d.properties.name==='Argentina'? 'none' : C.neighLine).attr('stroke-width',.6);
   const tip=o.tip, sel=o.sel||new Set();
-  const tipText = i => { const n=md.c.get(i)||0; const L=[`${fmt(n)} notícias · ${pct(n, md.N)} do recorte`]; if(md.unit==='prov' && POP[i]) L.push(`${nfmt1(md.rate(i))} por 100 mil hab.`); return L; };
+  const tipText = i => { const n=md.c.get(i)||0; const L=[`${fmt(n)} notícias · ${pct(n, md.N)} do recorte`]; if(md.unit==='prov' && POP[i]) L.push(`${nfmt1(md.rate(i))} por 100 mil hab.`);
+    if(md.unit==='prov' && o.ctx && o.ctx.nivel==='prov'){ const v=ctxValor(o.ctx, PROV_VALS[i]); if(v!=null) L.push(`${o.ctxCls.fmt(v)} ${o.ctx.curto} (${o.ctx.titulo.split(',')[0].toLowerCase()})`); } return L; };
   const ev = (s, nameOf, idxOf) => { if(!tip) return s; return s.attr('class','hit')
       .on('mousemove',(e,d)=>{ const i=idxOf(d); if(i<0) return tip.hide(); tip.show(e, nameOf(d), tipText(i)); })
       .on('mouseleave',()=>tip.hide()).on('click',(e,d)=>{ const i=idxOf(d); if(i>=0) o.onClick(md.vid, i); }); };
-  if(o.fill){ // choropleth of rates (provinces)
+  const cdef = o.ctx, cpoly = cdef && (cdef.nivel==='prov' || cdef.nivel==='reg');
+  if(cpoly){ // camada de contexto em coroplético (substitui o fundo neutro)
+    const feats = cdef.nivel==='prov'? PROVS_FC : REGS_FC;
+    const nome = f => cdef.nivel==='prov'? f.properties.p : f.properties.r;
+    const sCtx = m.append('g').selectAll('path').data(feats).join('path').attr('d',path).attr('fill', f=>o.ctxCls.color(ctxValor(cdef, nome(f))));
+    if(tip && md.unit!=='prov') sCtx.on('mousemove',(e,f)=>{ const v=ctxValor(cdef, nome(f)); tip.show(e, nome(f), [v==null? 'sem dado' : `${o.ctxCls.fmt(v)} ${cdef.curto}`, cdef.titulo]); }).on('mouseleave',()=>tip.hide());
+    if(md.unit==='prov') ev(sCtx, f=>f.properties.p, f=>f.properties.pi);
+  } else if(o.fill){ // choropleth of rates (provinces)
     ev(m.append('g').selectAll('path').data(PROVS_FC).join('path').attr('d',path).attr('fill',f=> f.properties.pi>=0? sh.color(md.rate(f.properties.pi)) : C.zero), f=>f.properties.p, f=>f.properties.pi);
   } else {
     const land = m.append('g').selectAll('path').data(md.unit==='prov'? PROVS_FC : DEPTS).join('path').attr('d',path).attr('fill',C.land);
     if(md.unit!=='loc') ev(land, f=> md.unit==='prov'? f.properties.p : f.properties.n, f=> md.unit==='prov'? f.properties.pi : f.properties.di);
   }
   // boundary hierarchy: departments < provinces < regions
-  if(!o.fill) m.append('path').datum(MESH.dept).attr('d',path).attr('fill','none').attr('stroke',C.dept).attr('stroke-width', o.small? .2 : .35);
+  if(!o.fill && !cpoly) m.append('path').datum(MESH.dept).attr('d',path).attr('fill','none').attr('stroke',C.dept).attr('stroke-width', o.small? .2 : .35);
   m.append('path').datum(MESH.prov).attr('d',path).attr('fill','none').attr('stroke',C.prov).attr('stroke-width', o.small? .55 : 1);
   m.append('path').datum(MESH.reg).attr('d',path).attr('fill','none').attr('stroke',C.reg).attr('stroke-width', o.small? 1.3 : 2.3).attr('stroke-linejoin','round');
   m.append('path').datum(MESH.out).attr('d',path).attr('fill','none').attr('stroke',C.reg).attr('stroke-width', o.small? .8 : 1.2);
@@ -166,12 +215,25 @@ function drawBase(g, proj, box, md, sh, o){
     const tx=m.append('text').attr('x',p[0]).attr('y',p[1]).attr('text-anchor','middle').attr('font-size',(opt&&opt.size)||10).attr('font-family',FONT).attr('fill',C.label).attr('letter-spacing',(opt&&opt.ls)||1.2).attr('font-style',(opt&&opt.italic)?'italic':'normal');
     if(opt&&opt.rot) tx.attr('transform',`rotate(${opt.rot} ${p[0]} ${p[1]})`);
     String(t).split('\n').forEach((l,i)=>tx.append('tspan').attr('x',p[0]).attr('dy', i? '1.2em' : 0).text(l)); });
+  if(cdef && cdef.nivel==='pop'){ // população absoluta: círculos vazados
+    const pts = PROVS_FC.filter(f=>f.properties.pi>=0 && POP[f.properties.pi]).map(f=>({p:f.properties.p, n:POP[f.properties.pi], xy:proj(PROV_XY[f.properties.pi])})).sort((a,b)=>b.n-a.n);
+    const sp = m.append('g').selectAll('circle').data(pts).join('circle').attr('cx',d=>d.xy[0]).attr('cy',d=>d.xy[1]).attr('r',d=>o.popR(d.n))
+      .attr('fill','none').attr('stroke','#5e4c33').attr('stroke-width', o.small? .7 : 1.1).attr('stroke-dasharray','3 2');
+    if(tip) sp.on('mousemove',(e,d)=>tip.show(e, d.p, [`${fmt(d.n)} habitantes (Censo 2022)`])).on('mouseleave',()=>tip.hide());
+  }
   if(o.circles){
     const pts=[]; md.c.forEach((n,i)=>{ if(md.XY[i]){ const xy=proj(md.XY[i]); if(xy && xy[0]>x0-40 && xy[0]<x1+40 && xy[1]>y0-40 && xy[1]<y1+40) pts.push({i,n,xy}); } });
     pts.sort((a,b)=>b.n-a.n);
     ev(m.append('g').selectAll('circle').data(pts).join('circle').attr('cx',d=>d.xy[0]).attr('cy',d=>d.xy[1]).attr('r',d=>Math.max(o.small?1.6:2.2, sh.r(d.n)))
       .attr('fill',C.sol).attr('fill-opacity', o.fill? .72 : .85).attr('stroke', d=> sel.has(d.i)? C.sel : C.solDark).attr('stroke-width', d=> sel.has(d.i)? 2.2 : (o.small? .6 : .8)),
       d=> (md.unit==='loc'? LOC_VALS : md.unit==='dept'? DEPT_VALS : PROV_VALS)[d.i], d=>d.i);
+  }
+  if(cdef && cdef.nivel==='agl'){ // aglomerados urbanos da EPH: quadrados coloridos pelo indicador
+    const s = o.small? 7 : 11;
+    const ag = CTX.aglomerados.map(a=>({...a, xy:proj([a.lon,a.lat])})).filter(a=>a.xy);
+    const sq = m.append('g').selectAll('rect').data(ag).join('rect').attr('x',d=>d.xy[0]-s/2).attr('y',d=>d.xy[1]-s/2).attr('width',s).attr('height',s)
+      .attr('fill',d=>o.ctxCls.color(d[cdef.campo])).attr('stroke','#2b2216').attr('stroke-width', o.small? .6 : .9);
+    if(tip) sq.on('mousemove',(e,d)=>tip.show(e, d.aglomerado, [`${o.ctxCls.fmt(d[cdef.campo])} ${cdef.curto}`, cdef.titulo])).on('mouseleave',()=>tip.hide());
   }
   g.append('rect').attr('x',x0).attr('y',y0).attr('width',x1-x0).attr('height',y1-y0).attr('fill','none').attr('stroke',C.ink).attr('stroke-width',o.small? .7 : 1);
   return m;
@@ -201,8 +263,23 @@ function legendBlock(g, x, y, w, md, sh, o){
       g.append('text').attr('x',x+26).attr('y',yy+9.5).attr('font-size',10.5).attr('font-family',FONT).attr('fill',C.ink2).text(lab); yy += 16; });
     yy += 8;
   }
+  if(o.ctx){
+    const d=o.ctx;
+    yy += textBlock(g, x, yy, `Contexto: ${d.titulo}`, 12, w, {weight:700}) + 6;
+    if(d.nivel==='pop'){
+      const ref=[20e6, 5e6, 1e6], R=o.popR(ref[0]), cx=x+R+2, base=yy+2*R+4;
+      ref.forEach(v=>{ const r=o.popR(v); g.append('circle').attr('cx',cx).attr('cy',base-r).attr('r',r).attr('fill','none').attr('stroke','#5e4c33').attr('stroke-dasharray','3 2');
+        g.append('text').attr('x',cx+R+14).attr('y',base-2*r+3.5).attr('font-size',10.5).attr('font-family',FONT).attr('fill',C.ink2).text(fmt(v)+' hab.'); });
+      yy = base + 14;
+    } else {
+      o.ctxCls.items.forEach(([col,lab])=>{ if(d.nivel==='agl') g.append('rect').attr('x',x+4).attr('y',yy+1).attr('width',10).attr('height',10).attr('fill',col).attr('stroke','#2b2216').attr('stroke-width',.8);
+        else g.append('rect').attr('x',x).attr('y',yy).attr('width',18).attr('height',11).attr('fill',col).attr('stroke','#9aa6b2').attr('stroke-width',.5);
+        g.append('text').attr('x',x+26).attr('y',yy+9.5).attr('font-size',10.5).attr('font-family',FONT).attr('fill',C.ink2).text(`${lab} ${d.curto}`); yy += 16; });
+    }
+    yy += textBlock(g, x, yy+8, `Fonte: ${d.fonte}.`, 9.5, w, {fill:C.ink3}) + 18;
+  }
   [['Limite internacional',C.neighLine,.9],['Limite regional (INDEC)',C.reg,2.3],['Limite provincial',C.prov,1],['Limite de departamento / partido',C.dept,.6]].forEach(([l,c,wd])=>{
-    if(o.fill && wd===.6) return;
+    if((o.fill || (o.ctx && (o.ctx.nivel==='prov'||o.ctx.nivel==='reg'))) && wd===.6) return;
     g.append('line').attr('x1',x).attr('x2',x+18).attr('y1',yy+5).attr('y2',yy+5).attr('stroke',c).attr('stroke-width',wd);
     g.append('text').attr('x',x+26).attr('y',yy+9).attr('font-size',10.5).attr('font-family',FONT).attr('fill',C.ink2).text(l); yy += 15; });
   g.append('rect').attr('x',x).attr('y',yy+1).attr('width',18).attr('height',10).attr('fill',C.sea).attr('stroke','#9aa6b2').attr('stroke-width',.4);
@@ -222,6 +299,8 @@ function techNote(md, sh, o, multi){
   const s = ['NOTA TÉCNICA.'];
   if(o.circles) s.push(`Valores absolutos em círculos proporcionais: a área de cada círculo é proporcional ao número de notícias que citam ${art} ${unitTxt} (raio ∝ √n; maior círculo = ${fmt(sh.max||0)} notícias${multi?', mesma escala em todos os mapas':''}). ${md.unit==='loc'? 'Localidades posicionadas pelo GeoNames; na falta, no centro do departamento.' : `Círculos no centróide ${de} ${unitTxt} (da maior porção de terra, quando há ilhas).`} Notícias que citam vários lugares contam em cada um.`);
   if(o.fill) s.push(`Valores relativos em coroplético: taxa = notícias ÷ população residente × 100.000. População: INDEC, Censo Nacional de Población, Hogares y Viviendas 2022, resultados definitivos. Classes por quantis (até 5 classes) dos valores não nulos${multi?', comuns a todos os mapas':''}.`);
+  if(o.ctx){ const d=o.ctx; s.push(d.nivel==='pop'? `Camada de contexto: população residente em 2022 em círculos vazados proporcionais (área ∝ habitantes), no centróide de cada província; fonte: ${d.fonte}.`
+    : `Camada de contexto: ${d.titulo}, ${d.nivel==='agl'? 'em símbolos de cor nos 31 aglomerados urbanos da EPH (valores urbanos, não provinciais)' : d.nivel==='reg'? 'em coroplético por região estatística (valores dos aglomerados urbanos de cada região)' : 'em coroplético por província'}; classes por quantis; fonte: ${d.fonte}.`); }
   if(md.spatial) s.push('Filtros espaciais aplicados ao lugar: só são representados os lugares dentro das unidades selecionadas, mesmo quando a notícia também cita outros lugares.');
   s.push('Limites: departamentos/partidos (linha fina), províncias (média) e regiões estatísticas do INDEC (grossa): Gran Buenos Aires (CABA e 24 partidos), Pampeana, Noroeste, Noreste, Cuyo e Patagonia.');
   const zk = (multi? ZOOM.multi : ZOOM.one).k; if(zk>1) s.push(`Vista ampliada (×${zk.toLocaleString('pt-BR',{maximumFractionDigits:1})}) em relação ao país inteiro.`);
@@ -275,8 +354,11 @@ function zoomControls(box, frame, key){
 let SHEET_SVG = null;
 function renderMap(b){
   if(!RATE_OK(mstate.unit)) mstate.measure='abs';
+  const cdef = ctxEscolha(mstate.ctx), cpoly = !!cdef && (cdef.nivel==='prov' || cdef.nivel==='reg');
+  if(cpoly) mstate.measure='abs';
+  $('ctxLayer').value = mstate.ctx || '';
   document.querySelectorAll('#mapUnit button').forEach(x=>x.setAttribute('aria-pressed', String(x.dataset.v===mstate.unit)));
-  document.querySelectorAll('#mapMeasure button').forEach(x=>{ x.setAttribute('aria-pressed', String(x.dataset.v===mstate.measure)); x.disabled = x.dataset.v!=='abs' && !RATE_OK(mstate.unit); x.title = x.disabled? 'Taxa disponível para províncias (população por departamento e localidade não incluída)' : ''; });
+  document.querySelectorAll('#mapMeasure button').forEach(x=>{ x.setAttribute('aria-pressed', String(x.dataset.v===mstate.measure)); x.disabled = x.dataset.v!=='abs' && (!RATE_OK(mstate.unit) || cpoly); x.title = !x.disabled? '' : cpoly? 'Com uma camada de contexto em coroplético, as notícias aparecem em círculos' : 'Taxa disponível para províncias (população por departamento e localidade não incluída)'; });
   document.querySelectorAll('#mapMode button').forEach(x=>x.setAttribute('aria-pressed', String(x.dataset.v===mstate.mode)));
   $('cmpWrap').hidden = $('cmpNWrap').hidden = mstate.mode!=='multi';
   $('cmpVar').value = mstate.cmp; $('cmpN').value = String(mstate.n);
@@ -285,7 +367,7 @@ function renderMap(b){
   const box=$('sheet'); box.querySelectorAll('svg').forEach(s=>s.remove()); $('mapRank').textContent='';
   if(!HAS_D3){ $('mapNote').textContent='Não foi possível carregar a biblioteca de mapas nesta visualização.'; return; }
   const unit = mstate.unit, vid = UNIT_VID[unit];
-  const o = { circles: mstate.measure!=='rate', fill: mstate.measure!=='abs' };
+  const o = { circles: mstate.measure!=='rate', fill: mstate.measure!=='abs', ctx: cdef, ctxCls: cdef && cdef.nivel!=='pop'? ctxClasses(cdef) : null };
   const W = Math.max(320, box.clientWidth);
   const svg = d3.select(box).append('svg').attr('font-family',FONT).attr('width','100%');
   svg.append('rect').attr('class','bgpaper').attr('x',0).attr('y',0).attr('fill',C.paper);
@@ -309,6 +391,7 @@ function renderMap(b){
     const proj = zoomProj(PROJ().fitExtent([[fx0+fw*0.06, y+fh*0.015],[fx0+fw*0.94, y+fh*0.985]], ALL), ZOOM.one, [fx0, y]);
     const zk = ZOOM.one.k, gs = gridStep(zk);
     sh.r = d3.scaleSqrt().domain([0, sh.max]).range([0, Math.min(38, fw*0.08)*(o.fill? 0.72 : 1)]);
+    o.popR = d3.scaleSqrt().domain([0, 18e6]).range([0, Math.min(52, fw*0.11)]);
     const gm = svg.append('g');
     const mm = drawBase(gm, proj, frame, md, sh, {...o, tip, onClick, sel: st.f[vid], labels: fw>=380? LABELS : [], gstep: gs});
     const zbOne = attachZoom(gm, 'one', [fx0, y], frame, mm);
@@ -359,6 +442,7 @@ function renderMap(b){
     const ft = filtersText([vid, cv]);
     y += textBlock(svg, M, y+4, `${cats.length} categorias mais frequentes de “${cvar.label}”${ft? ' · recorte: '+ft : ''} · mesma escala em todos os mapas`, 12.5, W-2*M, {fill:C.ink2}) + 16;
     sh.r = d3.scaleSqrt().domain([0, sh.max]).range([0, Math.min(26, cw*0.1)*(o.fill? 0.75 : 1)]);
+    o.popR = d3.scaleSqrt().domain([0, 18e6]).range([0, Math.min(34, cw*0.13)]);
     let projRef=null;
     sets.forEach((s,j)=>{
       const col=j%cols, row=Math.floor(j/cols), x0=M+col*(cw+gap), y0=y+row*(ch+50);

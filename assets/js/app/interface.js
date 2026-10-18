@@ -11,7 +11,8 @@ function render(){
   const b=base();
   const nUniq=ROWS.filter(r=>!r.rep).length, nRep=ROWS.length-nUniq;
   const L=$('lede'); L.textContent='';
-  L.append(el('b',null,fmt(nUniq)), document.createTextNode(' notícias únicas'), document.createTextNode(' e '), el('b',null,fmt(nRep)), document.createTextNode(' repetidas, codificadas em '+VARS.length+' variáveis. Escolha uma variável para ver a distribuição; clique numa categoria para filtrar a base e listar as notícias.'));
+  L.append(document.createTextNode('Quem se mobiliza, por quais objetivos, com que tipo de ação e onde. '), el('b',null,fmt(nUniq)), document.createTextNode(' notícias únicas (e '+fmt(nRep)+' repetidas), lidas na íntegra e codificadas em '+VARS.length+' variáveis.'));
+  renderKPIs(b);
   renderChips();
   const v=VARS[VI[st.v]];
   const rowsV=b.filter(r=>match(r, st.v));
@@ -32,15 +33,20 @@ function render(){
   $('distNote').textContent=note;
   if(TAB==='map') renderMap(b);
   if(TAB==='time') renderTime(b);
+  if(TAB==='flow') renderFlow(b);
+  if(TAB==='typo') renderTypo(b);
+  if(TAB==='net') renderNet(b);
+  if(TAB==='ctx') renderCtx(b);
   renderNews(b.filter(r=>match(r,null)));
 }
 
 /* ---------- tabs ---------- */
 let TAB='dist';
-const TABS={distribuicao:'dist', mapa:'map', tempo:'time'};
+const TABS={distribuicao:'dist', fluxos:'flow', tipologias:'typo', redes:'net', mapa:'map', contexto:'ctx', tempo:'time'};
+const PAINEIS=[['dist','tab-dist','dist'],['flow','tab-flow','flowSec'],['typo','tab-typo','typoSec'],['net','tab-net','netSec'],['map','tab-map','mapSec'],['ctx','tab-ctx','ctxSec'],['time','tab-time','timeSec']];
 function setTab(t, push){
   TAB=t;
-  [['dist','tab-dist','dist'],['map','tab-map','mapSec'],['time','tab-time','timeSec']].forEach(([k,tid,sid])=>{
+  PAINEIS.forEach(([k,tid,sid])=>{
     $(tid).setAttribute('aria-selected', String(k===t)); $(sid).hidden = k!==t; });
   render();
 }
@@ -60,3 +66,19 @@ function tipFor(box){
   };
 }
 const HAS_D3 = typeof d3!=='undefined' && typeof topojson!=='undefined';
+
+/* ---------- indicadores do cabeçalho ---------- */
+function renderKPIs(b){
+  const rows = b.filter(r=>match(r,null)), box=$('kpis'); if(!box) return;
+  const distintos = vid => { const c=counts(rows, vid); const vals=VARS[VI[vid]].values; let n=0; c.forEach((_,k)=>{ if(!/no informa|^ni$|nacional|virtual/i.test(vals[k])) n++; }); return n; };
+  const filtrado = Object.keys(st.f).length>0;
+  const itens = [
+    [fmt(rows.length), filtrado? `notícias no recorte (de ${fmt(b.length)})` : 'notícias únicas'],
+    [fmt(distintos('nombremov')), 'movimentos e organizações'],
+    [fmt(distintos('localidad')), 'localidades citadas'],
+    [fmt((()=>{ const pop=(window.__GEO__||{}).pop||{}; const vals=VARS[VI.provincia].values; let n=0; counts(rows,'provincia').forEach((_,k)=>{ if(pop[vals[k]]!=null) n++; }); return n; })()), 'das 24 jurisdições'],
+    [fmt(distintos('fuente')), 'veículos e fontes'],
+  ];
+  box.textContent='';
+  itens.forEach(([v,l])=>{ const d=el('div','kpi'); d.append(el('b',null,v), el('span',null,l)); box.append(d); });
+}
