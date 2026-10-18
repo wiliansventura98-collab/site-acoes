@@ -62,7 +62,7 @@ prontos('mapPresets', 'Mapas prontos:', [
 
 const ctxp = (nivel, x) => ()=>{ CTXV.nivel=nivel; CTXV.x=x; };
 prontos('ctxPresets', 'Perguntas prontas:', [
-  ['Mais pobreza, mais protesto?', 'Privação material dos hogares × notícias, por departamento', ctxp('dept','i_ipmh')],
+  ['Mais pobreza, mais protesto?', 'Privação material dos domicílios × notícias, por departamento', ctxp('dept','i_ipmh')],
   ['Desemprego e mobilização', 'Desocupação (Censo 2022) × notícias, por província', ctxp('prov','i_desocup')],
   ['Educação e mobilização', 'Secundário completo × notícias, por departamento', ctxp('dept','i_secund')],
   ['Cidade densa, mais notícias?', 'Densidade demográfica × notícias, por província', ctxp('prov','densidade_hab_km2')],

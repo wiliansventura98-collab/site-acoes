@@ -104,7 +104,7 @@ function renderCtx(b){
   [[COR_ALTO,'Contorno laranja: muito acima da tendência (mais notícias do que o indicador faria esperar)'],[COR_BAIXO,'Contorno azul: muito abaixo da tendência'],['#9aa6b2','Linhas cinzas: medianas (metade dos lugares de cada lado)'],['#7c8aa0','Tracejado: tendência média']].forEach(([c,t],j)=>{
     const sp=el('span'); const sw=el('i'); sw.style.background= j<2? 'transparent' : c; if(j<2){ sw.style.border=`2.5px solid ${c}`; } else { sw.style.height='3px'; sw.style.borderRadius='0'; } sp.append(sw, document.createTextNode(t)); lgd.append(sp); });
   box.append(lgd);
-  const f2 = v => v.toLocaleString('pt-BR',{minimumFractionDigits:2, maximumFractionDigits:2});
+  const f2 = v => (v<0? '−' : '') + Math.abs(v).toLocaleString('pt-BR',{minimumFractionDigits:2, maximumFractionDigits:2});
   $('ctxMeta').textContent= dep? `${fmt(pts.length)} departamentos · ${fmt(pts.filter(d=>d.n).length)} com notícias` : `${pts.length} jurisdições`;
   const defX = IND.find(d=>'i_'+d.k===CTXV.x);
   { const rho=cr? cr.rho : 0, ar=Math.abs(rho), discorda = cr && Math.sign(cr.r)!==Math.sign(cr.rho) && Math.max(Math.abs(cr.r),ar)>=0.1, forca= discorda? 'inconsistente' : ar<0.1? 'praticamente nenhuma' : ar<0.3? 'fraca' : ar<0.6? 'moderada' : 'forte';
@@ -120,7 +120,7 @@ function renderCtx(b){
     + 'Associação entre agregados territoriais não indica causalidade nem se aplica a indivíduos (falácia ecológica); a cobertura da imprensa também varia entre províncias.';
   renderCtxTabela(dep? mapData(b.filter(r=>match(r,'provincia')),'prov') : md);
   renderCtxRegioes(b);
-  $('ctxSources').textContent = 'Fontes: INDEC, Censo Nacional de Población, Hogares y Viviendas 2022, resultados definitivos (população) e indicadores por província e departamento obtidos no Geoportal estadístico do INDEC (portalgeoestadistico.indec.gob.ar: privação material dos hogares, serviços, conectividade, educação, trabalho, saúde, estrutura demográfica, diversidade e migração); área calculada pelo projeto em projeção equivalente; Ministerio de Seguridad Nacional, SNIC-SAT, Informe de Homicidios Dolosos 2024 (homicídios 2023 e 2024); INDEC, Encuesta Permanente de Hogares: pobreza e indigência no segundo semestre de 2024 e mercado de trabalho no quarto trimestre de 2024 (regiões). Detalhes em pipeline/referencias/contexto/FONTES.md no repositório.';
+  $('ctxSources').textContent = 'Fontes: INDEC, Censo Nacional de Población, Hogares y Viviendas 2022, resultados definitivos (população) e indicadores por província e departamento obtidos no Geoportal estadístico do INDEC (portalgeoestadistico.indec.gob.ar: privação material dos domicílios, serviços, conectividade, educação, trabalho, saúde, estrutura demográfica, diversidade e migração); área calculada pelo projeto em projeção equivalente; Ministerio de Seguridad Nacional, SNIC-SAT, Informe de Homicidios Dolosos 2024 (homicídios 2023 e 2024); INDEC, Encuesta Permanente de Hogares: pobreza e indigência no segundo semestre de 2024 e mercado de trabalho no quarto trimestre de 2024 (regiões). Detalhes em pipeline/referencias/contexto/FONTES.md no repositório.';
 }
 
 function barCell(td, v, max, txt, cor){
@@ -132,7 +132,7 @@ function renderCtxTabela(md){
     return { p, i, reg:PROV_REG.get(p), noticias:md.c.get(i)||0, taxa:md.rate(i), pop:c.populacao_2022, dens:c.densidade_hab_km2, hom:c.taxa_homicidios_2024,
       ipmh:c.i_ipmh, desocup:c.i_desocup, secund:c.i_secund, cloaca:c.i_cloaca }; });
   const cols=[['p','Província'],['reg','Região'],['noticias','Notícias'],['taxa','Notícias / 100 mil hab.'],['pop','População 2022'],['dens','Hab./km²'],['hom','Homicídios / 100 mil hab. (2024)'],
-    ['ipmh','Privação material, % hogares (2022)'],['desocup','Desocupação, % (Censo 2022)'],['secund','Secundário completo, % 25+ (2022)'],['cloaca','Esgoto em rede, % hogares (2022)']];
+    ['ipmh','Privação material, % domicílios (2022)'],['desocup','Desocupação, % (Censo 2022)'],['secund','Secundário completo, % 25+ (2022)'],['cloaca','Esgoto em rede, % domicílios (2022)']];
   lin.sort((a,q)=>{ const A=a[CTXV.ord], B=q[CTXV.ord]; const r = typeof A==='string'? A.localeCompare(B,'es') : (A??-1)-(B??-1); return CTXV.desc? -r : r; });
   const mx={ noticias:d3.max(lin,d=>d.noticias), taxa:d3.max(lin,d=>d.taxa), hom:d3.max(lin,d=>d.hom||0), ipmh:d3.max(lin,d=>d.ipmh||0), desocup:d3.max(lin,d=>d.desocup||0), secund:100, cloaca:100 };
   const t=el('table','ctx-table'), th=el('thead'), tr=el('tr');

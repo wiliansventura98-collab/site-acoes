@@ -304,3 +304,6 @@ i.evb{flex:none;display:inline-grid;place-items:center;width:18px;height:18px;bo
 .wbtn:hover{background:var(--mist)}
 .leaflet-tooltip{font-family:var(--f-body);font-size:13px}
 .perio select{min-width:130px}
+/* título da base (DATALUTA) */
+h1.titulo-base{font-size:clamp(30px,4.2vw,52px);line-height:1.04;letter-spacing:-.025em;max-width:30ch}
+h1.titulo-base span{display:block;margin-top:10px;font-size:clamp(18px,2.1vw,26px);font-weight:600;letter-spacing:-.01em;color:var(--ink-2);line-height:1.2}

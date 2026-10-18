@@ -79,10 +79,11 @@ function renderCmp(b){
   box.append(lg);
   // leitura automática: as maiores diferenças significativas em cada direção
   const sig=linhas.filter(d=>Math.abs(d.z)>=1.96), maisA=sig.filter(d=>d.d>0).sort((p,q)=>q.d-p.d).slice(0,3), maisB=sig.filter(d=>d.d<0).sort((p,q)=>p.d-q.d).slice(0,3);
-  const frase=l=>l.map(d=>`<b>${vy.values[d.k]}</b> (${f1(d.pa)}% contra ${f1(d.pb)}%)`).join('; ');
+  const junta=a=> a.length<2? a.join('') : a.slice(0,-1).join(', ')+' e '+a[a.length-1];
+  const frase=(l,deB)=>junta(l.map(d=> deB? `<b>${vy.values[d.k]}</b> (${f1(d.pb)}% contra ${f1(d.pa)}%)` : `<b>${vy.values[d.k]}</b> (${f1(d.pa)}% contra ${f1(d.pb)}%)`));
   const Lg=$('cmpLeitura'); Lg.hidden=false;
   Lg.innerHTML = `<b>Leitura deste resultado:</b> ` + (!sig.length? `nenhuma diferença entre <b>${nomeA}</b> e <b>${nomeB}</b> é estatisticamente significativa nas categorias de “${vy.label}”; os dois grupos têm perfis parecidos, ou há poucas notícias para afirmar uma diferença.` :
-    (maisA.length? `as notícias de <b>${nomeA}</b> têm proporcionalmente mais ${frase(maisA)}. ` : '') + (maisB.length? `As de <b>${nomeB}</b> têm mais ${frase(maisB)}. ` : '') + `As demais diferenças podem ser acaso.`);
+    (maisA.length? `as notícias de <b>${nomeA}</b> têm, proporcionalmente, mais ${frase(maisA)}. ` : '') + (maisB.length? `Já as notícias de <b>${nomeB}</b> têm mais ${frase(maisB,true)}. ` : '') + `As demais diferenças podem ser fruto do acaso.`);
   $('cmpMeta').textContent=`${fmt(A.length)} × ${fmt(B.length)} notícias`;
   const comuns = CMP.bk!=='resto'? rows.filter(r=>temA(r) && r.v[iv].includes(+CMP.bk)).length : 0;
   $('cmpNote').textContent=`Cada linha mostra a proporção das notícias de cada grupo que têm a categoria de “${vy.label}”. As 18 categorias mais frequentes nos dois grupos estão ordenadas da maior vantagem de A à maior vantagem de B. A coluna da direita traz a diferença em pontos percentuais; * marca diferenças significativas a 5% (teste z de duas proporções). Os grupos respeitam os demais filtros ativos.`

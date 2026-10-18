@@ -644,7 +644,7 @@ function renderMap(b){
     const bivNota = cdef && cdef.nivel==='biv'? `Mapa bivariado: a cor de cada departamento combina o nível de “${cdef.indTitulo}” (do branco ao azul, de baixo a alto) com as notícias por habitante (do branco ao amarelo, de nenhuma a muitas). Onde os dois são altos, a cor fica verde-escura. Veja “Como ler” na legenda. ` : '';
     const altos = o.dest? o.dest.feats.filter(d=>d.t==='alto').sort((a,q)=>q.razao-a.razao) : [];
     const destNota = o.dest && o.dest.feats.length? `Destaques: ${altos.length} lugares com notícias muito acima do esperado pela população (contorno laranja${altos.length? ', por exemplo ' + altos.slice(0,4).map(d=>d.nome.replace(/ \((Buenos Aires|[^)]+)\)$/,'')).join(', ') : ''}) e ${o.dest.feats.length-altos.length} muito abaixo (contorno azul). ` : (unit==='loc' && mstate.dest!==false? 'Os destaques por população aparecem quando a unidade é departamento ou província. ' : '');
-    $('mapNote').textContent = destNota + bivNota + baWarn + (RATE_OK(unit)? '' : 'Para localidades o mapa mostra valores absolutos (círculos); a taxa por habitante está disponível por departamento e por província. ') + `${fmt(md.N-md.mapped)} notícias do recorte ficam fora do mapa por serem de escala nacional, virtuais, sem referência espacial ou no exterior.`;
+    $('mapNote').textContent = destNota + bivNota + baWarn + (RATE_OK(unit)? '' : 'Para localidades, o mapa mostra valores absolutos (círculos); a taxa por habitante está disponível por departamento e por província. ') + `${fmt(md.N-md.mapped)} notícias do recorte ficam fora do mapa por serem de escala nacional, virtuais, sem referência espacial ou no exterior.`;
   } else {
     const cv = mstate.cmp, icv = VI[cv], cvar = VARS[icv];
     const rowsAll = b.filter(r=>match(r, [vid, cv]));
@@ -692,7 +692,7 @@ function renderMap(b){
     const nh = textBlock(svg, noteX, noteY, techNote(md0, sh, o, true), 10, noteW, {fill:C.ink2, lh:1.38});
     H = Math.max(ly+lgH, noteY+nh) + M;
     $('mapTitle').textContent = 'Mapas por categoria'; $('mapMeta').textContent = `${cats.length} mapas · ${cvar.label}`;
-    $('mapNote').textContent = `Cada mapa mostra as notícias que têm a categoria indicada, dentro do recorte atual, na mesma escala para comparação.` + (RATE_OK(unit)? '' : ' Para localidades os mapas mostram valores absolutos (círculos).');
+    $('mapNote').textContent = `Cada mapa mostra as notícias que têm a categoria indicada, dentro do recorte atual, na mesma escala para comparação.` + (RATE_OK(unit)? '' : ' Para localidades, os mapas mostram valores absolutos (círculos).');
   }
   svg.attr('viewBox', `0 0 ${W} ${Math.ceil(H)}`); svg.select('.bgpaper').attr('width',W).attr('height',Math.ceil(H));
   SHEET_SVG = svg.node();

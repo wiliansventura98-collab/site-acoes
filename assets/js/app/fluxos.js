@@ -82,5 +82,5 @@ function renderFlow(b){
     svg.append('text').attr('class','sk-stage').attr('x', s===ultimo? x+14 : x).attr('y', 0).attr('dy','-0.2em').attr('text-anchor', s===ultimo? 'end':'start').text(VARS[VI[vid]].label); });
   svg.attr('viewBox',`0 -18 ${W} ${H+18}`);
   $('flowMeta').textContent = `${fmt(N)} notícias no recorte`;
-  $('flowNote').textContent = `Cada faixa liga categorias que aparecem na mesma notícia; a espessura é proporcional ao número de notícias. Contagem fracionada: uma notícia com 2 categorias numa etapa e 3 na seguinte reparte seu peso igualmente entre as 6 combinações, de modo que cada etapa soma o total do recorte. "Outras categorias" reúne as que estão fora das ${FLOW.n} principais; "Sem informação" reúne notícias sem valor ou com NI. Clique numa categoria para filtrar a base.`;
+  $('flowNote').textContent = `Cada faixa liga categorias que aparecem na mesma notícia; a espessura é proporcional ao número de notícias. Contagem fracionada: uma notícia com 2 categorias numa etapa e 3 na seguinte reparte seu peso igualmente entre as 6 combinações, de modo que cada etapa soma o total do recorte. “Outras categorias” reúne as que estão fora das ${FLOW.n} principais; “Sem informação” reúne notícias sem valor ou com NI. Clique numa categoria para filtrar a base.`;
 }

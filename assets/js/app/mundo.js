@@ -1,7 +1,7 @@
 /*
  * Mapa navegável
- * Alternativa à prancha cartográfica: mapa “deslizante” (Leaflet) sobre o mapa base da CARTO com dados do
- * OpenStreetMap, que pode ser arrastado e aproximado livremente para qualquer país do mundo. Os nomes de
+ * Alternativa à prancha cartográfica: mapa “deslizante” (Leaflet) sobre o mapa base cinza claro da Esri
+ * (ou o OpenStreetMap), que pode ser arrastado e aproximado livremente para qualquer país do mundo. Os nomes de
  * lugares do mapa base ficam por cima das camadas e mudam conforme o zoom. As camadas da base (círculos,
  * taxas, contexto do INDEC, bivariado, pontos quentes e destaques) são as mesmas da prancha.
  * Parte da base interativa Ações Socioespaciais 2024. Os arquivos são carregados em ordem por carregar.js
@@ -16,9 +16,14 @@ function webIniciar(){
   const box=$('wmap');
   WEB.map=L.map(box, { preferCanvas:true, worldCopyJump:true, minZoom:2, maxZoom:18, zoomSnap:0.5, zoomControl:true });
   WEB.map.createPane('rotulos'); WEB.map.getPane('rotulos').style.zIndex=650; WEB.map.getPane('rotulos').style.pointerEvents='none';
-  const att='Mapa base © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> © <a href="https://carto.com/attributions">CARTO</a> · Dados: base do projeto, INDEC';
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png', {subdomains:'abcd', maxZoom:19, attribution:att}).addTo(WEB.map);
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png', {subdomains:'abcd', maxZoom:19, pane:'rotulos'}).addTo(WEB.map);
+  // Mapa base sem chave de acesso: Esri Light Gray Canvas (fundo e nomes em camadas separadas, nomes por cima dos dados)
+  // e, como alternativa, o OpenStreetMap padrão.
+  const esri='https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/';
+  const fundo=L.tileLayer(esri+'World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {maxNativeZoom:16, maxZoom:18, attribution:'Mapa base: Esri, HERE, Garmin, © OpenStreetMap · Dados: base do projeto, INDEC'});
+  const nomes=L.tileLayer(esri+'World_Light_Gray_Reference/MapServer/tile/{z}/{y}/{x}', {maxNativeZoom:16, maxZoom:18, pane:'rotulos'});
+  const osm=L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom:19, attribution:'© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> · Dados: base do projeto, INDEC'});
+  const claro=L.layerGroup([fundo, nomes]).addTo(WEB.map);
+  L.control.layers({'Cinza claro, com nomes (Esri)': claro, 'OpenStreetMap (ruas e lugares)': osm}, null, {position:'topright', collapsed:true}).addTo(WEB.map);
   L.control.scale({imperial:false, position:'bottomright'}).addTo(WEB.map);
   WEB.grupo=L.layerGroup().addTo(WEB.map);
   WEB.legenda=L.control({position:'bottomleft'}); WEB.legenda.onAdd=()=>{ const d=L.DomUtil.create('div','wleg'); L.DomEvent.disableScrollPropagation(d); L.DomEvent.disableClickPropagation(d); return d; }; WEB.legenda.addTo(WEB.map);
@@ -99,5 +104,5 @@ function renderWeb(b, cdef){
     d.append(sw, document.createTextNode(it[2])); lg.append(d); });
   if(!leg.length) lg.append(el('p',null,'Escolha uma medida ou camada.'));
   $('mapTitle').textContent='Mapa navegável'; $('mapMeta').textContent=`${fmt(md.mapped)} de ${fmt(md.N)} notícias no mapa`;
-  $('mapNote').textContent = 'Arraste para mover e use a rolagem do mouse, os botões +/− ou a pinça para aproximar: o mapa vai a qualquer lugar do mundo, e os nomes de cidades, bairros e ruas aparecem conforme o zoom. O botão “⌂ Argentina” volta à vista inicial. Passe o mouse sobre um lugar para ver os números; clique para filtrar. Para a prancha cartográfica com escala, grade, nota técnica e exportação, volte a “Prancha cartográfica”.';
+  $('mapNote').textContent = 'Arraste para mover e use a rolagem do mouse, os botões +/− ou a pinça para aproximar: o mapa vai a qualquer lugar do mundo, e os nomes de países, cidades e bairros aparecem conforme o zoom. No canto superior direito, dá para trocar o fundo pelo OpenStreetMap, que mostra também as ruas. O botão “⌂ Argentina” volta à vista inicial. Passe o mouse sobre um lugar para ver os números; clique para filtrar. Para a prancha cartográfica com escala, grade, nota técnica e exportação, volte a “Prancha cartográfica”.';
 }
