@@ -34,6 +34,8 @@ A plataforma permite explorar a base sem instalar nada: escolher variáveis, cru
 | **Imprensa** | Quem noticia: veículos mais frequentes, concentração da cobertura (curva de Lorenz e Gini), veículos × regiões e diversidade de fontes por província. |
 | **Fichas** | Prancha de um movimento, tipo de movimento, província, departamento, localidade, objetivo ou ação, no padrão das pranchas de mapa: indicadores, mapa com escala, norte, grade e topônimos, detalhe da AMBA, evolução mensal, perfis, parceiros, nota técnica e exportação em PNG e SVG. |
 
+O mapa tem dois modos: a **prancha cartográfica** (escala, grade, nota técnica, exportação) e o **mapa navegável**, que pode ser arrastado para qualquer lugar do mundo sobre o mapa base da CARTO/OpenStreetMap. Por departamento e por província, **contornos** destacam lugares com notícias muito acima (laranja) ou abaixo (azul) do esperado pela população (teste exato de Poisson). Há **combinações prontas** em todas as abas e um **glossário** dos termos técnicos.
+
 Cada aba tem um guia **Como ler**, com explicação, exemplos tirados da própria base e cuidados de interpretação; Comparar, Correspondências e Contexto trazem também uma **leitura automática** do resultado em palavras, e Comparar e Correspondências têm **exemplos prontos**. Nos mapas, os **nomes de lugares mudam com o zoom**: capitais e províncias no país inteiro, cidades menores e departamentos ao aproximar (GeoNames, CC BY 4.0).
 
 O endereço da página guarda a aba, as variáveis e os filtros: o botão **Copiar link deste recorte** permite enviar a outra pessoa exatamente o mesmo gráfico.

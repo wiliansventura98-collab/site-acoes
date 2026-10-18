@@ -90,7 +90,7 @@ function renderCtx(b){
     .attr('fill',d=>REG_COR.get(d.reg)||COR_OUTROS).attr('fill-opacity',d=> dep && !d.n? .28 : .82).attr('class','sc-pt').style('cursor','pointer')
     .on('mousemove',(e,d)=>tip.show(e, d.p, [`${fmt(d.n)} notícias · ${nfmt1(d.y)} por 100 mil hab.`, `${titX}: ${d.x.toLocaleString('pt-BR',{maximumFractionDigits:2})} ${unX}`, d.reg]))
     .on('mouseleave',()=>tip.hide()).on('click',(e,d)=>{ if(d.i>=0) toggleFilter(vid, d.i); });
-  svg.append('g').selectAll('circle').data([...dest]).join('circle').attr('cx',d=>x(d.x)).attr('cy',d=>y(d.y)).attr('r',d=>rr(d.n)+3.5).attr('fill','none').attr('stroke',d=>d.res>0? '#c45a00' : '#2569ad').attr('stroke-width',2).attr('pointer-events','none');
+  svg.append('g').selectAll('circle').data([...dest]).join('circle').attr('cx',d=>x(d.x)).attr('cy',d=>y(d.y)).attr('r',d=>rr(d.n)+3.5).attr('fill','none').attr('stroke',d=>d.res>0? COR_ALTO : COR_BAIXO).attr('stroke-width',2).attr('pointer-events','none');
   // rótulos sem sobreposição: os de maior número de notícias têm prioridade
   const curtoP = p => p.replace('CABA (Ciudad de Buenos Aires)','CABA').replace('Santiago del Estero','Sgo. del Estero').replace('Tierra del Fuego','T. del Fuego');
   const ocupados=[]; const rot=[];
@@ -99,7 +99,11 @@ function renderCtx(b){
     if(!bate){ ocupados.push(bx); rot.push([d,tx]); } });
   svg.append('g').selectAll('text').data(rot).join('text').attr('class','sc-label').attr('x',([d])=>x(d.x)+rr(d.n)+3).attr('y',([d])=>y(d.y)+3.5).text(([,tx])=>tx);
   box.querySelectorAll('.net-legend').forEach(e=>e.remove());
-  const lgd=el('div','net-legend'); REG_ORDEM.forEach(r=>{ const s=el('span'); const sw=el('i'); sw.style.background=REG_COR.get(r); s.append(sw, document.createTextNode(r)); lgd.append(s); }); box.append(lgd);
+  const lgd=el('div','net-legend'); REG_ORDEM.forEach(r=>{ const s=el('span'); const sw=el('i'); sw.style.background=REG_COR.get(r); s.append(sw, document.createTextNode(r)); lgd.append(s); });
+  const sep=el('b',null,'Destaques e linhas'); sep.style.marginTop='6px'; lgd.append(sep);
+  [[COR_ALTO,'Contorno laranja: muito acima da tendência (mais notícias do que o indicador faria esperar)'],[COR_BAIXO,'Contorno azul: muito abaixo da tendência'],['#9aa6b2','Linhas cinzas: medianas (metade dos lugares de cada lado)'],['#7c8aa0','Tracejado: tendência média']].forEach(([c,t],j)=>{
+    const sp=el('span'); const sw=el('i'); sw.style.background= j<2? 'transparent' : c; if(j<2){ sw.style.border=`2.5px solid ${c}`; } else { sw.style.height='3px'; sw.style.borderRadius='0'; } sp.append(sw, document.createTextNode(t)); lgd.append(sp); });
+  box.append(lgd);
   const f2 = v => v.toLocaleString('pt-BR',{minimumFractionDigits:2, maximumFractionDigits:2});
   $('ctxMeta').textContent= dep? `${fmt(pts.length)} departamentos · ${fmt(pts.filter(d=>d.n).length)} com notícias` : `${pts.length} jurisdições`;
   const defX = IND.find(d=>'i_'+d.k===CTXV.x);

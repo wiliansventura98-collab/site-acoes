@@ -10,9 +10,10 @@
 <meta property="og:description" content="Base interativa de notícias sobre ações coletivas na Argentina em 2024: distribuições, fluxos, tipologias, redes de movimentos, mapas com indicadores do INDEC e calendário.">
 <meta property="og:type" content="website">
 <link rel="preload" href="../assets/fonts/urbanist-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="../assets/css/fontes.css?v=20261018f">
-<link rel="stylesheet" href="../assets/css/base.css?v=20261018f">
-<script src="../assets/js/marcha.js?v=20261018f" defer></script>
+<link rel="stylesheet" href="../assets/css/fontes.css?v=20261018g">
+<link rel="stylesheet" href="../assets/js/vendor/leaflet-1.9.4/leaflet.css">
+<link rel="stylesheet" href="../assets/css/base.css?v=20261018g">
+<script src="../assets/js/marcha.js?v=20261018g" defer></script>
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="sol" viewBox="-28 -28 56 56"><g fill="#f6b40e" stroke="#85340a" stroke-width=".6" stroke-linejoin="round"><path d="M-1.69 -12.38L0.00 -27.00L1.69 -12.38ZM3.17 -12.09L10.33 -24.94L6.31 -10.79ZM7.56 -9.96L19.09 -19.09L9.96 -7.56ZM10.79 -6.31L24.94 -10.33L12.09 -3.17ZM12.38 -1.69L27.00 0.00L12.38 1.69ZM12.09 3.17L24.94 10.33L10.79 6.31ZM9.96 7.56L19.09 19.09L7.56 9.96ZM6.31 10.79L10.33 24.94L3.17 12.09ZM1.69 12.38L0.00 27.00L-1.69 12.38ZM-3.17 12.09L-10.33 24.94L-6.31 10.79ZM-7.56 9.96L-19.09 19.09L-9.96 7.56ZM-10.79 6.31L-24.94 10.33L-12.09 3.17ZM-12.38 1.69L-27.00 0.00L-12.38 -1.69ZM-12.09 -3.17L-24.94 -10.33L-10.79 -6.31ZM-9.96 -7.56L-19.09 -19.09L-7.56 -9.96ZM-6.31 -10.79L-10.33 -24.94L-3.17 -12.09Z"/><path d="M1.08 -12.45C0.45 -16.99 6.22 -19.01 6.09 -23.22C6.27 -17.94 2.33 -15.83 3.77 -11.92ZM5.76 -11.09C6.92 -15.53 13.02 -15.18 14.51 -19.12C12.66 -14.17 8.21 -13.73 8.04 -9.57ZM9.57 -8.04C12.33 -11.70 17.84 -9.04 20.72 -12.11C17.12 -8.25 12.84 -9.54 11.09 -5.76ZM11.92 -3.77C15.87 -6.09 19.94 -1.53 23.78 -3.26C18.97 -1.07 15.52 -3.90 12.45 -1.08ZM12.45 1.08C16.99 0.45 19.01 6.22 23.22 6.09C17.94 6.27 15.83 2.33 11.92 3.77ZM11.09 5.76C15.53 6.92 15.18 13.02 19.12 14.51C14.17 12.66 13.73 8.21 9.57 8.04ZM8.04 9.57C11.70 12.33 9.04 17.84 12.11 20.72C8.25 17.12 9.54 12.84 5.76 11.09ZM3.77 11.92C6.09 15.87 1.53 19.94 3.26 23.78C1.07 18.97 3.90 15.52 1.08 12.45ZM-1.08 12.45C-0.45 16.99 -6.22 19.01 -6.09 23.22C-6.27 17.94 -2.33 15.83 -3.77 11.92ZM-5.76 11.09C-6.92 15.53 -13.02 15.18 -14.51 19.12C-12.66 14.17 -8.21 13.73 -8.04 9.57ZM-9.57 8.04C-12.33 11.70 -17.84 9.04 -20.72 12.11C-17.12 8.25 -12.84 9.54 -11.09 5.76ZM-11.92 3.77C-15.87 6.09 -19.94 1.53 -23.78 3.26C-18.97 1.07 -15.52 3.90 -12.45 1.08ZM-12.45 -1.08C-16.99 -0.45 -19.01 -6.22 -23.22 -6.09C-17.94 -6.27 -15.83 -2.33 -11.92 -3.77ZM-11.09 -5.76C-15.53 -6.92 -15.18 -13.02 -19.12 -14.51C-14.17 -12.66 -13.73 -8.21 -9.57 -8.04ZM-8.04 -9.57C-11.70 -12.33 -9.04 -17.84 -12.11 -20.72C-8.25 -17.12 -9.54 -12.84 -5.76 -11.09ZM-3.77 -11.92C-6.09 -15.87 -1.53 -19.94 -3.26 -23.78C-1.07 -18.97 -3.90 -15.52 -1.08 -12.45Z"/><circle r="11.5"/></g><circle r="8.4" fill="none" stroke="#85340a" stroke-width=".5" opacity=".55"/></symbol></svg>
@@ -20,7 +21,7 @@
 <header class="hero">
   <nav class="topo" aria-label="Navegação principal">
     <a class="marca" href="../"><svg viewBox="-28 -28 56 56" aria-hidden="true"><use href="#sol" x="-28" y="-28" width="56" height="56"/></svg><span>Ações Socioespaciais</span></a>
-    <div class="links"><a href="../">Início</a><a href="../#dados">Dados abertos</a><a href="https://github.com/wiliansventura98-collab/site-acoes">GitHub</a></div>
+    <div class="links"><a href="../">Início</a><a href="#" id="linkGloss">Glossário</a><a href="../#dados">Dados abertos</a><a href="https://github.com/wiliansventura98-collab/site-acoes">GitHub</a></div>
   </nav>
   <div class="hero-in">
     <div class="brand-txt">
@@ -71,6 +72,7 @@
 <li><b>Modo Associação:</b> compara cada célula com o que se esperaria se as variáveis não tivessem relação. Azul = aparece <i>mais</i> que o esperado; laranja = <i>menos</i>; branco = dentro do esperado.</li></ul>
 <h4>Exemplo nesta base</h4><p>Os <b>movimentos sindicais</b> aparecem em 446 das 934 notícias (47,8%). Cruzando tipo de movimento com objetivos no modo Associação, os <b>movimentos feministas</b> têm resíduo +13,7 em “igualdade de gênero” e os <b>estudantis</b> +11,7 em “objetivos educativos”: são as combinações mais típicas da base.</p>
 <h4>Cuidados</h4><p>Categorias grandes dominam a contagem bruta; para saber o que é característico de cada grupo, use % da linha ou Associação.</p></div></details>
+    <div class="presets" id="distPresets"></div>
     <p class="note" id="distNote"></p>
     <div id="distBody"></div>
   </section>
@@ -89,6 +91,7 @@
 <h4>Como ler</h4><ul><li>Cada <b>coluna</b> é uma variável; cada <b>bloco</b>, uma categoria (altura ∝ notícias).</li><li>Cada <b>faixa</b> liga categorias que aparecem juntas; a espessura é o número de notícias.</li><li>Passe o mouse para ver os valores; clique para filtrar.</li></ul>
 <h4>Exemplo nesta base</h4><p>Siga a faixa que sai de “Movimientos sindicales”: a parte mais grossa vai para deslocamentos coletivos (marchas, mobilizações) e daí para objetivos laborais.</p>
 <h4>Cuidados</h4><p>Quando uma notícia tem várias categorias, seu peso é repartido entre as combinações, para que cada coluna some o total de notícias do recorte.</p></div></details>
+    <div class="presets" id="flowPresets"></div>
     <p class="note" id="flowNote"></p>
     <div class="chart" id="flowChart"></div>
   </section>
@@ -102,6 +105,7 @@
     <details class="guia"><summary>Como ler: Tipologias</summary><div class="guia-corpo"><h4>O que mostra</h4><p>Um mapa de árvore: retângulos dentro de retângulos. O retângulo grande é a ação matriz; dentro dele, as ações derivadas.</p>
 <h4>Como ler</h4><p>A área de cada retângulo é proporcional ao número de notícias. Compare tamanhos dentro do mesmo bloco para ver quais formas concretas cada tipo de ação assume.</p>
 <h4>Exemplo nesta base</h4><p>“Acciones comunicativas” é a ação matriz mais frequente (274 notícias); dentro dela, os retângulos mostram as formas derivadas, como comunicados e conferências.</p></div></details>
+    <div class="presets" id="typoPresets"></div>
     <p class="note" id="typoNote"></p>
     <div class="chart" id="typoChart"></div>
   </section>
@@ -123,6 +127,7 @@
     <details class="guia"><summary>Como ler: Redes</summary><div class="guia-corpo"><h4>O que mostra</h4><p>Quais organizações (ou outras categorias) aparecem juntas nas mesmas notícias: as articulações entre movimentos.</p>
 <h4>Como ler</h4><ul><li><b>Círculo:</b> uma organização; o tamanho é o número de notícias.</li><li><b>Linha:</b> notícias em comum; quanto mais grossa, mais vezes agiram juntas.</li><li><b>Cor:</b> tipo de movimento predominante ou, se escolhido, comunidade (bloco de organizações que agem mais entre si do que com as demais).</li><li><b>Tabela abaixo:</b> grau = número de parceiros; força = notícias em comum; intermediação = quanto a organização faz a ponte entre outras.</li></ul>
 <h4>Exemplo nesta base</h4><p>A UTEP é o nó central: 165 notícias e 23 parceiros. As ligações mais fortes são MTE–UTEP (36 notícias em comum) e Movimiento Evita–UTEP (32). O Movimiento Evita e o Polo Obrero têm alta intermediação: ligam blocos diferentes.</p></div></details>
+    <div class="presets" id="netPresets"></div>
     <p class="note" id="netNote"></p>
     <div class="chart" id="netChart"></div>
     <div class="sechead" style="margin-top:24px"><h2>Quem articula a rede</h2><span class="meta">clique no cabeçalho para ordenar</span></div>
@@ -133,6 +138,12 @@
   <section class="panel" id="mapSec" role="tabpanel" aria-labelledby="tab-map" hidden>
     <div class="sechead"><h2 id="mapTitle">Mapa</h2><span class="meta" id="mapMeta"></span></div>
     <div class="mapctl">
+      <label class="f">Visualização
+        <span class="seg" id="mapVis">
+          <button data-v="prancha" aria-pressed="true">Prancha cartográfica</button>
+          <button data-v="web" aria-pressed="false">Mapa navegável (mundo)</button>
+        </span>
+      </label>
       <label class="f">Unidade espacial
         <span class="seg" id="mapUnit">
           <button data-v="loc" aria-pressed="true">Localidades</button>
@@ -182,6 +193,7 @@
       <label class="f" for="mapMes">Período
         <span class="perio"><select id="mapMes"><option value="">Ano inteiro (2024)</option></select><button class="btn" id="mapPlay" type="button" aria-pressed="false">Animar mês a mês</button></span>
       </label>
+      <label class="opt" for="mapDest"><input type="checkbox" id="mapDest" checked> Destacar lugares muito acima ou abaixo do esperado</label>
       <label class="opt" for="mapTopo"><input type="checkbox" id="mapTopo" checked> Mostrar nomes de lugares (mudam com o zoom)</label>
       <label class="f" for="author">Elaboração (aparece na nota)
         <input type="text" id="author" placeholder="ex.: Nome, instituição">
@@ -191,10 +203,14 @@
 <h4>Como ler</h4><ul><li><b>Círculos amarelos:</b> a área é proporcional ao número de notícias que citam o lugar.</li><li><b>Coroplético (cores):</b> do mais claro ao mais escuro, valores maiores. As classes estão na legenda.</li>
 <li><b>Camada de contexto:</b> pinta o fundo com um indicador oficial, para comparar com os círculos de notícias.</li><li><b>Mapa bivariado:</b> uma só cor combina notícias por habitante (amarelo) e o indicador (azul); veja “Como ler” na legenda.</li>
 <li><b>Pontos quentes (LISA):</b> laranja = departamentos com muitas notícias cercados de outros com muitas notícias; azul = poucos cercados de poucos.</li>
-<li><b>Nomes de lugares:</b> aparecem mais cidades à medida que você aproxima (botões +/−, Ctrl + rolagem ou pinça).</li></ul>
+<li><b>Nomes de lugares:</b> aparecem mais cidades à medida que você aproxima (botões +/−, Ctrl + rolagem ou pinça).</li>
+<li><b>Contornos laranja e azul (destaques):</b> por departamento ou província, marcam lugares com notícias <i>muito acima</i> (laranja) ou <i>muito abaixo</i> (azul) do que a população faria esperar. Exemplo: Los Lagos e Bariloche, no sul de Neuquén e Río Negro, têm várias vezes mais notícias do que o esperado para a sua população. O contorno só aparece quando a diferença é grande demais para ser acaso.</li>
+<li><b>Mapa navegável (mundo):</b> em “Visualização”, troca a prancha por um mapa que pode ser arrastado para qualquer país, com nomes de cidades, bairros e ruas que mudam com o zoom. As camadas são as mesmas.</li></ul>
 <h4>Exemplo nesta base</h4><p>Por localidade, a cidade de Buenos Aires concentra o maior círculo (254 notícias). Por taxa por habitante, departamentos menores da Patagônia aparecem acima, porque poucas notícias pesam mais numa população pequena.</p>
 <h4>Cuidados</h4><p>Em lugares pouco populosos, uma única notícia gera taxas altas; leia a taxa junto com os círculos. Notícias nacionais, virtuais ou sem lugar não entram no mapa.</p></div></details>
+    <div class="presets" id="mapPresets"></div>
     <p class="note" id="mapNote"></p>
+    <div class="wmap" id="wmap" hidden></div>
     <div class="sheet" id="sheet"></div>
     <div class="sheetbar">
       <span class="meta">Passe o mouse para ver valores e clique num lugar para filtrar. Aproxime com os botões +/−, Ctrl + rolagem ou pinça, e arraste para mover.</span>
@@ -225,9 +241,10 @@
     <details class="guia"><summary>Como ler: Contexto</summary><div class="guia-corpo"><h4>O que mostra</h4><p>Se os lugares com mais mobilização registrada são também os de maior carência, densidade, violência etc. Cada ponto é uma província ou um departamento.</p>
 <h4>Como ler</h4><ul><li><b>Eixo vertical:</b> notícias por 100 mil habitantes (quanto mais alto, mais mobilização registrada em proporção à população).</li><li><b>Eixo horizontal:</b> o indicador oficial escolhido (quanto mais à direita, maior).</li>
 <li><b>Linhas cinzas de mediana:</b> dividem o gráfico em quatro quadrantes, com o nome de cada situação (por exemplo, “indicador alto, poucas notícias”).</li><li><b>Linha tracejada:</b> tendência média. Subindo para a direita = relação positiva; descendo = negativa.</li>
-<li><b>r e ρ:</b> força da relação, de −1 a +1. Perto de 0 = sem relação; até ±0,3 = fraca; ±0,3 a ±0,6 = moderada; acima de ±0,6 = forte.</li><li><b>Pontos destacados com contorno:</b> lugares muito acima ou abaixo da tendência, que merecem um olhar específico.</li></ul>
+<li><b>r e ρ:</b> força da relação, de −1 a +1. Perto de 0 = sem relação; até ±0,3 = fraca; ±0,3 a ±0,6 = moderada; acima de ±0,6 = forte.</li><li><b>Pontos com contorno:</b> laranja = muito acima da tendência (mais notícias do que o indicador faria esperar); azul = muito abaixo. São os casos que merecem um olhar específico, e aparecem nomeados na leitura acima do gráfico.</li></ul>
 <h4>Exemplo nesta base</h4><p>Por departamento, com a privação material dos hogares no eixo horizontal, a correlação de Spearman é −0,27: relação fraca e negativa. Os departamentos mais pobres tendem levemente a ter <i>menos</i> notícias por habitante.</p>
 <h4>Cuidados</h4><p>Correlação não é causa. A relação vale para lugares, não para pessoas (falácia ecológica). E a base mede notícias, não todos os protestos: a cobertura da imprensa varia (veja a aba Imprensa).</p></div></details>
+    <div class="presets" id="ctxPresets"></div>
     <div class="leitura" id="ctxLeitura" hidden></div>
     <p class="note" id="ctxNote"></p>
     <div class="chart" id="ctxChart"></div>
@@ -245,8 +262,9 @@
     </div>
     <details class="guia"><summary>Como ler: No tempo</summary><div class="guia-corpo"><h4>O que mostra</h4><p>Quando as ações aconteceram: por mês, por dia (calendário) e por semana, com os principais acontecimentos políticos de 2024 marcados.</p>
 <h4>Como ler</h4><ul><li><b>Colunas mensais:</b> notícias por mês da publicação. Os círculos numerados no alto são os acontecimentos.</li><li><b>Calendário:</b> cada quadrado é um dia; mais escuro = mais ações iniciadas; quadrados com contorno colorido são os dias dos acontecimentos.</li>
-<li><b>Semana a semana:</b> áreas empilhadas por categoria; picos mostram semanas de mobilização intensa. Os cartões abaixo comparam cada acontecimento com uma semana típica e listam as notícias daquela semana.</li></ul>
+<li><b>Semana a semana:</b> áreas empilhadas por categoria; os triângulos laranja marcam semanas de pico, com muito mais notícias que o comum (acima do terceiro quartil mais 1,5 vez o intervalo interquartil, critério usual para valores atípicos). Os cartões abaixo comparam cada acontecimento com uma semana típica e listam as notícias daquela semana.</li></ul>
 <h4>Exemplo nesta base</h4><p>Março é o mês com mais notícias (187), puxado pelo 8M e pelo 24 de março, Dia da Memória. Outro pico aparece na semana da segunda Marcha Federal Universitária, em outubro.</p></div></details>
+    <div class="presets" id="timePresets"></div>
     <p class="note" id="timeNote">Mês da notícia. Clique numa coluna para filtrar o mês.</p>
     <div class="chart" id="timeMain"></div>
     <div class="sechead" style="margin-top:28px"><h2>Calendário das ações</h2><span class="meta" id="calMeta"></span></div>
@@ -339,7 +357,41 @@
     </div>
     <details class="guia"><summary>Como ler: Fichas</summary><div class="guia-corpo"><h4>O que mostra</h4><p>Um retrato de uma organização, tipo de movimento, província, departamento, localidade, objetivo ou ação: quantas notícias, quando, onde, com que repertório e com quem.</p>
 <h4>Como usar</h4><p>Escolha o tipo de ficha e digite o nome. Clique em qualquer categoria das listas para abrir a ficha dela. A ficha usa todas as notícias da base, sem os filtros, e pode ser baixada como imagem.</p></div></details>
+    <div class="presets" id="ficPresets"></div>
     <div id="ficBody"></div>
+  </section>
+
+  <section class="panel glossario" id="glossario">
+    <details>
+      <summary><h2>Glossário</h2><span class="meta">os termos técnicos usados na base, em linguagem simples</span></summary>
+      <dl>
+        <div><dt>Notícia única / repetida</dt><dd>A mesma ação pode ser noticiada várias vezes. As cópias são marcadas como “repetidas” e ficam fora das contagens, salvo se você marcar “Incluir notícias repetidas”.</dd></div>
+        <div><dt>Recorte</dt><dd>O conjunto de notícias que sobra depois dos filtros escolhidos. Todos os gráficos, mapas e números mostram o recorte atual.</dd></div>
+        <div><dt>Variável com vários valores</dt><dd>Uma notícia pode ter mais de uma categoria na mesma variável (por exemplo, dois tipos de movimento). Por isso as porcentagens podem somar mais de 100%.</dd></div>
+        <div><dt>Taxa por 100 mil habitantes</dt><dd>Número de notícias dividido pela população e multiplicado por 100.000. Permite comparar lugares de tamanhos diferentes.</dd></div>
+        <div><dt>Pontos percentuais (p.p.)</dt><dd>Diferença entre duas porcentagens. De 43% para 52% são 9 pontos percentuais (e não 9%).</dd></div>
+        <div><dt>Esperado</dt><dd>O valor que apareceria se não houvesse nenhuma relação entre as coisas comparadas. Por exemplo, nos mapas, o total de notícias repartido conforme a população de cada lugar.</dd></div>
+        <div><dt>Resíduo ajustado</dt><dd>Mede quanto um valor observado se afasta do esperado, em unidades comparáveis. Acima de +1,96 ou abaixo de −1,96, a diferença dificilmente é acaso (5% de chance).</dd></div>
+        <div><dt>Significativo</dt><dd>Uma diferença é chamada de significativa quando é grande demais para ser explicada pelo acaso. Os testes usam o limite usual de 5% (p < 0,05) ou o mais exigente de 1% (p < 0,01).</dd></div>
+        <div><dt>Valor p</dt><dd>A probabilidade de ver uma diferença tão grande quanto a observada se, na verdade, não houvesse diferença. Quanto menor, mais confiável é o resultado.</dd></div>
+        <div><dt>Qui-quadrado (χ²) e V de Cramér</dt><dd>O qui-quadrado testa se duas variáveis têm relação; o V de Cramér diz a força dessa relação, de 0 (nenhuma) a 1 (total).</dd></div>
+        <div><dt>Correlação (r de Pearson e ρ de Spearman)</dt><dd>Medem se duas medidas sobem ou descem juntas, de −1 a +1. Pearson olha a relação em linha reta; Spearman, a ordem dos lugares, e é menos sensível a casos extremos.</dd></div>
+        <div><dt>Mediana</dt><dd>O valor do meio: metade dos lugares está acima e metade abaixo. Usada para dividir os gráficos em quadrantes.</dd></div>
+        <div><dt>Quantis, tercis e quintis</dt><dd>Cortes que dividem os lugares em grupos do mesmo tamanho (três grupos nos tercis, cinco nos quintis). Usados para formar as classes de cor dos mapas.</dd></div>
+        <div><dt>Círculos proporcionais</dt><dd>Representação de valores absolutos: a área do círculo é proporcional ao número de notícias.</dd></div>
+        <div><dt>Coroplético</dt><dd>Mapa em que cada área é pintada conforme um valor relativo (taxa ou porcentagem). Cores mais escuras indicam valores maiores.</dd></div>
+        <div><dt>Mapa bivariado</dt><dd>Uma só cor combina duas informações: notícias por habitante (do branco ao amarelo) e um indicador do Censo (do branco ao azul).</dd></div>
+        <div><dt>LISA (pontos quentes e frios)</dt><dd>Indicador local de associação espacial. Mostra departamentos com muitas notícias cercados de vizinhos com muitas notícias (pontos quentes) ou o contrário (pontos frios).</dd></div>
+        <div><dt>Taxa bayesiana empírica</dt><dd>Ajuste da taxa por habitante que reduz o peso do acaso em lugares pouco populosos, aproximando-os da média geral.</dd></div>
+        <div><dt>Análise de correspondências múltiplas (ACM)</dt><dd>Técnica que coloca categorias de várias variáveis num mesmo plano: as que aparecem juntas nas mesmas notícias ficam próximas.</dd></div>
+        <div><dt>Inércia (ACM)</dt><dd>A quantidade de informação que cada eixo resume. A inércia corrigida de Benzécri é a estimativa mais realista.</dd></div>
+        <div><dt>Comunidade (redes)</dt><dd>Grupo de nós que se ligam mais entre si do que com o resto da rede, detectado pelo método de Louvain. A modularidade Q mede quão nítidos são esses grupos.</dd></div>
+        <div><dt>Intermediação (redes)</dt><dd>Quanto um nó está no caminho entre outros: organizações com alta intermediação fazem a ponte entre grupos.</dd></div>
+        <div><dt>Índice de Gini e HHI</dt><dd>Medem concentração. Gini perto de 0 = notícias distribuídas por igual entre as fontes; perto de 1 = concentradas em poucas. HHI perto de 1 = quase tudo de uma só fonte.</dd></div>
+        <div><dt>Falácia ecológica</dt><dd>Erro de tirar conclusões sobre pessoas a partir de dados de lugares. Uma relação entre províncias não diz como os indivíduos se comportam.</dd></div>
+        <div><dt>IPMH</dt><dd>Índice de Privação Material dos Hogares (INDEC, Censo 2022): proporção de domicílios com privação de recursos correntes, patrimoniais ou ambas.</dd></div>
+      </dl>
+    </details>
   </section>
 
   <section class="panel" id="newsSec">
@@ -372,6 +424,7 @@
 <script src="../assets/js/vendor/d3-7.8.5.min.js"></script>
 <script src="../assets/js/vendor/d3-sankey-0.12.3.min.js"></script>
 <script src="../assets/js/vendor/topojson-client-3.1.0.min.js"></script>
-<script src="../assets/js/app/carregar.js?v=20261018f"></script>
+<script src="../assets/js/vendor/leaflet-1.9.4/leaflet.js"></script>
+<script src="../assets/js/app/carregar.js?v=20261018g"></script>
 </body>
 </html>

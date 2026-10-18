@@ -9,6 +9,7 @@
 
 const EVENTOS = ((window.__GEO__||{}).eventos||[]).map((e,i)=>({ ...e, i:i+1, d:new Date(e.data+'T12:00:00') }));
 const SEM = { v:'tipomov', n:6, ev:true };
+let SEM_PICOS = { picos:[], corte:0 };
 try{ Object.assign(SEM, JSON.parse(localStorage.getItem('as24sem')||'{}')); }catch(e){}
 fillSelect($('semVar'), false);
 $('semVar').onchange=e=>{ SEM.v=e.target.value; render(); };
@@ -44,6 +45,14 @@ function renderSemanas(b){
   const area=d3.area().x(d=>x(d.data.d)+((x(d3.timeDay.offset(d.data.d,7))-x(d.data.d))/2)).y0(d=>y(d[0])).y1(d=>y(d[1])).curve(d3.curveMonotoneX);
   const tip=tipFor(box);
   svg.append('g').selectAll('path').data(stack).join('path').attr('d',area).attr('fill',s=>cor(s.key)).attr('fill-opacity',.88).attr('stroke','#fff').attr('stroke-width',.6);
+  // semanas de pico: acima de Q3 + 1,5 × intervalo interquartil (critério usual de valor atípico)
+  const totW=M.map(d=>d3.sum(series,k=>d[k])), ord=[...totW].sort(d3.ascending), q1=d3.quantileSorted(ord,.25), q3=d3.quantileSorted(ord,.75), corte=q3+1.5*(q3-q1);
+  const picos=M.map((d,i)=>({d:d.d, n:totW[i]})).filter(p=>p.n>corte && p.n>0);
+  const xm=d=>x(d)+((x(d3.timeDay.offset(d,7))-x(d))/2);
+  svg.append('g').selectAll('g').data(picos).join('g').attr('transform',p=>`translate(${xm(p.d)},${y(p.n)-8})`).call(g=>{
+    g.append('path').attr('d','M-6,-6 L6,-6 L0,4 Z').attr('fill',COR_ALTO);
+    g.append('text').attr('y',-10).attr('text-anchor','middle').attr('font-size',10).attr('font-weight',800).attr('fill',COR_ALTO).attr('paint-order','stroke').attr('stroke','#fff').attr('stroke-width',3).text(p=>fmt(Math.round(p.n))); });
+  SEM_PICOS = { picos, corte };
   if(SEM.ev){
     const ge=svg.append('g');
     // rótulos curtos em duas alturas alternadas, para não se sobreporem
@@ -64,9 +73,12 @@ function renderSemanas(b){
       tip.show(ev, `Semana de ${d.d.toLocaleDateString('pt-BR',{day:'2-digit',month:'short'})} a ${fim.toLocaleDateString('pt-BR',{day:'2-digit',month:'short'})}`,
         [`${fmt(Math.round(d3.sum(series,k=>d[k])))} notícias`, ...series.filter(k=>d[k]>0).sort((a,q)=>d[q]-d[a]).slice(0,4).map(k=>`${k==='outros'? 'Outras categorias' : v.values[k]}: ${d[k].toLocaleString('pt-BR',{maximumFractionDigits:1})}`), ...evs.map(e=>`● ${e.i}. ${e.nome}`)]); })
     .on('mouseleave',()=>tip.hide());
-  const lg=el('div','legend'); series.forEach(k=>{ const s=el('span'); const i=el('i','sw'); i.style.background=cor(k); s.append(i, document.createTextNode(k==='outros'? 'Outras categorias e sem informação' : v.values[k])); lg.append(s); }); box.append(lg);
+  const lg=el('div','legend');
+  if(SEM_PICOS.picos.length){ const sp=el('span'); const sw=el('i','sw'); sw.style.background='transparent'; sw.style.border='none'; sw.style.borderTop=`9px solid ${COR_ALTO}`; sw.style.borderLeft='6px solid transparent'; sw.style.borderRight='6px solid transparent'; sw.style.width='0'; sw.style.height='0'; sw.style.borderRadius='0';
+    sp.append(sw, document.createTextNode(`Semana de pico: ${SEM_PICOS.picos.length} semanas com mais de ${Math.round(SEM_PICOS.corte)} notícias, bem acima do comum`)); lg.append(sp); }
+  series.forEach(k=>{ const s=el('span'); const i=el('i','sw'); i.style.background=cor(k); s.append(i, document.createTextNode(k==='outros'? 'Outras categorias e sem informação' : v.values[k])); lg.append(s); }); box.append(lg);
   $('semMeta').textContent=`${fmt(rows.length)} notícias com data em 2024`;
-  $('semNote').textContent=`Notícias por semana (segunda a domingo) pela data de início da ação ou, na falta dela, pela data da notícia, empilhadas pelas ${top.length} categorias mais frequentes de “${v.label}”. Cada notícia soma 1 na sua semana, repartida igualmente quando tem várias categorias. Os números no alto marcam acontecimentos de 2024; a lista abaixo traz as datas e as fontes.`;
+  $('semNote').textContent=`Notícias por semana (segunda a domingo) pela data de início da ação ou, na falta dela, pela data da notícia, empilhadas pelas ${top.length} categorias mais frequentes de “${v.label}”. Cada notícia soma 1 na sua semana, repartida igualmente quando tem várias categorias. Os números no alto marcam acontecimentos de 2024 (a lista abaixo traz as datas e as fontes); os triângulos laranja marcam semanas de pico, com muito mais notícias que o comum.`;
   // cartões: notícias na semana do acontecimento comparadas à semana típica (mediana do ano)
   const totSem=M.map(d=>d3.sum(series,k=>d[k])), mediana=d3.median(totSem)||1;
   const ol=$('semEventos'); ol.textContent='';

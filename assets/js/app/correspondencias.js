@@ -23,6 +23,9 @@ const ACM_EX = [
   ['Repertório de ação', ['matriz','direccion','modalidad','localizacion','escala']],
   ['Movimentos e objetivos', ['tipomov','objetivos','direccion']],
   ['Instituições interpeladas', ['tipoinst','escala','region','direccion']],
+  ['Espaço da ação', ['localizacion','dependencias','escala','region']],
+  ['Ação e desenvolvimento sustentável', ['matriz','objetivos','ods']],
+  ['Presencial ou virtual', ['virtual','modalidad','matriz','tipomov']],
 ];
 (()=>{ const box=$('acmPresets'); box.append(el('span',null,'Combinações prontas:'));
   ACM_EX.forEach(([rot,vs])=>{ const b=el('button','btn',rot); b.type='button'; b.onclick=()=>{ ACMS.vars=vs.filter(x=>ACM_OK.includes(x)); $('acmVars').querySelectorAll('input').forEach(i=>{ i.checked=ACMS.vars.includes(i.value); }); render(); }; box.append(b); }); })();

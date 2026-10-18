@@ -22,6 +22,11 @@ const CMP_EX = [
   ['Patagônia × Noroeste, por objetivos', {av:'region', akNome:'Patagonia', bkNome:'Noroeste (NOA)', y:'objetivos'}],
   ['Feministas × estudantis, por ação matriz', {av:'tipomov', akNome:'Movimientos de mujeres/feministas', bkNome:'Movimientos Estudiantiles', y:'matriz'}],
   ['Escala nacional × municipal, por instituição interpelada', {av:'escala', akNome:'Nacional', bkNome:'Municipal', y:'tipoinst'}],
+  ['Ações virtuais × presenciais, por objetivos', {av:'virtual', akNome:'Sí', bkNome:'No', y:'objetivos'}],
+  ['Reivindicativas × defensivas, por tipo de movimento', {av:'direccion', akNome:'Reivindicativa', bkNome:'Defensiva', y:'tipomov'}],
+  ['Pampeana × Patagônia, por ação matriz', {av:'region', akNome:'Pampeana', bkNome:'Patagonia', y:'matriz'}],
+  ['Economia popular × sindicais, por instituição interpelada', {av:'tipomov', akNome:'Movimientos de Economía Social y Solidaria', bkNome:'Movimientos sindicales', y:'tipoinst'}],
+  ['Desocupados × sindicais, por lugar da ação', {av:'tipomov', akNome:'Movimientos de trabajadores Desocupados', bkNome:'Movimientos sindicales', y:'localizacion'}],
 ];
 (()=>{ const box=$('cmpPresets'); box.append(el('span',null,'Exemplos prontos:'));
   CMP_EX.forEach(([rot,ex])=>{ const b=el('button','btn',rot); b.type='button'; b.onclick=()=>{ const vals=VARS[VI[ex.av]].values; CMP.av=ex.av; CMP.ak=vals.indexOf(ex.akNome); CMP.bk= ex.bkNome? String(vals.indexOf(ex.bkNome)) : 'resto'; CMP.y=ex.y; render(); }; box.append(b); }); })();

@@ -195,6 +195,22 @@ function topoLayer(m, proj, box, k, modo){
   return out.length;
 }
 
+/* ---------- destaques: lugares com notícias muito acima ou abaixo do esperado pela população ----------
+   Esperado = total de notícias do recorte × (população do lugar ÷ população total). Teste exato de Poisson, p < 0,01. */
+const COR_ALTO='#c45a00', COR_BAIXO='#2569ad';
+function poisCdf(O, E){ if(O<0) return 0; let t=Math.exp(-E), soma=t; for(let k=1;k<=O;k++){ t*=E/k; soma+=t; } return Math.min(1,soma); }
+function destaques(md){
+  const feats = md.unit==='dept'? DEPTS.filter(f=>(IND_DEP[f.id]||{}).pop) : PROVS_FC.filter(f=>f.properties.pi>=0 && POP[f.properties.pi]);
+  const popF = f => md.unit==='dept'? IND_DEP[f.id].pop : POP[f.properties.pi], obsF = f => { const i = md.unit==='dept'? f.properties.di : f.properties.pi; return i>=0? (md.c.get(i)||0) : 0; };
+  const tot=d3.sum(feats,obsF), P=d3.sum(feats,popF), out=[];
+  if(tot<10) return {feats:[], tot};
+  feats.forEach(f=>{ const O=obsF(f), E=tot*popF(f)/P, nome = md.unit==='dept'? f.properties.n : f.properties.p;
+    const pAlto = 1-poisCdf(O-1,E), pBaixo = poisCdf(O,E);
+    if(O>=3 && O>E && pAlto<0.01) out.push({f, t:'alto', O, E, p:pAlto, nome, razao:O/E});
+    else if(O<E && pBaixo<0.01) out.push({f, t:'baixo', O, E, p:pBaixo, nome, razao:O/E}); });
+  return { feats: out, tot };
+}
+
 const PROJ = () => d3.geoConicConformal().parallels([-28,-46]).rotate([64,0]);
 const mstate = { unit:'loc', measure:'abs', mode:'one', cmp:'nombremov', n:6, author:'', ctx:'', mes:'' };
 try{ const s=JSON.parse(localStorage.getItem('as24m2')||'null'); if(s){ Object.assign(mstate, s); if(VI[mstate.cmp]==null) mstate.cmp='nombremov'; } }catch(e){}
@@ -207,6 +223,7 @@ document.querySelectorAll('#mapMode button').forEach(b=>b.onclick=()=>{ mstate.m
 $('cmpVar').onchange=e=>{ mstate.cmp=e.target.value; render(); };
 $('ctxLayer').onchange=e=>{ mstate.ctx=e.target.value; render(); };
 $('mapTopo').onchange=e=>{ mstate.topo=e.target.checked; render(); };
+$('mapDest').onchange=e=>{ mstate.dest=e.target.checked; render(); };
 const MES_VALS = VARS[VI.mes].values;
 MES_VALS.forEach((m,i)=>{ const o=el('option',null,m.replace(/^\d\d · /,'')); o.value=String(i); $('mapMes').append(o); });
 $('mapMes').onchange=e=>{ mstate.mes=e.target.value; pararAnim(); render(); };
@@ -294,6 +311,8 @@ function drawBase(g, proj, box, md, sh, o){
   const tip=o.tip, sel=o.sel||new Set();
   const tipText = i => { const n=md.c.get(i)||0; const L=[`${fmt(n)} notícias · ${pct(n, md.N)} do recorte`]; const P=popOf(md.unit,i); if(P) L.push(`${nfmt1(md.rate(i))} notícias por 100 mil hab. (${fmt(P)} hab.)`);
     const chaveCtx = o.ctx && ((md.unit==='prov' && o.ctx.nivel==='prov')? PROV_VALS[i] : (md.unit==='dept' && o.ctx.nivel==='dep')? DI_ID[i] : null);
+    if(o.dest && o.dest.idx && o.dest.idx.has(i)){ const d=o.dest.idx.get(i), f1=v=>v.toLocaleString('pt-BR',{maximumFractionDigits:1});
+      L.push(d.t==='alto'? `▲ Destaque: ${f1(d.razao)} vezes o esperado pela população (esperado ≈ ${f1(d.E)})` : `▼ Destaque: bem abaixo do esperado pela população (esperado ≈ ${f1(d.E)})`); }
     if(chaveCtx!=null){ const v=ctxValor(o.ctx, chaveCtx); if(v!=null) L.push(`${o.ctx.titulo.replace(/, 20\d\d.*$/,'')}: ${o.ctxCls.fmt(v)} ${o.ctx.curto}`); } return L; };
   const ev = (s, nameOf, idxOf) => { if(!tip) return s; return s.attr('class','hit')
       .on('mousemove',(e,d)=>{ const i=idxOf(d); if(i<0) return tip.hide(); tip.show(e, nameOf(d), tipText(i)); })
@@ -346,6 +365,10 @@ function drawBase(g, proj, box, md, sh, o){
     const sp = m.append('g').selectAll('circle').data(pts).join('circle').attr('cx',d=>d.xy[0]).attr('cy',d=>d.xy[1]).attr('r',d=>o.popDR(d.n))
       .attr('fill','#957d58').attr('fill-opacity',.08).attr('stroke','#5e4c33').attr('stroke-width', o.small? .5 : .8);
     if(tip) sp.on('mousemove',(e,d)=>tip.show(e, d.nm, [`${fmt(d.n)} habitantes (Censo 2022)`])).on('mouseleave',()=>tip.hide());
+  }
+  if(o.dest && o.dest.feats.length){ // contornos dos destaques
+    const gd=m.append('g').attr('pointer-events','none');
+    gd.selectAll('path').data(o.dest.feats).join('path').attr('d',d=>path(d.f)).attr('fill','none').attr('stroke',d=>d.t==='alto'? COR_ALTO : COR_BAIXO).attr('stroke-width',o.small? 1.4 : 2.4).attr('stroke-linejoin','round');
   }
   if(o.circles){
     const pts=[]; md.c.forEach((n,i)=>{ if(md.XY[i]){ const xy=proj(md.XY[i]); if(xy && xy[0]>x0-40 && xy[0]<x1+40 && xy[1]>y0-40 && xy[1]<y1+40) pts.push({i,n,xy}); } });
@@ -434,6 +457,13 @@ function legendBlock(g, x, y, w, md, sh, o){
     }
     yy += textBlock(g, x, yy+8, `Fonte: ${d.fonte}.`, 9.5, w, {fill:C.ink3}) + 18;
   }
+  if(o.dest && o.dest.feats.length){
+    yy += textBlock(g, x, yy, 'Destaques (contorno)', 12, w, {weight:700}) + 6;
+    [[COR_ALTO,'Muito acima do esperado pela população'],[COR_BAIXO,'Muito abaixo do esperado pela população']].forEach(([c,l])=>{ const n=o.dest.feats.filter(d=>(d.t==='alto')===(c===COR_ALTO)).length;
+      g.append('rect').attr('x',x+1).attr('y',yy).attr('width',16).attr('height',11).attr('fill','none').attr('stroke',c).attr('stroke-width',2.2);
+      g.append('text').attr('x',x+26).attr('y',yy+9.5).attr('font-size',10.5).attr('font-family',FONT).attr('fill',C.ink2).text(`${l}: ${n}`); yy+=16; });
+    yy += textBlock(g, x, yy+4, 'Esperado = notícias do recorte repartidas conforme a população. Contorno só quando a diferença é grande demais para ser acaso (teste de Poisson, p < 0,01).', 9.5, w, {fill:C.ink3}) + 12;
+  }
   [['Limite internacional',C.neighLine,.9],['Limite regional (INDEC)',C.reg,2.3],['Limite provincial',C.prov,1],['Limite de departamento / partido',C.dept,.6]].forEach(([l,c,wd])=>{
     if(((o.fill && md.unit!=='dept') || (o.ctx && (o.ctx.nivel==='prov'||o.ctx.nivel==='reg'))) && wd===.6) return;
     g.append('line').attr('x1',x).attr('x2',x+18).attr('y1',yy+5).attr('y2',yy+5).attr('stroke',c).attr('stroke-width',wd);
@@ -460,6 +490,7 @@ function techNote(md, sh, o, multi){
     : d.nivel==='lisa'? `Pontos quentes e frios por departamento/partido: indicador local de associação espacial (LISA, I de Moran local) sobre a taxa bayesiana empírica de notícias por 100 mil habitantes (estimador global de Marshall, que estabiliza departamentos pouco populosos); vizinhança por contiguidade de rainha com pesos padronizados por linha; significância por 499 permutações condicionais (p < 0,05, sem correção para comparações múltiplas). Fonte: ${d.fonte}.`
     : d.nivel==='popDep'? `Camada de contexto: população residente em 2022 em círculos vazados proporcionais (área ∝ habitantes), no centróide de cada departamento/partido; fonte: ${d.fonte}.`
     : `Camada de contexto: ${d.titulo}, ${d.nivel==='agl'? 'em símbolos de cor nos 31 aglomerados urbanos da EPH (valores urbanos, não provinciais)' : d.nivel==='reg'? 'em coroplético por região estatística (valores dos aglomerados urbanos de cada região)' : d.nivel==='dep'? 'em coroplético por departamento/partido (CABA como um todo; sem dado para as Ilhas Malvinas)' : 'em coroplético por província'}; classes por quantis${d.nivel==='dep'? ' dos 511 departamentos' : ''}; fonte: ${d.fonte}.${d.definicao? ' Definição do INDEC: '+d.definicao.split(/\n/)[0] : ''}`); }
+  if(o.dest && o.dest.feats.length) s.push(`Destaques: contorno laranja nos lugares com mais notícias do que o esperado pela sua população e azul nos que têm menos (esperado = ${fmt(o.dest.tot)} notícias do recorte repartidas proporcionalmente à população; teste exato de Poisson unicaudal, p < 0,01; para “acima”, mínimo de 3 notícias).`);
   if(md.spatial) s.push('Filtros espaciais aplicados ao lugar: só são representados os lugares dentro das unidades selecionadas, mesmo quando a notícia também cita outros lugares.');
   s.push('Limites: departamentos/partidos (linha fina), províncias (média) e regiões estatísticas do INDEC (grossa): Gran Buenos Aires (CABA e 24 partidos), Pampeana, Noroeste, Noreste, Cuyo e Patagonia.');
   const zk = (multi? ZOOM.multi : ZOOM.one).k; if(zk>1) s.push(`Vista ampliada (×${zk.toLocaleString('pt-BR',{maximumFractionDigits:1})}) em relação ao país inteiro.`);
@@ -517,7 +548,7 @@ function renderMap(b){
   const b0=b, comMes = mstate.mes!=='' && mstate.mes!=null;
   if(comMes){ const im=+mstate.mes; b=b.filter(r=>r.v[VI.mes].includes(im)); }
   const nomeMes = comMes? MES_VALS[+mstate.mes].replace(/^\d\d · /,'').toLowerCase() : '';
-  $('mapMes').value = mstate.mes||''; $('mapTopo').checked = mstate.topo!==false;
+  $('mapMes').value = mstate.mes||''; $('mapTopo').checked = mstate.topo!==false; $('mapDest').checked = mstate.dest!==false;
   if(!RATE_OK(mstate.unit)) mstate.measure='abs';
   const cdef = ctxEscolha(mstate.ctx), cpoly = !!cdef && ['prov','reg','dep','biv','lisa'].includes(cdef.nivel);
   if(cpoly) mstate.measure='abs';
@@ -529,6 +560,10 @@ function renderMap(b){
   $('cmpVar').value = mstate.cmp; $('cmpN').value = String(mstate.n);
   if(document.activeElement!==$('author')) $('author').value = mstate.author;
   msave();
+  const ehWeb = mstate.vis==='web';
+  document.querySelectorAll('#mapVis button').forEach(x=>x.setAttribute('aria-pressed', String(x.dataset.v===(ehWeb? 'web' : 'prancha'))));
+  $('sheet').hidden=ehWeb; $('wmap').hidden=!ehWeb; const sb=document.querySelector('#mapSec .sheetbar'); if(sb) sb.hidden=ehWeb; $('mapMode').closest('label').hidden=ehWeb;
+  if(ehWeb){ $('mapRank').textContent=''; $('cmpWrap').hidden=$('cmpNWrap').hidden=true; if(typeof renderWeb==='function') renderWeb(b, cdef); return; }
   const box=$('sheet'); box.querySelectorAll('svg').forEach(s=>s.remove()); $('mapRank').textContent='';
   if(!HAS_D3){ $('mapNote').textContent='Não foi possível carregar a biblioteca de mapas nesta visualização.'; return; }
   const unit = mstate.unit, vid = UNIT_VID[unit];
@@ -556,6 +591,8 @@ function renderMap(b){
   if(mstate.mode==='one'){
     const rows = b.filter(r=>match(r, vid));
     const md = mapData(rows, unit);
+    o.dest = (unit!=='loc' && mstate.dest!==false && !o.esp)? destaques(md) : null;
+    if(o.dest) o.dest.idx = new Map(o.dest.feats.map(d=>[unit==='dept'? d.f.properties.di : d.f.properties.pi, d]).filter(([i])=>i>=0));
     // no modo mensal, a escala dos círculos é a do mês com mais notícias, para que os meses sejam comparáveis
     const sh = { max: comMes? (d3.max(MES_VALS, (_,m)=>mapData(b0.filter(r=>r.v[VI.mes].includes(m) && match(r, vid)), unit).max)||1) : (md.max||1) };
     if(o.fill) Object.assign(sh, classify(rateIds(unit).map(md.rate)));
@@ -605,7 +642,9 @@ function renderMap(b){
     const regSel = st.f.region? [...st.f.region].map(i=>REG_VALS[i]) : [];
     const baWarn = unit==='prov' && regSel.some(r=>r==='Gran Buenos Aires'||r==='Pampeana') ? 'A província de Buenos Aires se divide entre as regiões Gran Buenos Aires e Pampeana; para separar as duas, use Departamentos ou Localidades. ' : '';
     const bivNota = cdef && cdef.nivel==='biv'? `Mapa bivariado: a cor de cada departamento combina o nível de “${cdef.indTitulo}” (do branco ao azul, de baixo a alto) com as notícias por habitante (do branco ao amarelo, de nenhuma a muitas). Onde os dois são altos, a cor fica verde-escura. Veja “Como ler” na legenda. ` : '';
-    $('mapNote').textContent = bivNota + baWarn + (RATE_OK(unit)? '' : 'Para localidades o mapa mostra valores absolutos (círculos); a taxa por habitante está disponível por departamento e por província. ') + `${fmt(md.N-md.mapped)} notícias do recorte ficam fora do mapa por serem de escala nacional, virtuais, sem referência espacial ou no exterior.`;
+    const altos = o.dest? o.dest.feats.filter(d=>d.t==='alto').sort((a,q)=>q.razao-a.razao) : [];
+    const destNota = o.dest && o.dest.feats.length? `Destaques: ${altos.length} lugares com notícias muito acima do esperado pela população (contorno laranja${altos.length? ', por exemplo ' + altos.slice(0,4).map(d=>d.nome.replace(/ \((Buenos Aires|[^)]+)\)$/,'')).join(', ') : ''}) e ${o.dest.feats.length-altos.length} muito abaixo (contorno azul). ` : (unit==='loc' && mstate.dest!==false? 'Os destaques por população aparecem quando a unidade é departamento ou província. ' : '');
+    $('mapNote').textContent = destNota + bivNota + baWarn + (RATE_OK(unit)? '' : 'Para localidades o mapa mostra valores absolutos (círculos); a taxa por habitante está disponível por departamento e por província. ') + `${fmt(md.N-md.mapped)} notícias do recorte ficam fora do mapa por serem de escala nacional, virtuais, sem referência espacial ou no exterior.`;
   } else {
     const cv = mstate.cmp, icv = VI[cv], cvar = VARS[icv];
     const rowsAll = b.filter(r=>match(r, [vid, cv]));

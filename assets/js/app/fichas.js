@@ -119,12 +119,14 @@ function renderFicha(b){
   yFim += textBlock(svg, M, yFim+14, nota, 10, W-2*M, {fill:C.ink2, lh:1.38}) + 10;
   const H=yFim+M;
   svg.attr('viewBox',`0 0 ${W} ${Math.ceil(H)}`); svg.select('.bgpaper').attr('width',W).attr('height',Math.ceil(H));
+  // tipografia da ficha: Urbanist, como no restante do site
+  const FU='Urbanist, "Helvetica Neue", Arial, sans-serif'; svg.attr('font-family',FU); svg.selectAll('text').attr('font-family',FU);
   FIC_SVG=svg.node();
   // ferramentas
   const tools=el('div','sheetbar fic-bar-tools'); const t1=el('div','tools');
   const slug=nome.normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-zA-Z0-9]+/g,'_').slice(0,40).toLowerCase();
   const msg=el('span','toast');
-  const salva=async kind=>{ try{ const data = kind==='png'? await pngBlob(FIC_SVG, 3) : svgString(FIC_SVG); await (DL||NATIVE_DL).save({filename:`ficha_${slug}.${kind}`, data}); msg.textContent=kind.toUpperCase()+' baixado.'; }catch(e){ msg.textContent='Não foi possível baixar aqui.'; } };
+  const salva=async kind=>{ try{ const css=await fonteEmbutida(); const data = kind==='png'? await pngBlob(FIC_SVG, 3, css) : svgString(FIC_SVG, css); await (DL||NATIVE_DL).save({filename:`ficha_${slug}.${kind}`, data}); msg.textContent=kind.toUpperCase()+' baixado.'; }catch(e){ msg.textContent='Não foi possível baixar aqui.'; } };
   const bp=el('button','btn','Baixar PNG'); bp.onclick=()=>salva('png'); const bs=el('button','btn','Baixar SVG'); bs.onclick=()=>salva('svg');
   const bf=el('button','btn','Filtrar a base por esta categoria'); bf.onclick=()=>{ st.f={}; st.f[FIC.v]=new Set([FIC.k]); st.page=40; setTab('dist'); };
   t1.append(bp,bs,bf,msg); tools.append(el('span','meta','Passe o mouse no mapa para ver as localidades; clique nas barras para abrir outra ficha.'), t1); box.append(tools);
