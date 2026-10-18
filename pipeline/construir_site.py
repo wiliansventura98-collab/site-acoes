@@ -17,6 +17,7 @@ import argparse
 import collections
 import csv
 import json
+import os
 import sys
 
 import pandas as pd
@@ -98,6 +99,8 @@ def _topo_para_geometrias(topo):
 
 
 def escrever_camadas(res, coords, relatorio, caminho):
+    # Data fixa nos metadados do GeoPackage: o arquivo só muda quando os dados mudam
+    os.environ.setdefault("OGR_CURRENT_DATE", "2024-12-31T00:00:00.000Z")
     try:
         import geopandas as gpd
         from shapely.geometry import Point
