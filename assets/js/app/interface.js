@@ -6,7 +6,7 @@
  */
 
 function render(){
-  save();
+  save(); if(typeof urlSync==='function') urlSync();
   $('var').value=st.v; $('cross').value=st.x; $('rep').checked=st.rep;
   const b=base();
   const nUniq=ROWS.filter(r=>!r.rep).length, nRep=ROWS.length-nUniq;
@@ -37,22 +37,25 @@ function render(){
   if(TAB==='typo') renderTypo(b);
   if(TAB==='net') renderNet(b);
   if(TAB==='ctx') renderCtx(b);
+  if(EXTRA[TAB]) EXTRA[TAB](b);
   renderNews(b.filter(r=>match(r,null)));
 }
 
 /* ---------- tabs ---------- */
 let TAB='dist';
-const TABS={distribuicao:'dist', fluxos:'flow', tipologias:'typo', redes:'net', mapa:'map', contexto:'ctx', tempo:'time'};
-const PAINEIS=[['dist','tab-dist','dist'],['flow','tab-flow','flowSec'],['typo','tab-typo','typoSec'],['net','tab-net','netSec'],['map','tab-map','mapSec'],['ctx','tab-ctx','ctxSec'],['time','tab-time','timeSec']];
+const EXTRA = {}; // abas acrescentadas por módulos posteriores: EXTRA[chave] = função de desenho
+const TABS={distribuicao:'dist', comparar:'cmp', fluxos:'flow', tipologias:'typo', correspondencias:'acm', redes:'net', mapa:'map', contexto:'ctx', tempo:'time', imprensa:'imp', fichas:'fic'};
+const PAINEIS=[['dist','tab-dist','dist'],['cmp','tab-cmp','cmpSec'],['flow','tab-flow','flowSec'],['typo','tab-typo','typoSec'],['acm','tab-acm','acmSec'],['net','tab-net','netSec'],['map','tab-map','mapSec'],['ctx','tab-ctx','ctxSec'],['time','tab-time','timeSec'],['imp','tab-imp','impSec'],['fic','tab-fic','ficSec']];
+const hashTab = () => (location.hash||'').slice(1).split('?')[0];
 function setTab(t, push){
   TAB=t;
   PAINEIS.forEach(([k,tid,sid])=>{
     $(tid).setAttribute('aria-selected', String(k===t)); $(sid).hidden = k!==t; });
   render();
 }
-document.querySelectorAll('.tabs a').forEach(a=>a.addEventListener('click',e=>{ e.preventDefault(); const k=a.getAttribute('href').slice(1); try{ history.replaceState(null,'','#'+k); }catch(_){} setTab(TABS[k]); }));
-const initTab = TABS[(location.hash||'').slice(1)]; if(initTab) TAB=initTab;
-window.addEventListener('hashchange',()=>{ const k=TABS[(location.hash||'').slice(1)]; if(k && k!==TAB) setTab(k); });
+document.querySelectorAll('.tabs a').forEach(a=>a.addEventListener('click',e=>{ e.preventDefault(); const k=a.getAttribute('href').slice(1); setTab(TABS[k]); }));
+const initTab = TABS[hashTab()]; if(initTab) TAB=initTab;
+window.addEventListener('hashchange',()=>{ const k=TABS[hashTab()]; if(k && k!==TAB) setTab(k); });
 
 /* ---------- shared tooltip ---------- */
 function tipFor(box){

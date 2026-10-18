@@ -9,7 +9,7 @@
 const MES_ABBR=['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
 function colChart(box, data, opts){
   // data: [{k,label,n,on,off}] ; opts: {H, ymax, onClick, tipTitle}
-  const W=Math.max(240, box.clientWidth), H=opts.H, m={t:10,r:6,b:22,l:34};
+  const W=Math.max(240, box.clientWidth), H=opts.H, m={t:opts.mt||10,r:6,b:22,l:34};
   const s=d3.select(box).append('svg').attr('viewBox',`0 0 ${W} ${H}`).attr('width','100%');
   const x=d3.scaleBand().domain(data.map(d=>d.k)).range([m.l,W-m.r]).padding(0.22);
   const y=d3.scaleLinear().domain([0, opts.ymax||d3.max(data,d=>d.n)||1]).nice().range([H-m.b,m.t]);
@@ -35,7 +35,7 @@ function renderTime(b){
   const c=counts(rows,'mes'); const sel=st.f.mes||new Set();
   const data=mesVals.map((lab,i)=>({k:i, label:MES_ABBR[i], n:c.get(i)||0, on:sel.has(i), off:sel.size&&!sel.has(i), full:lab.split('· ')[1]}));
   $('timeMeta').textContent = fmt(rows.length)+' notícias';
-  colChart(main, data, {H: 230, onClick:d=>toggleFilter('mes', d.k, !sel.has(d.k)||sel.size>1), tipTitle:d=>d.full+' de 2024'});
+  colChart(main, data, {H: 250, mt:26, onClick:d=>toggleFilter('mes', d.k, !sel.has(d.k)||sel.size>1), tipTitle:d=>d.full+' de 2024'});
   renderCal(b);
   // small multiples by selected variable
   const vid = st.v==='mes'? null : st.v;

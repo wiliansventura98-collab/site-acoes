@@ -14,7 +14,7 @@ const deptIdx = {}; DEPT_VALS.forEach((v,i)=>{ deptIdx[v]=i; });
 const POP = {}; Object.entries(GEO.pop).forEach(([k,n])=>{ if(provIdx[k]!=null) POP[provIdx[k]]=n; });
 const DEPT_HAS = new Set(), DI_ID = [];
 let REGS_FC=[];
-let TOPO=null, DEPTS=[], PROVS_FC=[], MESH={}, ALL=null, NEIGH=[], DEPT_XY=[], PROV_XY=[];
+let TOPO=null, DEPTS=[], PROVS_FC=[], MESH={}, ALL=null, NEIGH=[], DEPT_XY=[], PROV_XY=[], VIZ_DEP=[];
 function mainCentroid(f){ // centroid of the largest part, so islands don't pull the symbol into the sea
   const g=f.geometry; if(g.type!=='MultiPolygon') return d3.geoCentroid(f);
   let best=null, ba=-1; g.coordinates.forEach(c=>{ const p={type:'Polygon',coordinates:c}; const a=d3.geoArea(p); if(a>ba){ ba=a; best=p; } }); return d3.geoCentroid(best); }
@@ -26,6 +26,7 @@ if(HAS_D3){
     if(p.di>=0){ DEPT_HAS.add(p.di); DEPT_XY[p.di]=p.c; DI_ID[p.di]=f.id; } });
   PROVS_FC = [...d3.group(OBJ.geometries, g=>g.properties.p)].map(([p,gs])=>({type:'Feature', properties:{p, pi: provIdx[p] ?? -1}, geometry: topojson.merge(TOPO, gs)}));
   PROVS_FC.forEach(f=>{ if(f.properties.pi>=0) PROV_XY[f.properties.pi]=mainCentroid(f); });
+  VIZ_DEP = topojson.neighbors(OBJ.geometries); // contiguidade (rainha) entre departamentos, para o LISA
   MESH.dept = topojson.mesh(TOPO, OBJ, (a,b)=> a!==b && a.properties.p===b.properties.p);
   MESH.prov = topojson.mesh(TOPO, OBJ, (a,b)=> a!==b && a.properties.p!==b.properties.p && a.properties.r===b.properties.r);
   MESH.reg  = topojson.mesh(TOPO, OBJ, (a,b)=> a!==b && a.properties.r!==b.properties.r);
@@ -94,6 +95,15 @@ CTXDEF.popDep = {nivel:'popDep', titulo:'População residente por departamento,
   const og0=s.querySelector('optgroup'); const op=document.createElement('option'); op.value='popDep'; op.textContent='População absoluta por departamento (círculos)'; og0.append(op);
   [...new Set(IND.map(d=>d.tema))].forEach(t=>{ const og=document.createElement('optgroup'); og.label=`${t} · Censo 2022, por departamento`;
     IND.filter(d=>d.tema===t).forEach(d=>{ const o=document.createElement('option'); o.value='c_'+d.k; o.textContent=d.titulo; og.append(o); }); s.append(og); }); })();
+/* análise espacial: mapa bivariado e pontos quentes (LISA), por departamento */
+IND.forEach(d=>{ CTXDEF['biv_'+d.k] = {nivel:'biv', campo:d.k, titulo:`Notícias por 100 mil hab. × ${d.titulo.charAt(0).toLowerCase()+d.titulo.slice(1)} (2022)`, curto:d.unidade, dec:d.dec, indTitulo:d.titulo,
+  fonte:`notícias: base do projeto; população e indicador: INDEC, Censo 2022, via Geoportal estadístico (indicador ${d.ids[0]})`}; });
+CTXDEF.lisa = {nivel:'lisa', titulo:'Pontos quentes: notícias por 100 mil hab. (LISA), por departamento', fonte:'notícias: base do projeto; população: INDEC, Censo 2022 (Geoportal estadístico)'};
+(()=>{ const s=$('ctxLayer'); if(!IND.length) return;
+  const og=document.createElement('optgroup'); og.label='Análise espacial das notícias (por departamento)';
+  const o=document.createElement('option'); o.value='lisa'; o.textContent='Pontos quentes e frios (LISA)'; og.append(o); s.append(og);
+  const og2=document.createElement('optgroup'); og2.label='Mapa bivariado: notícias por habitante × indicador do Censo';
+  IND.forEach(d=>{ const o=document.createElement('option'); o.value='biv_'+d.k; o.textContent='× '+d.titulo; og2.append(o); }); s.append(og2); })();
 const POP_D = []; DEPTS.forEach(f=>{ const v=IND_DEP[f.id]; if(f.properties.di>=0 && v && v.pop) POP_D[f.properties.di]=v.pop; });
 const popOf = (unit, i) => unit==='dept'? POP_D[i] : unit==='prov'? POP[i] : null;
 const ctxEscolha = k => (k && CTXDEF[k]) || null;
@@ -109,8 +119,49 @@ function ctxClasses(def){
   const lo=[vals[0], ...th], hi=[...th, vals[vals.length-1]];
   return { color, items: ramp.map((c,i)=>[c, i===0? `${f(lo[i])} a ${f(hi[i])}` : `mais de ${f(lo[i])} a ${f(hi[i])}`]), fmt:f };
 }
+/* ---------- bivariado e LISA ---------- */
+const BIV_X=['#ffffff','#f7d27a','#f2a900'], BIV_Y=['#ffffff','#a9cdee','#2569ad'];
+const mult=(a,b)=>{ const p=d3.rgb(a), q=d3.rgb(b); return d3.rgb(p.r*q.r/255, p.g*q.g/255, p.b*q.b/255).formatHex(); };
+const BIV = BIV_Y.map(y=>BIV_X.map(x=>mult(x,y)));
+function taxasDept(b){ // notícias e notícias por 100 mil hab. por departamento (id da camada de limites)
+  const md=mapData(b.filter(r=>match(r,'departamento')),'dept'), out=new Map();
+  DEPTS.forEach(f=>{ const v=IND_DEP[f.id]; if(!v || !v.pop) return; const i=f.properties.di, n=i>=0? (md.c.get(i)||0) : 0; out.set(f.id,{n, pop:v.pop, rate:n/v.pop*1e5}); });
+  return out; }
+function bivCalc(def, T){
+  const pos=[...T.values()].filter(t=>t.n>0).map(t=>t.rate).sort(d3.ascending), med=pos.length? d3.quantileSorted(pos,.5) : 0;
+  const iv=Object.values(IND_DEP).map(r=>r[def.campo]).filter(v=>v!=null).sort(d3.ascending), t1=d3.quantileSorted(iv,1/3), t2=d3.quantileSorted(iv,2/3);
+  const xs=t=>!t||!t.n? 0 : t.rate<=med? 1 : 2, ys=v=>v==null? null : v<=t1? 0 : v<=t2? 1 : 2;
+  const cel=BIV.map(r=>r.map(()=>0)); DEPTS.forEach(f=>{ const t=T.get(f.id), y=ys((IND_DEP[f.id]||{})[def.campo]); if(t && y!=null) cel[y][xs(t)]++; });
+  return { med, t1, t2, cel, cls:f=>{ const t=T.get(f.id), y=ys((IND_DEP[f.id]||{})[def.campo]); return (y==null||!t)? null : [xs(t), y]; } };
+}
+function lisaCalc(T){
+  const ts=[...T.values()]; let N=0, P=0; ts.forEach(t=>{ N+=t.n; P+=t.pop; });
+  const bb=N/P, pm=P/ts.length; let s2=0; ts.forEach(t=>{ s2+=t.pop*(t.n/t.pop-bb)**2; }); s2/=P; const a=Math.max(0, s2-bb/pm);
+  // taxa bayesiana empírica global (Marshall): estabiliza departamentos pouco populosos
+  const x=DEPTS.map(f=>{ const t=T.get(f.id); if(!t) return null; const r=t.n/t.pop; return (bb + (a+bb/t.pop>0? a/(a+bb/t.pop) : 0)*(r-bb))*1e5; });
+  const val=x.map((v,i)=>v!=null? i : -1).filter(i=>i>=0), mu=d3.mean(val,i=>x[i]), sd=d3.deviation(val,i=>x[i])||1;
+  const z=x.map(v=>v==null? null : (v-mu)/sd);
+  const viz=VIZ_DEP.map((ns,i)=>z[i]==null? [] : ns.filter(j=>z[j]!=null));
+  const lag=z.map((zi,i)=>viz[i].length? d3.mean(viz[i],j=>z[j]) : null);
+  let rs=20241; const rnd=()=>{ rs=(rs*1103515245+12345)&0x7fffffff; return rs/0x7fffffff; };
+  const R=499, cls=new Array(DEPTS.length).fill(null), pv=new Array(DEPTS.length).fill(null);
+  z.forEach((zi,i)=>{ if(zi==null || !viz[i].length) return; const k=viz[i].length, Ii=zi*lag[i]; let cnt=0;
+    for(let r=0;r<R;r++){ let sm=0; for(let q=0;q<k;q++){ let j; do{ j=val[Math.floor(rnd()*val.length)]; }while(j===i); sm+=z[j]; } const Is=zi*sm/k; if(Ii>=0? Is>=Ii : Is<=Ii) cnt++; }
+    const p=(cnt+1)/(R+1); pv[i]=p; if(p<0.05) cls[i] = zi>0? (lag[i]>0? 'HH':'HL') : (lag[i]<0? 'LL':'LH'); else cls[i]='ns'; });
+  const comViz=z.map((zi,i)=>zi!=null && viz[i].length? i : -1).filter(i=>i>=0), den=d3.sum(comViz,i=>z[i]**2);
+  const Iglob=d3.sum(comViz,i=>z[i]*lag[i])/den;
+  let maior=0; const zz=comViz.map(i=>z[i]);
+  for(let r=0;r<199;r++){ const perm=zz.slice(); for(let q=perm.length-1;q>0;q--){ const j=Math.floor(rnd()*(q+1)); [perm[q],perm[j]]=[perm[j],perm[q]]; }
+    const pz=new Map(comViz.map((i,q)=>[i,perm[q]])); const Ir=d3.sum(comViz,i=>pz.get(i)*d3.mean(viz[i],j=>pz.has(j)? pz.get(j) : z[j]))/den; if(Ir>=Iglob) maior++; }
+  const n={HH:0,LL:0,HL:0,LH:0,ns:0}; cls.forEach(c=>{ if(c) n[c]++; });
+  return { cls:new Map(DEPTS.map((f,i)=>[f.id, cls[i]])), pv:new Map(DEPTS.map((f,i)=>[f.id, pv[i]])), eb:new Map(DEPTS.map((f,i)=>[f.id, x[i]])), I:Iglob, pI:(maior+1)/200, n };
+}
+const LISA_COR = { HH:'#c45a00', LL:'#2569ad', HL:'#f6c768', LH:'#a9cdee', ns:'#f4f4f1' };
+const LISA_ROT = { HH:'Alto cercado de alto (ponto quente)', LL:'Baixo cercado de baixo (ponto frio)', HL:'Alto cercado de baixo', LH:'Baixo cercado de alto', ns:'Não significativo (p ≥ 0,05)' };
+let ESP_CACHE={k:null, v:null};
+
 const PROJ = () => d3.geoConicConformal().parallels([-28,-46]).rotate([64,0]);
-const mstate = { unit:'loc', measure:'abs', mode:'one', cmp:'nombremov', n:6, author:'', ctx:'' };
+const mstate = { unit:'loc', measure:'abs', mode:'one', cmp:'nombremov', n:6, author:'', ctx:'', mes:'' };
 try{ const s=JSON.parse(localStorage.getItem('as24m2')||'null'); if(s){ Object.assign(mstate, s); if(VI[mstate.cmp]==null) mstate.cmp='nombremov'; } }catch(e){}
 const msave = () => { try{ localStorage.setItem('as24m2', JSON.stringify(mstate)); }catch(e){} };
 const RATE_OK = u => u==='prov' || u==='dept';
@@ -120,6 +171,15 @@ document.querySelectorAll('#mapMeasure button').forEach(b=>b.onclick=()=>{ if(b.
 document.querySelectorAll('#mapMode button').forEach(b=>b.onclick=()=>{ mstate.mode=b.dataset.v; render(); });
 $('cmpVar').onchange=e=>{ mstate.cmp=e.target.value; render(); };
 $('ctxLayer').onchange=e=>{ mstate.ctx=e.target.value; render(); };
+const MES_VALS = VARS[VI.mes].values;
+MES_VALS.forEach((m,i)=>{ const o=el('option',null,m.replace(/^\d\d · /,'')); o.value=String(i); $('mapMes').append(o); });
+$('mapMes').onchange=e=>{ mstate.mes=e.target.value; pararAnim(); render(); };
+let ANIM=null;
+function pararAnim(){ if(ANIM){ clearInterval(ANIM); ANIM=null; } $('mapPlay').textContent='Animar mês a mês'; $('mapPlay').setAttribute('aria-pressed','false'); }
+$('mapPlay').onclick=()=>{ if(ANIM) return pararAnim();
+  $('mapPlay').textContent='Parar'; $('mapPlay').setAttribute('aria-pressed','true');
+  const passo=()=>{ const i = mstate.mes===''? 0 : (+mstate.mes+1) % MES_VALS.length; mstate.mes=String(i); render(); };
+  passo(); ANIM=setInterval(passo, 1600); };
 $('cmpN').onchange=e=>{ mstate.n=+e.target.value; render(); };
 let at; $('author').oninput=e=>{ clearTimeout(at); at=setTimeout(()=>{ mstate.author=e.target.value.trim(); render(); },400); };
 const nfmt1 = x => x.toLocaleString('pt-BR',{maximumFractionDigits:1, minimumFractionDigits:1});
@@ -203,8 +263,13 @@ function drawBase(g, proj, box, md, sh, o){
       .on('mousemove',(e,d)=>{ const i=idxOf(d); if(i<0) return tip.hide(); tip.show(e, nameOf(d), tipText(i)); })
       .on('mouseleave',()=>tip.hide()).on('click',(e,d)=>{ const i=idxOf(d); if(i>=0) o.onClick(md.vid, i); }); };
   const cdef = o.ctx, cpoly = cdef && ['prov','reg','dep'].includes(cdef.nivel), cdep = cpoly && cdef.nivel==='dep';
-  const deptFill = cdep || (o.fill && md.unit==='dept');
-  if(cpoly){ // camada de contexto em coroplético (substitui o fundo neutro)
+  const espec = !!o.esp;
+  const deptFill = cdep || espec || (o.fill && md.unit==='dept');
+  if(espec){ // bivariado ou LISA, por departamento
+    const sE = m.append('g').selectAll('path').data(DEPTS).join('path').attr('d',path).attr('fill', f=>o.esp.cor(f)).attr('class','hit');
+    if(tip) sE.on('mousemove',(e,f)=>tip.show(e, f.properties.n, o.esp.tip(f))).on('mouseleave',()=>tip.hide())
+      .on('click',(e,f)=>{ if(f.properties.di>=0) o.onClick('departamento', f.properties.di); });
+  } else if(cpoly){ // camada de contexto em coroplético (substitui o fundo neutro)
     const feats = cdep? DEPTS : cdef.nivel==='prov'? PROVS_FC : REGS_FC;
     const chaveF = f => cdep? f.id : cdef.nivel==='prov'? f.properties.p : f.properties.r;
     const nomeF = f => cdep? f.properties.n : chaveF(f);
@@ -291,7 +356,19 @@ function legendBlock(g, x, y, w, md, sh, o){
   if(o.ctx){
     const d=o.ctx;
     yy += textBlock(g, x, yy, `Contexto: ${d.titulo}`, 12, w, {weight:700}) + 6;
-    if(d.nivel==='popDep'){
+    if(d.nivel==='biv' && o.esp){
+      const B=o.esp.b, cs=Math.min(30, (w-120)/3), gx=x+44, gy=yy+6, f=v=>v.toLocaleString('pt-BR',{maximumFractionDigits:d.dec});
+      for(let yi=0; yi<3; yi++) for(let xi=0; xi<3; xi++){ g.append('rect').attr('x',gx+xi*cs).attr('y',gy+(2-yi)*cs).attr('width',cs).attr('height',cs).attr('fill',BIV[yi][xi]).attr('stroke','#ffffff');
+        g.append('text').attr('x',gx+xi*cs+cs/2).attr('y',gy+(2-yi)*cs+cs/2+3.5).attr('text-anchor','middle').attr('font-size',9.5).attr('font-family',FONT).attr('fill', d3.hsl(BIV[yi][xi]).l<0.5? '#ffffff' : C.ink2).text(B.cel[yi][xi]); }
+      g.append('text').attr('x',gx+1.5*cs).attr('y',gy+3*cs+14).attr('text-anchor','middle').attr('font-size',10.5).attr('font-family',FONT).attr('fill',C.ink2).text('Notícias por 100 mil hab. →');
+      g.append('text').attr('transform',`translate(${gx-8},${gy+1.5*cs}) rotate(-90)`).attr('text-anchor','middle').attr('font-size',10.5).attr('font-family',FONT).attr('fill',C.ink2).text('Indicador →');
+      const tx=gx+3*cs+12;
+      yy += Math.max(3*cs+22, textBlock(g, tx, gy+8, `Colunas: sem notícias · até ${nfmt1(B.med)} · mais de ${nfmt1(B.med)} por 100 mil hab. (mediana dos departamentos com notícias). Linhas: tercis do indicador (até ${f(B.t1)}; até ${f(B.t2)}; acima de ${f(B.t2)} ${d.curto}). Números: departamentos em cada classe.`, 10, Math.max(120, w-(tx-x)), {fill:C.ink2}) + 10);
+    } else if(d.nivel==='lisa' && o.esp){
+      ['HH','LL','HL','LH','ns'].forEach(c=>{ g.append('rect').attr('x',x).attr('y',yy).attr('width',18).attr('height',11).attr('fill',LISA_COR[c]).attr('stroke','#9aa6b2').attr('stroke-width',.5);
+        g.append('text').attr('x',x+26).attr('y',yy+9.5).attr('font-size',10.5).attr('font-family',FONT).attr('fill',C.ink2).text(`${LISA_ROT[c]}: ${o.esp.L.n[c]}`); yy += 16; });
+      yy += 6 + textBlock(g, x, yy+10, `I de Moran global = ${o.esp.L.I.toLocaleString('pt-BR',{maximumFractionDigits:3})} (p = ${o.esp.L.pI.toLocaleString('pt-BR',{maximumFractionDigits:3})}, 199 permutações).`, 10.5, w, {fill:C.ink, weight:700}) + 10;
+    } else if(d.nivel==='popDep'){
       const ref=[1.5e6, 3e5, 5e4], R=o.popDR(ref[0]), cx=x+R+2, base=yy+2*R+4;
       ref.forEach(v=>{ const r=o.popDR(v); g.append('circle').attr('cx',cx).attr('cy',base-r).attr('r',r).attr('fill','#957d58').attr('fill-opacity',.08).attr('stroke','#5e4c33');
         g.append('text').attr('x',cx+R+14).attr('y',base-2*r+3.5).attr('font-size',10.5).attr('font-family',FONT).attr('fill',C.ink2).text(fmt(v)+' hab.'); });
@@ -330,6 +407,8 @@ function techNote(md, sh, o, multi){
   if(o.circles) s.push(`Valores absolutos em círculos proporcionais: a área de cada círculo é proporcional ao número de notícias que citam ${art} ${unitTxt} (raio ∝ √n; maior círculo = ${fmt(sh.max||0)} notícias${multi?', mesma escala em todos os mapas':''}). ${md.unit==='loc'? 'Localidades posicionadas pelo GeoNames; na falta, no centro do departamento.' : `Círculos no centróide ${de} ${unitTxt} (da maior porção de terra, quando há ilhas).`} Notícias que citam vários lugares contam em cada um.`);
   if(o.fill) s.push(`Valores relativos em coroplético: taxa = notícias ÷ população residente ${md.unit==='dept'? 'do departamento/partido' : 'da província'} × 100.000. População: INDEC, Censo Nacional de Población, Hogares y Viviendas 2022, resultados definitivos${md.unit==='dept'? ' (Geoportal estadístico)' : ''}. Classes por quantis (até 5 classes) dos valores não nulos${multi?', comuns a todos os mapas':''}.${md.unit==='dept'? ' Em departamentos pouco populosos, uma única notícia gera taxas altas: leia junto com os valores absolutos.' : ''}`);
   if(o.ctx){ const d=o.ctx; s.push(d.nivel==='pop'? `Camada de contexto: população residente em 2022 em círculos vazados proporcionais (área ∝ habitantes), no centróide de cada província; fonte: ${d.fonte}.`
+    : d.nivel==='biv'? `Mapa bivariado por departamento/partido: a cor combina as notícias por 100 mil habitantes (colunas: sem notícias, até a mediana e acima da mediana dos departamentos com notícias) com os tercis do indicador “${d.indTitulo}” entre os 511 departamentos (linhas); classes 3 × 3 por mistura multiplicativa de amarelo e azul. Fonte: ${d.fonte}.`
+    : d.nivel==='lisa'? `Pontos quentes e frios por departamento/partido: indicador local de associação espacial (LISA, I de Moran local) sobre a taxa bayesiana empírica de notícias por 100 mil habitantes (estimador global de Marshall, que estabiliza departamentos pouco populosos); vizinhança por contiguidade de rainha com pesos padronizados por linha; significância por 499 permutações condicionais (p < 0,05, sem correção para comparações múltiplas). Fonte: ${d.fonte}.`
     : d.nivel==='popDep'? `Camada de contexto: população residente em 2022 em círculos vazados proporcionais (área ∝ habitantes), no centróide de cada departamento/partido; fonte: ${d.fonte}.`
     : `Camada de contexto: ${d.titulo}, ${d.nivel==='agl'? 'em símbolos de cor nos 31 aglomerados urbanos da EPH (valores urbanos, não provinciais)' : d.nivel==='reg'? 'em coroplético por região estatística (valores dos aglomerados urbanos de cada região)' : d.nivel==='dep'? 'em coroplético por departamento/partido (CABA como um todo; sem dado para as Ilhas Malvinas)' : 'em coroplético por província'}; classes por quantis${d.nivel==='dep'? ' dos 511 departamentos' : ''}; fonte: ${d.fonte}.${d.definicao? ' Definição do INDEC: '+d.definicao.split(/\n/)[0] : ''}`); }
   if(md.spatial) s.push('Filtros espaciais aplicados ao lugar: só são representados os lugares dentro das unidades selecionadas, mesmo quando a notícia também cita outros lugares.');
@@ -337,14 +416,15 @@ function techNote(md, sh, o, multi){
   const zk = (multi? ZOOM.multi : ZOOM.one).k; if(zk>1) s.push(`Vista ampliada (×${zk.toLocaleString('pt-BR',{maximumFractionDigits:1})}) em relação ao país inteiro.`);
   s.push(`Sistema de coordenadas geográficas, datum WGS 84; projeção cônica conforme de Lambert (paralelos-padrão 28° S e 46° S; meridiano central 64° O); grade de ${gridStep(zk).toLocaleString('pt-BR')}°; escala gráfica válida para o centro do mapa.`);
   const ft = filtersText(multi? [md.vid, mstate.cmp] : md.vid);
+  if(mstate.mes!=='' && mstate.mes!=null) s.push(`Período: notícias de ${MES_VALS[+mstate.mes].replace(/^\d\d · /,'').toLowerCase()} de 2024 (mês da notícia).`);
   s.push(`Fonte dos dados: Base de notícias de ações coletivas 2024 (${fmt(md.N)} notícias${st.rep?', incluindo repetidas':', sem repetidas'}${ft? '; recorte: '+ft : ''}; ${fmt(md.N-md.mapped)} sem localização mapeável nesta escala). Base cartográfica: departamentos (mgaitan/departamentos_argentina), simplificada; países limítrofes: Natural Earth 1:50 milhões.`);
   s.push(`Elaboração: ${mstate.author || 'não informada'}, ${today}.`);
   return s.join(' ');
 }
 function mapTitle(md, o){
   const u = md.unit==='loc'? 'localidade' : md.unit==='dept'? 'departamento / partido' : 'província';
-  const t = o.fill && o.circles? `Notícias de ações coletivas por ${u}: taxa por 100 mil habitantes e valores absolutos` : o.fill? `Notícias de ações coletivas por 100 mil habitantes, por ${u}` : `Notícias de ações coletivas por ${u}`;
-  return t + ' · Argentina, 2024';
+  const t = o.esp? o.ctx.titulo.replace(/, por departamento$/,'') + ', por departamento / partido' : o.fill && o.circles? `Notícias de ações coletivas por ${u}: taxa por 100 mil habitantes e valores absolutos` : o.fill? `Notícias de ações coletivas por 100 mil habitantes, por ${u}` : `Notícias de ações coletivas por ${u}`;
+  return t + (mstate.mes!=='' && mstate.mes!=null? ` · Argentina, ${MES_VALS[+mstate.mes].replace(/^\d\d · /,'').toLowerCase()} de 2024` : ' · Argentina, 2024');
 }
 
 
@@ -384,8 +464,12 @@ function zoomControls(box, frame, key){
 
 let SHEET_SVG = null;
 function renderMap(b){
+  const b0=b, comMes = mstate.mes!=='' && mstate.mes!=null;
+  if(comMes){ const im=+mstate.mes; b=b.filter(r=>r.v[VI.mes].includes(im)); }
+  const nomeMes = comMes? MES_VALS[+mstate.mes].replace(/^\d\d · /,'').toLowerCase() : '';
+  $('mapMes').value = mstate.mes||'';
   if(!RATE_OK(mstate.unit)) mstate.measure='abs';
-  const cdef = ctxEscolha(mstate.ctx), cpoly = !!cdef && ['prov','reg','dep'].includes(cdef.nivel);
+  const cdef = ctxEscolha(mstate.ctx), cpoly = !!cdef && ['prov','reg','dep','biv','lisa'].includes(cdef.nivel);
   if(cpoly) mstate.measure='abs';
   $('ctxLayer').value = mstate.ctx || '';
   document.querySelectorAll('#mapUnit button').forEach(x=>x.setAttribute('aria-pressed', String(x.dataset.v===mstate.unit)));
@@ -398,7 +482,20 @@ function renderMap(b){
   const box=$('sheet'); box.querySelectorAll('svg').forEach(s=>s.remove()); $('mapRank').textContent='';
   if(!HAS_D3){ $('mapNote').textContent='Não foi possível carregar a biblioteca de mapas nesta visualização.'; return; }
   const unit = mstate.unit, vid = UNIT_VID[unit];
-  const o = { circles: mstate.measure!=='rate', fill: mstate.measure!=='abs', ctx: cdef, ctxCls: cdef && !['pop','popDep'].includes(cdef.nivel)? ctxClasses(cdef) : null };
+  const o = { circles: mstate.measure!=='rate', fill: mstate.measure!=='abs', ctx: cdef, ctxCls: cdef && !['pop','popDep','biv','lisa'].includes(cdef.nivel)? ctxClasses(cdef) : null };
+  if(cdef && (cdef.nivel==='biv' || cdef.nivel==='lisa') && HAS_D3){
+    const T=taxasDept(b), fN=v=>v.toLocaleString('pt-BR',{maximumFractionDigits:1});
+    if(cdef.nivel==='biv'){ const B=bivCalc(cdef, T);
+      o.esp={ b:B, cor:f=>{ const c=B.cls(f); return c? BIV[c[1]][c[0]] : '#f1f1ef'; },
+        tip:f=>{ const t=T.get(f.id), v=(IND_DEP[f.id]||{})[cdef.campo]; return t? [`${fmt(t.n)} notícias · ${fN(t.rate)} por 100 mil hab.`, `${cdef.indTitulo}: ${v==null? 'sem dado' : v.toLocaleString('pt-BR',{maximumFractionDigits:cdef.dec})} ${cdef.curto}`] : ['sem dado']; } };
+    } else {
+      const chave=JSON.stringify([b.length, b.length? b[0].k:0, b.length? b[b.length-1].k:0, Object.keys(st.f).map(k=>[k,[...st.f[k]]]), mstate.mes]);
+      const L = ESP_CACHE.k===chave? ESP_CACHE.v : (ESP_CACHE={k:chave, v:lisaCalc(T)}).v;
+      o.esp={ L, cor:f=>LISA_COR[L.cls.get(f.id)] || '#f1f1ef',
+        tip:f=>{ const t=T.get(f.id), c=L.cls.get(f.id); return t? [`${fmt(t.n)} notícias · ${fN(t.rate)} por 100 mil hab.`, `Taxa suavizada (bayesiana empírica): ${fN(L.eb.get(f.id)||0)}`, c? `${LISA_ROT[c]}${L.pv.get(f.id)!=null? ` (p = ${L.pv.get(f.id).toLocaleString('pt-BR',{maximumFractionDigits:3})})` : ''}` : 'sem vizinhos'] : ['sem dado']; } };
+    }
+    o.circles=false; o.fill=false;
+  }
   const W = Math.max(320, box.clientWidth);
   const svg = d3.select(box).append('svg').attr('font-family',FONT).attr('width','100%');
   svg.append('rect').attr('class','bgpaper').attr('x',0).attr('y',0).attr('fill',C.paper);
@@ -409,13 +506,14 @@ function renderMap(b){
   if(mstate.mode==='one'){
     const rows = b.filter(r=>match(r, vid));
     const md = mapData(rows, unit);
-    const sh = { max: md.max||1 };
+    // no modo mensal, a escala dos círculos é a do mês com mais notícias, para que os meses sejam comparáveis
+    const sh = { max: comMes? (d3.max(MES_VALS, (_,m)=>mapData(b0.filter(r=>r.v[VI.mes].includes(m) && match(r, vid)), unit).max)||1) : (md.max||1) };
     if(o.fill) Object.assign(sh, classify(rateIds(unit).map(md.rate)));
     const wide = W>=780;
     let y = M+14;
     y += textBlock(svg, M, y+4, mapTitle(md, o), 19, W-2*M, {weight:700}) + 10;
     const ft = filtersText(vid);
-    y += textBlock(svg, M, y+4, ft? `Recorte: ${ft} · ${fmt(md.N)} notícias` : `Todas as notícias${st.rep?'':' únicas'} · ${fmt(md.N)}`, 12.5, W-2*M, {fill:C.ink2}) + 14;
+    y += textBlock(svg, M, y+4, (ft? `Recorte: ${ft} · ${fmt(md.N)} notícias` : `Todas as notícias${st.rep?'':' únicas'} · ${fmt(md.N)}`) + (comMes? ` em ${nomeMes} (escala dos círculos comum a todos os meses)` : ''), 12.5, W-2*M, {fill:C.ink2}) + 14;
     const GL = 40; // room for latitude labels
     const fx0 = M+GL, fw = (wide? Math.round(W*0.56) : W-2*M) - GL, fh = Math.round(fw*1.58);
     const frame = [fx0, y, fx0+fw, y+fh];

@@ -22,13 +22,19 @@ A plataforma permite explorar a base sem instalar nada: escolher variáveis, cru
 
 | Aba | Para quê |
 |---|---|
-| **Distribuição** | Frequência de qualquer variável, cruzamento entre duas variáveis em tabela de calor e filtros combináveis. |
+| **Distribuição** | Frequência de qualquer variável e cruzamento entre duas variáveis em tabela de calor: contagem, % da linha, % da coluna ou **associação** (resíduos ajustados, qui-quadrado e V de Cramér), com filtros combináveis. |
+| **Comparar** | Dois recortes lado a lado (uma categoria contra outra, ou contra as demais) em gráfico de halteres, com diferença em pontos percentuais e teste de proporções. |
 | **Fluxos** | Diagrama de Sankey com duas ou três variáveis encadeadas (por exemplo, tipo de movimento → ação matriz → objetivos), em contagem fracionada que preserva o total do recorte. |
 | **Tipologias** | Mapa de árvore da ação matriz subdividida pela ação derivada, ou de qualquer par de variáveis. |
-| **Redes** | Rede de coocorrência: movimentos (ou outras categorias) que aparecem juntos nas mesmas notícias, com cor pelo tipo de movimento predominante. |
-| **Mapa** | Pranchas cartográficas com círculos proporcionais (valores absolutos) e coropléticos (taxas por 100 mil hab. por província ou departamento), 38 camadas de contexto do INDEC e do SNIC (28 indicadores do Censo 2022 por departamento), mapas por categoria, zoom, nota técnica e exportação em PNG e SVG. |
-| **Contexto** | Dispersão por província ou por departamento (notícias por 100 mil hab. × qualquer indicador do Censo 2022, densidade ou homicídios, com correlações de Pearson e Spearman), panorama provincial ordenável e quadro das regiões estatísticas (pobreza, indigência, desocupação). |
-| **No tempo** | Notícias por mês, calendário diário das ações por data de início e categorias mês a mês. |
+| **Correspondências** | Análise de correspondências múltiplas (ACM) das variáveis escolhidas: plano fatorial das categorias, inércias brutas e corrigidas (Benzécri) e contribuições aos eixos. |
+| **Redes** | Rede de coocorrência de movimentos (ou outras categorias), com cor pelo tipo de movimento ou por **comunidade** (Louvain) e tabela de centralidade (grau, força e intermediação). |
+| **Mapa** | Pranchas cartográficas com círculos proporcionais e coropléticos (taxas por 100 mil hab. por província ou departamento), 38 camadas de contexto do INDEC e do SNIC, **mapa bivariado** (notícias por habitante × indicador do Censo), **pontos quentes** (LISA sobre taxas bayesianas empíricas), **animação mês a mês**, mapas por categoria, zoom, nota técnica e exportação em PNG e SVG. |
+| **Contexto** | Dispersão por província ou por departamento (notícias por 100 mil hab. × qualquer indicador do Censo 2022, densidade ou homicídios, com correlações de Pearson e Spearman), panorama provincial ordenável e quadro das regiões estatísticas. |
+| **No tempo** | Notícias por mês, calendário diário, **série semanal empilhada com os acontecimentos de 2024** (paros gerais, marchas universitárias, Ley Bases, vetos, datas do calendário de lutas) e categorias mês a mês. |
+| **Imprensa** | Quem noticia: veículos mais frequentes, concentração da cobertura (curva de Lorenz e Gini), veículos × regiões e diversidade de fontes por província. |
+| **Fichas** | Perfil de um movimento, tipo de movimento, província, departamento, localidade, objetivo ou ação: evolução, mapa, repertório, objetivos, parceiros e notícias recentes. |
+
+O endereço da página guarda a aba, as variáveis e os filtros: o botão **Copiar link deste recorte** permite enviar a outra pessoa exatamente o mesmo gráfico.
 
 Em todas as abas é possível consultar as notícias do recorte, com link para a matéria original, e baixar o recorte em **CSV**.
 
