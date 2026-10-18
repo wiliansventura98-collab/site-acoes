@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Ações Socioespaciais 2024 · Base interativa</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%276%27 fill=%27%2374acdf%27/%3E%3Ccircle cx=%2716%27 cy=%2716%27 r=%277%27 fill=%27%23f6b40e%27 stroke=%27%2385340a%27 stroke-width=%271.5%27/%3E%3C/svg%3E">
 <meta name="description" content="Base interativa de notícias sobre ações coletivas na Argentina em 2024: distribuições, cruzamentos, mapas e evolução mensal.">
 <meta property="og:title" content="Ações Socioespaciais 2024">
 <meta property="og:description" content="Base interativa de notícias sobre ações coletivas na Argentina em 2024: distribuições, cruzamentos, mapas e evolução mensal.">
@@ -457,6 +458,7 @@ function setTab(t, push){
 }
 document.querySelectorAll('.tabs a').forEach(a=>a.addEventListener('click',e=>{ e.preventDefault(); const k=a.getAttribute('href').slice(1); try{ history.replaceState(null,'','#'+k); }catch(_){} setTab(TABS[k]); }));
 const initTab = TABS[(location.hash||'').slice(1)]; if(initTab) TAB=initTab;
+window.addEventListener('hashchange',()=>{ const k=TABS[(location.hash||'').slice(1)]; if(k && k!==TAB) setTab(k); });
 
 /* ---------- shared tooltip ---------- */
 function tipFor(box){
