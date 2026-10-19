@@ -4,15 +4,16 @@
 
 Este documento registra, de forma cumulativa, tudo o que foi feito para transformar a planilha de codificação das notícias na base interativa publicada. Serve de memória metodológica, de roteiro para refazer a base do zero e de registro das decisões tomadas a cada etapa.
 
-| | |
+| Item | Informação |
 |---|---|
 | Responsável | Wilians Ventura Ferreira Souza (Unesp) |
 | Site | <https://wiliansventura98-collab.github.io/site-acoes/> (base interativa em `/base/`) |
 | Repositório | <https://github.com/wiliansventura98-collab/site-acoes> |
-| Versão deste documento | 1.1 · 19/10/2026 |
+| Versão deste documento | 1.2 · 19/10/2026 |
+| Versão em Word | [`PROCESSO.docx`](PROCESSO.docx), gerada por `python pipeline/gerar_processo_docx.py` |
 | Licença | Base de dados: CC BY 4.0 · código: MIT (ver [`LICENCAS.md`](LICENCAS.md)) |
 
-> **Como manter este documento.** A cada avanço (correção da base, nova variável, nova fonte, nova análise ou mudança de critério): (1) atualize a seção correspondente; (2) acrescente uma entrada no [Registro de alterações](#9-registro-de-alterações), com data, o que mudou e por quê; (3) mova o que foi resolvido para fora das [Pendências](#10-pendências); (4) aumente o número da versão. O documento é versionado junto com o código, então o histórico do Git guarda todas as versões anteriores.
+> **Como manter este documento.** A cada avanço (correção da base, nova variável, nova fonte, nova análise ou mudança de critério): (1) atualize a seção correspondente; (2) acrescente uma entrada no [Registro de alterações](#9-registro-de-alterações), com data, o que mudou e por quê; (3) mova o que foi resolvido para fora das [Pendências](#10-pendências); (4) aumente o número da versão; (5) gere de novo a versão em Word com `python pipeline/gerar_processo_docx.py`. O documento é versionado junto com o código, então o histórico do Git guarda todas as versões anteriores.
 
 ---
 
@@ -254,6 +255,7 @@ Datas no fuso de São Paulo. Os códigos entre colchetes são os commits do repo
 - **Indicadores sem ligação com as lutas retirados do site**; El Cuy deixado vazio no RENABAP; painel do mapa reorganizado em três blocos; quadro “Como foi calculado este mapa”; cálculo da tendência explicado no Contexto; **leitura em três partes para as 139 combinações prontas** [5839d6f].
 - Criado este documento de processo e o roteiro `pipeline/reconstruir.sh`.
 - **Licenças definidas:** base de dados sob CC BY 4.0 (arquivo `LICENSE`, que o GitHub reconhece) e código sob MIT (`LICENCA-CODIGO`); `LICENCAS.md` explica o que cada uma cobre, lista as condições dos dados de terceiros e traz a forma de citar; rodapés do site e README atualizados. Motivo: sem licença, ninguém tinha permissão formal de reutilizar a base; a CC BY 4.0 é o padrão em dados científicos abertos, garante o crédito e é compatível com o GeoNames e o datos.gob.ar.
+- **Versão em Word do documento de processo** (`PROCESSO.docx`), gerada a partir deste arquivo por `pipeline/gerar_processo_docx.py` (pandoc + python-docx), para circular no grupo.
 
 ---
 
