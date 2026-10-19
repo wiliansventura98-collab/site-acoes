@@ -76,6 +76,10 @@ prontos('mapPresets', 'Mapas prontos:', [
   ['Notícias sobre a densidade', 'Círculos por departamento sobre a densidade do Censo 2022', mapa({unit:'dept', ctx:'c_dens'})],
   ['Principais movimentos, um mapa cada', 'Mapas lado a lado para as organizações mais citadas', mapa({unit:'loc', mode:'multi', cmp:'nombremov', n:6})],
   ['Tipos de movimento, um mapa cada', 'Mapas lado a lado por tipo de movimento', mapa({unit:'prov', mode:'multi', cmp:'tipomov', n:6, measure:'rate'})],
+  ['Bairros populares × protestos (bivariado)', 'Famílias em bairros populares (RENABAP) e notícias por habitante, por departamento', mapa({unit:'dept', ctx:'biv_bp_fam'})],
+  ['Voto em Milei × protestos (bivariado)', 'Voto em La Libertad Avanza em 2023 e notícias por habitante, por departamento', mapa({unit:'dept', ctx:'biv_v_lla'})],
+  ['Economia popular por província', 'Inscritos no RENATEP (% da população de 18 a 65 anos), com os círculos de notícias', mapa({unit:'loc', ctx:'lp_renatep_pct'})],
+  ['Femicídios e notícias feministas (filtra)', 'Taxa de femicídios 2024 por província, com as notícias de movimentos feministas', ()=>{ mapa({unit:'loc', ctx:'lp_femicidios_taxa_2024'})(); st.f={tipomov:new Set([idxDe('tipomov','Movimientos de mujeres/feministas')].filter(k=>k>=0))}; }],
   ['Desocupação × protestos (bivariado)', 'Desocupação do Censo 2022 e notícias por habitante, por departamento', mapa({unit:'dept', ctx:'biv_desocup'})],
   ['Esgoto × protestos (bivariado)', 'Acesso a esgoto em rede e notícias por habitante, por departamento', mapa({unit:'dept', ctx:'biv_cloaca'})],
   ['Jovens nem-nem × protestos (bivariado)', 'Jovens que não estudam nem trabalham e notícias por habitante', mapa({unit:'dept', ctx:'biv_nini'})],
@@ -93,11 +97,14 @@ prontos('ctxPresets', 'Perguntas prontas:', [
   ['Violência e protesto', 'Homicídios dolosos 2024 × notícias, por província', ctxp('prov','taxa_homicidios_2024')],
   ['Povos indígenas', 'População indígena × notícias, por departamento', ctxp('dept','i_indig')],
   ['Serviços básicos', 'Esgoto em rede × notícias, por departamento', ctxp('dept','i_cloaca')],
+  ['Bairros populares e mobilização', 'Famílias em bairros populares (RENABAP) × notícias, por departamento', ctxp('dept','i_bp_fam')],
+  ['Economia popular (RENATEP)', 'Inscritos no registro da economia popular × notícias, por província', ctxp('prov','renatep_pct')],
+  ['Economia popular × notícias da economia popular (filtra)', 'RENATEP × notícias dos movimentos de economia social e de desocupados', ()=>{ CTXV.nivel='prov'; CTXV.x='renatep_pct'; st.f={tipomov:new Set([idxDe('tipomov','Movimientos de Economía Social y Solidaria'), idxDe('tipomov','Movimientos de trabajadores Desocupados')].filter(k=>k>=0))}; }],
+  ['Femicídios × notícias feministas (filtra)', 'Taxa de femicídios 2024 × notícias de movimentos feministas, por província', ()=>{ CTXV.nivel='prov'; CTXV.x='femicidios_taxa_2024'; st.f={tipomov:new Set([idxDe('tipomov','Movimientos de mujeres/feministas')].filter(k=>k>=0))}; }],
+  ['Voto em Milei e protesto', 'Voto em La Libertad Avanza (1º turno 2023) × notícias, por departamento', ctxp('dept','i_v_lla')],
+  ['Voto na esquerda e protesto', 'Voto na Frente de Izquierda (1º turno 2023) × notícias, por departamento', ctxp('dept','i_v_fit')],
   ['Aluguel e mobilização', 'Domicílios em moradia alugada × notícias, por departamento', ctxp('dept','i_alquila')],
-  ['Conectividade e mobilização', 'Domicílios com internet × notícias, por departamento', ctxp('dept','i_internet')],
   ['Jovens nem-nem', 'Jovens que não estudam nem trabalham × notícias, por departamento', ctxp('dept','i_nini')],
-  ['Migração interna', 'População nascida em outra província × notícias, por província', ctxp('prov','i_otraProv')],
-  ['Envelhecimento', 'Índice de envelhecimento × notícias, por província', ctxp('prov','i_env')],
 ]);
 
 prontos('timePresets', 'Ver no tempo:', [

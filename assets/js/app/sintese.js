@@ -289,7 +289,7 @@ function renderSintese(b){
   { const s=sinSecao(body, ++sec, 'Diante de que contexto', 'Relação entre notícias por habitante e indicadores oficiais, por província.');
     const md=mapData(rows,'prov');
     const provs=PROVS_FC.filter(f=>f.properties.pi>=0 && POP[f.properties.pi]);
-    const cor=Object.keys(CTX_ROT).filter(k=>!/populacao|homicidios_2023|^i_pop$|^i_viv$/.test(k)).map(k=>{ const pts=provs.map(f=>({x:(CTX.provincias[f.properties.p]||{})[k], y:md.rate(f.properties.pi)})).filter(p=>p.x!=null && isFinite(p.x));
+    const cor=Object.keys(CTX_ROT).filter(k=>CTX_LUTAS.has(k)).map(k=>{ const pts=provs.map(f=>({x:(CTX.provincias[f.properties.p]||{})[k], y:md.rate(f.properties.pi)})).filter(p=>p.x!=null && isFinite(p.x));
       if(pts.length<15) return null; const c=correlacoes(pts.map(p=>p.x), pts.map(p=>p.y)); return {k, rot:CTX_ROT[k][0], rho:c.rho, n:pts.length}; }).filter(x=>x && isFinite(x.rho));
     const vis=new Set(); const corU=cor.sort((a,c)=>Math.abs(c.rho)-Math.abs(a.rho)).filter(x=>{ if(vis.has(x.rot)) return false; vis.add(x.rot); return true; });
     const sig=corU.filter(x=>Math.abs(x.rho)>=0.41);
@@ -300,7 +300,7 @@ function renderSintese(b){
       if(sig[0]) achados.push(`O indicador mais associado às notícias por habitante é ${rotInd(sig[0].rot)} (ρ = ${nfmt2(sig[0].rho)}, relação ${forcaRho(sig[0].rho)} ${sig[0].rho>0? 'positiva' : 'negativa'}).`);
       sinTabela(s, 'Indicadores mais associados às notícias por habitante (províncias)', ['Indicador','ρ de Spearman','Relação'],
         corU.slice(0,8).map(x=>{ const sp=el('span', 'sin-rho '+(x.rho>0? 'pos':'neg')); const bar=el('i'); bar.style.width=Math.abs(x.rho)*100+'%'; sp.append(bar, document.createTextNode(nfmt2(x.rho))); return [x.rot, sp, `${forcaRho(x.rho)} ${x.rho>0? 'positiva' : 'negativa'}${Math.abs(x.rho)>=0.41? ' · significativa' : ''}`]; }),
-        'ρ de Spearman: de −1 a +1, compara a ordem das províncias nos dois indicadores. Positiva: mais notícias por habitante onde o indicador é maior. Fontes: Censo 2022 (INDEC) e Ministério de Segurança.', ['','r','']);
+        'ρ de Spearman: de −1 a +1, compara a ordem das províncias nos dois indicadores. Positiva: mais notícias por habitante onde o indicador é maior. Só entram indicadores ligados às lutas (os controles demográficos, como conectividade ou envelhecimento, ficam de fora). Fontes: INDEC (Censo 2022), RENABAP (2023), ReNaTEP (2023), Dirección Nacional Electoral (2023) e Registro Nacional de Femicidios (2024).', ['','r','']);
       sinIr(s, [[`Abrir: ${corU[0].rot}`, ()=>{ CTXV.nivel='prov'; CTXV.x=corU[0].k; setTab('ctx'); }], ['Privação × protestos (mapa bivariado)', ()=>{ Object.assign(mstate,{mode:'one', unit:'dept', ctx:'biv_ipmh', mes:''}); setTab('map'); }]]);
     }
   }

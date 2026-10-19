@@ -88,22 +88,33 @@ const CTXDEF = {
 };
 /* Censo 2022 por departamento (INDEC, Geoportal estadístico): coroplético sobre os 511 departamentos/partidos */
 const IND = (CTX.indec && CTX.indec.indicadores) || [], IND_DEP = (CTX.indec && CTX.indec.departamentos) || {};
-IND.forEach(d=>{ CTXDEF['c_'+d.k] = {nivel:'dep', campo:d.k, titulo:`${d.titulo}, 2022`, curto:d.unidade, dec:d.dec, tema:d.tema, definicao:d.definicao,
-  fonte:`INDEC, Censo Nacional de Población, Hogares y Viviendas 2022, via Geoportal estadístico (indicador ${d.ids[0]}: “${d.indec}”)`}; });
+const indAno = d => d.ano || 2022, indTit = d => /20\d\d/.test(d.titulo)? d.titulo : `${d.titulo}, ${indAno(d)}`;
+// ordem dos grupos: primeiro os indicadores ligados às lutas, depois os controles demográficos
+const IND_TEMAS = grupo => [...new Set(IND.filter(d=>(d.grupo||'lutas')===grupo).map(d=>d.tema))];
+const LUTAS_PROV = (CTX.lutas_prov)||[];
+IND.forEach(d=>{ CTXDEF['c_'+d.k] = {nivel:'dep', campo:d.k, titulo:indTit(d), curto:d.unidade, dec:d.dec, tema:d.tema, definicao:d.definicao,
+  fonte: d.fonte || `INDEC, Censo Nacional de Población, Hogares y Viviendas 2022, via Geoportal estadístico (indicador ${d.ids[0]}: “${d.indec}”)`}; });
+LUTAS_PROV.forEach(d=>{ CTXDEF['lp_'+d.campo] = {nivel:'prov', campo:d.campo, titulo:`${d.titulo} (${d.unidade}), ${d.ano}`, curto:d.unidade, dec:d.dec, definicao:d.definicao, fonte:d.fonte}; });
 CTXDEF.popDep = {nivel:'popDep', titulo:'População residente por departamento, 2022 (absoluto)', fonte:'INDEC, Censo 2022, via Geoportal estadístico (indicador 37)'};
 (()=>{ const s=$('ctxLayer'); if(!IND.length) return;
   const og0=s.querySelector('optgroup'); const op=document.createElement('option'); op.value='popDep'; op.textContent='População absoluta por departamento (círculos)'; og0.append(op);
-  [...new Set(IND.map(d=>d.tema))].forEach(t=>{ const og=document.createElement('optgroup'); og.label=`${t} · Censo 2022, por departamento`;
-    IND.filter(d=>d.tema===t).forEach(d=>{ const o=document.createElement('option'); o.value='c_'+d.k; o.textContent=d.titulo; og.append(o); }); s.append(og); }); })();
+  const grupo=(g, rot)=>IND_TEMAS(g).forEach(t=>{ const og=document.createElement('optgroup'); og.label=`${rot}${t} · por departamento`;
+    IND.filter(d=>d.tema===t && (d.grupo||'lutas')===g).forEach(d=>{ const o=document.createElement('option'); o.value='c_'+d.k; o.textContent=indTit(d).replace(/, 2022$/,''); og.append(o); }); s.append(og); });
+  grupo('lutas','');
+  if(LUTAS_PROV.length){ const og=document.createElement('optgroup'); og.label='Economia popular e violência de gênero · por província';
+    LUTAS_PROV.forEach(d=>{ const o=document.createElement('option'); o.value='lp_'+d.campo; o.textContent=`${d.titulo}, ${d.ano}`; og.append(o); }); s.append(og); }
+  grupo('controle','Controles demográficos: '); })();
 /* análise espacial: mapa bivariado e pontos quentes (LISA), por departamento */
-IND.forEach(d=>{ CTXDEF['biv_'+d.k] = {nivel:'biv', campo:d.k, titulo:`Notícias por 100 mil hab. × ${d.titulo.charAt(0).toLowerCase()+d.titulo.slice(1)} (2022)`, curto:d.unidade, dec:d.dec, indTitulo:d.titulo,
-  fonte:`notícias: base do projeto; população e indicador: INDEC, Censo 2022, via Geoportal estadístico (indicador ${d.ids[0]})`}; });
+IND.forEach(d=>{ CTXDEF['biv_'+d.k] = {nivel:'biv', campo:d.k, titulo:`Notícias por 100 mil hab. × ${d.titulo.charAt(0).toLowerCase()+d.titulo.slice(1)}${/20\d\d/.test(d.titulo)? '' : ` (${indAno(d)})`}`, curto:d.unidade, dec:d.dec, indTitulo:d.titulo,
+  fonte: d.fonte? `notícias: base do projeto; ${/população/.test(d.fonte)? '' : 'população: INDEC, Censo 2022; '}indicador: ${d.fonte}` : `notícias: base do projeto; população e indicador: INDEC, Censo 2022, via Geoportal estadístico (indicador ${d.ids[0]})`}; });
 CTXDEF.lisa = {nivel:'lisa', titulo:'Pontos quentes: notícias por 100 mil hab. (LISA), por departamento', fonte:'notícias: base do projeto; população: INDEC, Censo 2022 (Geoportal estadístico)'};
 (()=>{ const s=$('ctxLayer'); if(!IND.length) return;
   const og=document.createElement('optgroup'); og.label='Análise espacial das notícias (por departamento)';
   const o=document.createElement('option'); o.value='lisa'; o.textContent='Pontos quentes e frios (LISA)'; og.append(o); s.append(og);
-  const og2=document.createElement('optgroup'); og2.label='Mapa bivariado: notícias por habitante × indicador do Censo';
-  IND.forEach(d=>{ const o=document.createElement('option'); o.value='biv_'+d.k; o.textContent='× '+d.titulo; og2.append(o); }); s.append(og2); })();
+  const og2=document.createElement('optgroup'); og2.label='Mapa bivariado: notícias por habitante × indicadores ligados às lutas';
+  IND.filter(d=>(d.grupo||'lutas')==='lutas').forEach(d=>{ const o=document.createElement('option'); o.value='biv_'+d.k; o.textContent='× '+d.titulo; og2.append(o); }); s.append(og2);
+  const og3=document.createElement('optgroup'); og3.label='Mapa bivariado: notícias por habitante × controles demográficos';
+  IND.filter(d=>d.grupo==='controle').forEach(d=>{ const o=document.createElement('option'); o.value='biv_'+d.k; o.textContent='× '+d.titulo; og3.append(o); }); s.append(og3); })();
 const POP_D = []; DEPTS.forEach(f=>{ const v=IND_DEP[f.id]; if(f.properties.di>=0 && v && v.pop) POP_D[f.properties.di]=v.pop; });
 const popOf = (unit, i) => unit==='dept'? POP_D[i] : unit==='prov'? POP[i] : null;
 const ctxEscolha = k => (k && CTXDEF[k]) || null;

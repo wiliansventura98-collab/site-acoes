@@ -17,12 +17,19 @@ const PROV_REG = (()=>{ const m=new Map(); DEPTS.forEach(f=>{ const p=f.properti
 const CTX_ROT = { densidade_hab_km2:['Densidade demográfica, 2022','hab./km²',true], populacao_2022:['População, 2022','habitantes',true],
   taxa_homicidios_2024:['Homicídios dolosos, 2024','por 100 mil hab.',false], taxa_homicidios_2023:['Homicídios dolosos, 2023','por 100 mil hab.',false] };
 // indicadores do Censo 2022 (INDEC, Geoportal): disponíveis por província e por departamento
-IND.forEach(d=>{ CTX_ROT['i_'+d.k]=[d.titulo+', 2022', d.unidade, d.k==='dens']; });
-(()=>{ if(!IND.length) return; const s=$('ctxX');
-  [...new Set(IND.map(d=>d.tema))].forEach(t=>{ const og=document.createElement('optgroup'); og.label=`${t} · Censo 2022`;
-    IND.filter(d=>d.tema===t).forEach(d=>{ const o=document.createElement('option'); o.value='i_'+d.k; o.textContent=d.titulo+(d.k==='dens'? ' (escala log)' : ''); og.append(o); }); s.append(og); });
-  const pre=document.createElement('optgroup'); pre.label='Só por província'; [...s.querySelectorAll(':scope > option')].forEach(o=>pre.append(o)); s.prepend(pre); })();
 const SO_PROV = new Set(['densidade_hab_km2','populacao_2022','taxa_homicidios_2024','taxa_homicidios_2023']);
+IND.forEach(d=>{ CTX_ROT['i_'+d.k]=[indTit(d), d.unidade, d.k==='dens']; });
+LUTAS_PROV.forEach(d=>{ CTX_ROT[d.campo]=[`${d.titulo}, ${d.ano}`, d.unidade, false]; SO_PROV.add(d.campo); });
+// chaves dos indicadores ligados às lutas (usadas também na Síntese)
+const CTX_LUTAS = new Set([...IND.filter(d=>(d.grupo||'lutas')==='lutas').map(d=>'i_'+d.k), ...LUTAS_PROV.map(d=>d.campo)]);
+(()=>{ if(!IND.length) return; const s=$('ctxX');
+  const pre=document.createElement('optgroup'); pre.label='Controles e violência · só por província'; [...s.querySelectorAll(':scope > option')].forEach(o=>pre.append(o));
+  const grupo=(g, rot)=>IND_TEMAS(g).forEach(t=>{ const og=document.createElement('optgroup'); og.label=`${rot}${t}`;
+    IND.filter(d=>d.tema===t && (d.grupo||'lutas')===g).forEach(d=>{ const o=document.createElement('option'); o.value='i_'+d.k; o.textContent=indTit(d)+(d.k==='dens'? ' (escala log)' : ''); og.append(o); }); s.append(og); });
+  grupo('lutas','');
+  if(LUTAS_PROV.length){ const og=document.createElement('optgroup'); og.label='Economia popular e violência de gênero · só por província';
+    LUTAS_PROV.forEach(d=>{ const o=document.createElement('option'); o.value=d.campo; o.textContent=`${d.titulo}, ${d.ano} (${d.unidade})`; og.append(o); }); s.append(og); }
+  grupo('controle','Controles demográficos: '); s.append(pre); })();
 
 function correlacoes(xs, ys){
   const n=xs.length, mx=d3.mean(xs), my=d3.mean(ys);
@@ -106,21 +113,21 @@ function renderCtx(b){
   box.append(lgd);
   const f2 = v => (v<0? '−' : '') + Math.abs(v).toLocaleString('pt-BR',{minimumFractionDigits:2, maximumFractionDigits:2});
   $('ctxMeta').textContent= dep? `${fmt(pts.length)} departamentos · ${fmt(pts.filter(d=>d.n).length)} com notícias` : `${pts.length} jurisdições`;
-  const defX = IND.find(d=>'i_'+d.k===CTXV.x);
+  const defX = IND.find(d=>'i_'+d.k===CTXV.x) || LUTAS_PROV.find(d=>d.campo===CTXV.x);
   { const rho=cr? cr.rho : 0, ar=Math.abs(rho), discorda = cr && Math.sign(cr.r)!==Math.sign(cr.rho) && Math.max(Math.abs(cr.r),ar)>=0.1, forca= discorda? 'inconsistente' : ar<0.1? 'praticamente nenhuma' : ar<0.3? 'fraca' : ar<0.6? 'moderada' : 'forte';
-    const nomeInd=titX.replace(/, 20\d\d$/,'').toLowerCase(), uni=dep? 'departamentos' : 'províncias';
+    const nomeInd=(t=>/^[A-ZÁÉÍÓÚ][a-záéíóúâêôãõç]/.test(t)? t.charAt(0).toLowerCase()+t.slice(1) : t)(titX.replace(/, 20\d\d$/,'')), uni=dep? 'departamentos' : 'províncias';
     const sentido = discorda? `a linha de tendência (Pearson, r = ${f2(cr.r)}) e a ordem dos lugares (Spearman) apontam em direções opostas, sinal de que poucos casos extremos puxam a linha; na prática, não há relação consistente entre ${nomeInd} e notícias por habitante` : ar<0.1? `não há relação clara entre ${nomeInd} e notícias por habitante` : rho>0? `onde ${nomeInd} é maior, tende a haver <b>mais</b> notícias por habitante` : `onde ${nomeInd} é maior, tende a haver <b>menos</b> notícias por habitante`;
     const lista=l=>l.map(d=>d.p.replace(/ \((Buenos Aires|[^)]+)\)$/,'')).join(', ');
     const Lg=$('ctxLeitura'); Lg.hidden=!cr;
     if(cr) Lg.innerHTML=`<b>Leitura:</b> relação <b>${forca}</b> (ρ = ${f2(rho)}): ${sentido}, entre ${fmt(pts.length)} ${uni}.` + (acima.length? ` <span style="color:#c45a00">●</span> Muito <b>acima</b> do esperado pela tendência: ${lista(acima)}.` : '') + (abaixo.length? ` <span style="color:#2569ad">●</span> Muito <b>abaixo</b>: ${lista(abaixo)}.` : '') + ` Os quadrantes usam as medianas dos dois eixos.`; }
   $('ctxNote').textContent = (dep? `Cada ponto é um departamento ou partido (área ∝ número de notícias; pontos claros = sem notícias no recorte; cor = região estatística). Eixo vertical: notícias que citam o departamento por 100 mil habitantes (Censo 2022), no recorte atual. `
       : `Cada ponto é uma jurisdição (área ∝ número de notícias; cor = região estatística, com Buenos Aires em Pampeana). Eixo vertical: notícias que citam a província por 100 mil habitantes (Censo 2022, resultados definitivos), no recorte atual. `)
-    + (defX && defX.definicao? `Indicador (INDEC): ${defX.definicao.split(/\n/)[0]} ` : '')
+    + (defX && defX.definicao? `Indicador${defX.fonte? '' : ' (INDEC)'}: ${defX.definicao.split(/\n/)[0]} ` : '') + (defX && defX.fonte && !/^INDEC/.test(defX.fonte)? `Fonte: ${defX.fonte}. ` : '')
     + (cr? `Correlação de Pearson r = ${f2(cr.r)}${logX? ' (com o logaritmo do indicador)' : ''}; correlação de postos de Spearman ρ = ${f2(cr.rho)}; n = ${pts.length}. ` : '')
     + 'Associação entre agregados territoriais não indica causalidade nem se aplica a indivíduos (falácia ecológica); a cobertura da imprensa também varia entre províncias.';
   renderCtxTabela(dep? mapData(b.filter(r=>match(r,'provincia')),'prov') : md);
   renderCtxRegioes(b);
-  $('ctxSources').textContent = 'Fontes: INDEC, Censo Nacional de Población, Hogares y Viviendas 2022, resultados definitivos (população) e indicadores por província e departamento obtidos no Geoportal estadístico do INDEC (portalgeoestadistico.indec.gob.ar: privação material dos domicílios, serviços, conectividade, educação, trabalho, saúde, estrutura demográfica, diversidade e migração); área calculada pelo projeto em projeção equivalente; Ministerio de Seguridad Nacional, SNIC-SAT, Informe de Homicidios Dolosos 2024 (homicídios 2023 e 2024); INDEC, Encuesta Permanente de Hogares: pobreza e indigência no segundo semestre de 2024 e mercado de trabalho no quarto trimestre de 2024 (regiões). Detalhes em pipeline/referencias/contexto/FONTES.md no repositório.';
+  $('ctxSources').textContent = 'Fontes: RENABAP, Registro Nacional de Barrios Populares (versão de 05/12/2023); ReNaTEP, registro da economia popular (dados de 04/04/2023); Dirección Nacional Electoral, eleições gerais de 2023 (categoria Presidente, resultados provisórios); Corte Suprema de Justicia, Registro Nacional de Femicidios 2024; INDEC, Censo Nacional de Población, Hogares y Viviendas 2022, resultados definitivos (população) e indicadores por província e departamento obtidos no Geoportal estadístico do INDEC (portalgeoestadistico.indec.gob.ar: privação material dos domicílios, serviços, conectividade, educação, trabalho, saúde, estrutura demográfica, diversidade e migração); área calculada pelo projeto em projeção equivalente; Ministerio de Seguridad Nacional, SNIC-SAT, Informe de Homicidios Dolosos 2024 (homicídios 2023 e 2024); INDEC, Encuesta Permanente de Hogares: pobreza e indigência no segundo semestre de 2024 e mercado de trabalho no quarto trimestre de 2024 (regiões). Detalhes em pipeline/referencias/contexto/FONTES.md no repositório.';
 }
 
 function barCell(td, v, max, txt, cor){

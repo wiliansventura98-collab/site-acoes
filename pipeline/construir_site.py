@@ -64,7 +64,12 @@ def contexto():
     indec = indec_geoportal(prov.keys())
     for p, vals in indec["provincias"].items():
         prov.setdefault(p, {}).update({"i_" + k: v for k, v in vals.items()})
-    return {"provincias": prov, "regioes": reg, "aglomerados": agl, "indec": indec}
+    extra, defs = lutas_provincias()
+    for p, vals in extra.items():
+        if p not in prov:
+            print("Província sem correspondência:", p)
+        prov.setdefault(p, {}).update(vals)
+    return {"provincias": prov, "regioes": reg, "aglomerados": agl, "indec": indec, "lutas_prov": defs}
 
 
 # Indicadores do Censo 2022 obtidos no Geoportal estadístico do INDEC (API datosestadisticos.indec.gob.ar).
@@ -99,6 +104,10 @@ INDEC_INDICADORES = {
     "extr":      ("Nascidos em outro país", "% da população", "Diversidade e migração", 1, 0),
     "otraProv":  ("Nascidos em outra província", "% da população", "Diversidade e migração", 1, 0),
 }
+# Indicadores com pouca ligação direta com as lutas: ficam disponíveis, mas num grupo à parte ("controles demográficos")
+CONTROLES = {"pisos", "internet", "compu", "inact", "dens", "crec", "fem", "env", "dep", "hijos", "afro", "extr", "otraProv"}
+TEMA_NOVO = {"indig": "Povos originários"}
+
 # Departamentos com nomes diferentes nas duas bases; Tolhuin (2017) e Lezama (2009) não existem na camada de limites usada
 ALIAS_INDEC = {"38021": "doctor manuel belgrano|jujuy", "46028": "coronel felipe varela|la rioja",
                "46056": "general angel v penaloza|la rioja", "46070": "general juan f quiroga|la rioja",
@@ -145,11 +154,124 @@ def indec_geoportal(nomes_provincia):
     for k, (rot, un, tema, dec, sentido) in INDEC_INDICADORES.items():
         m = meta.get("ocup" if k == "desocup" else k, {})
         dm = m.get("dep", {})
-        inds.append({"k": k, "titulo": rot, "unidade": un, "tema": tema, "dec": dec, "sentido": sentido,
+        inds.append({"k": k, "titulo": rot, "unidade": un, "tema": TEMA_NOVO.get(k, tema), "dec": dec, "sentido": sentido,
                      "indec": dm.get("titulo"), "definicao": (dm.get("definicao") or "").strip()[:600],
-                     "ids": [m.get("dep_id"), m.get("prov_id")]})
+                     "ids": [m.get("dep_id"), m.get("prov_id")], "ano": 2022,
+                     "grupo": "controle" if k in CONTROLES else "lutas",
+                     "fonte": f"INDEC, Censo Nacional de Población, Hogares y Viviendas 2022, via Geoportal estadístico (indicador {m.get('dep_id')}: “{dm.get('titulo')}”)"})
+    lutas_departamentos(ids, deps, provs, nome_site, inds)
     return {"indicadores": inds, "departamentos": deps, "provincias": provs,
             "fonte": "INDEC, Censo Nacional de Población, Hogares y Viviendas 2022, via Geoportal estadístico (portalgeoestadistico.indec.gob.ar)"}
+
+
+# Nomes de departamento que diferem entre as fontes e a camada de limites (chave normalizada → chave da camada).
+# Tolhuin (desmembrado de Río Grande em 2017) e Lezama (de Chascomús em 2009) somam-se ao departamento de origem.
+ALIAS_DEP = {"jose m ezeiza": "ezeiza", "dr manuel belgrano": "doctor manuel belgrano", "juan b alberdi": "juan bautista alberdi",
+             "coronel de marina l rosales": "coronel de marina leonardo rosales", "1o de mayo": "1 de mayo",
+             "angel vicente penaloza": "general angel v penaloza", "general juan facundo quiroga": "general juan f quiroga",
+             "general ortiz de ocampo": "general ocampo", "tolhuin": "rio grande", "lezama": "chascomus"}
+
+# Indicadores ligados às lutas que não vêm do Censo (ver referencias/contexto/FONTES.md)
+LUTAS_DEP = {
+    "bp_fam": ("Famílias em bairros populares (RENABAP)", "por 1.000 hab.", "Bairros populares e economia popular", 1, 1, 2023,
+               "Registro Nacional de Barrios Populares (RENABAP), Subsecretaría de Integración Socio Urbana, versão de 05/12/2023 (datos.gob.ar); população: INDEC, Censo 2022",
+               "Famílias que vivem em bairros populares (assentamentos e vilas com pelo menos 8 famílias, sem título de propriedade e sem acesso regular a dois ou mais serviços básicos) por 1.000 habitantes."),
+    "bp_n":   ("Bairros populares (RENABAP)", "por 100 mil hab.", "Bairros populares e economia popular", 1, 1, 2023,
+               "Registro Nacional de Barrios Populares (RENABAP), versão de 05/12/2023; população: INDEC, Censo 2022",
+               "Número de bairros populares registrados por 100 mil habitantes."),
+    "v_lla":  ("Voto em La Libertad Avanza (Milei), 1º turno 2023", "% dos votos positivos", "Política: eleições presidenciais de 2023", 1, 0, 2023,
+               "Dirección Nacional Electoral, resultados provisórios das eleições gerais de 22/10/2023, categoria Presidente (argentina.gob.ar/dine)",
+               "Votos em La Libertad Avanza (Javier Milei) sobre os votos positivos para presidente no primeiro turno."),
+    "v_uxp":  ("Voto em Unión por la Patria (Massa), 1º turno 2023", "% dos votos positivos", "Política: eleições presidenciais de 2023", 1, 0, 2023,
+               "Dirección Nacional Electoral, resultados provisórios das eleições gerais de 22/10/2023, categoria Presidente",
+               "Votos em Unión por la Patria (Sergio Massa) sobre os votos positivos para presidente no primeiro turno."),
+    "v_jxc":  ("Voto em Juntos por el Cambio (Bullrich), 1º turno 2023", "% dos votos positivos", "Política: eleições presidenciais de 2023", 1, 0, 2023,
+               "Dirección Nacional Electoral, resultados provisórios das eleições gerais de 22/10/2023, categoria Presidente",
+               "Votos em Juntos por el Cambio (Patricia Bullrich) sobre os votos positivos para presidente no primeiro turno."),
+    "v_fit":  ("Voto na Frente de Izquierda (Bregman), 1º turno 2023", "% dos votos positivos", "Política: eleições presidenciais de 2023", 2, 0, 2023,
+               "Dirección Nacional Electoral, resultados provisórios das eleições gerais de 22/10/2023, categoria Presidente",
+               "Votos na Frente de Izquierda y de Trabajadores – Unidad (Myriam Bregman) sobre os votos positivos para presidente no primeiro turno."),
+}
+LUTAS_PROV = [  # só por província: campo, título, unidade, tema, casas, ano, fonte, definição
+    ("renatep_pct", "Inscritos no RENATEP (economia popular)", "% da pop. de 18 a 65 anos", "Bairros populares e economia popular", 1, 2023,
+     "Registro Nacional de Trabajadores y Trabajadoras de la Economía Popular (ReNaTEP), informe “Juventudes y Economía Popular en el ReNaTEP”, dados de 04/04/2023, cuadro 2",
+     "Trabalhadoras e trabalhadores da economia popular inscritos no registro nacional, em relação à população de 18 a 65 anos."),
+    ("femicidios_taxa_2024", "Femicídios", "por 100 mil mulheres", "Violência de gênero", 2, 2024,
+     "Corte Suprema de Justicia de la Nación, Oficina de la Mujer, Registro Nacional de Femicidios de la Justicia Argentina 2024, tabela 6",
+     "Vítimas diretas de femicídio (inclui travesticídios/transfemicídios) por 100 mil mulheres, por jurisdição de ocorrência."),
+]
+
+
+def lutas_departamentos(ids, deps, provs, nome_site, inds):
+    """Acrescenta aos indicadores do Censo os bairros populares (RENABAP) e o voto de 2023, por departamento e por província."""
+    from comum import chave, chave_provincia
+    pop_prov = _populacao()
+    k_caba = next((k for k in ids if k.startswith("CABA|")), None)
+
+    def id_dep(prov, dep):
+        p = chave_provincia(prov)
+        if p.startswith("ciudad autonoma") or p == "caba":
+            return k_caba
+        d = chave(dep); d = ALIAS_DEP.get(d, d)
+        return f"{d}|{p}" if f"{d}|{p}" in ids else None
+
+    def nome_prov(prov):
+        p = chave_provincia(prov)
+        return nome_site.get(p) or (nome_site.get("ciudad autonoma de buenos aires") if p in ("caba", "ciudad autonoma de buenos aires") else None)
+
+    soma_d, soma_p, sem = collections.defaultdict(collections.Counter), collections.defaultdict(collections.Counter), []
+    arq = CONTEXTO / "renabap_departamentos_2023.csv"
+    if arq.exists():
+        for r in _ler_csv(arq.name):
+            c = collections.Counter(bp_n=int(r["barrios_populares"]), bp_f=int(r["familias_aprox"]))
+            k = id_dep(r["provincia"], r["departamento"])
+            if k: soma_d[k].update(c)
+            else: sem.append("RENABAP " + r["departamento"])
+            if nome_prov(r["provincia"]): soma_p[nome_prov(r["provincia"])].update(c)
+    arq = CONTEXTO / "eleicoes_2023_generales_departamentos.csv"
+    if arq.exists():
+        for r in _ler_csv(arq.name):
+            c = collections.Counter(pos=int(r["votos_positivos"]), lla=int(r["la_libertad_avanza"]), uxp=int(r["union_por_la_patria"]),
+                                    jxc=int(r["juntos_por_el_cambio"]), fit=int(r["frente_de_izquierda"]))
+            k = id_dep(r["distrito"], r["seccion"])
+            if k: soma_d[k].update(c)
+            elif "antartida" not in chave(r["seccion"]): sem.append("Eleições " + r["seccion"])
+            if nome_prov(r["distrito"]): soma_p[nome_prov(r["distrito"])].update(c)
+    if sem:
+        print("Lutas sem polígono correspondente:", "; ".join(sem))
+
+    def valores(c, pop):
+        out = {}
+        if pop:
+            out["bp_fam"] = round(c["bp_f"] / pop * 1000, 1)
+            out["bp_n"] = round(c["bp_n"] / pop * 1e5, 1)
+        if c["pos"]:
+            for k in ("lla", "uxp", "jxc", "fit"):
+                out["v_" + k] = round(c[k] / c["pos"] * 100, 2)
+        return out
+    for k, v in deps.items():
+        v.update(valores(soma_d.get(k, collections.Counter()), v.get("pop")))
+    for nome, v in provs.items():
+        v.update(valores(soma_p.get(nome, collections.Counter()), pop_prov.get(nome) or v.get("pop")))
+    for k, (rot, un, tema, dec, sentido, ano, fonte, definicao) in LUTAS_DEP.items():
+        inds.append({"k": k, "titulo": rot, "unidade": un, "tema": tema, "dec": dec, "sentido": sentido, "indec": None,
+                     "definicao": definicao, "ids": [None, None], "ano": ano, "grupo": "lutas", "fonte": fonte})
+
+
+def lutas_provincias():
+    """RENATEP e femicídios: só existem por província."""
+    out = {}
+    arq = CONTEXTO / "renatep_provincias_2023.csv"
+    if arq.exists():
+        for r in _ler_csv(arq.name):
+            out.setdefault(r["provincia"], {})["renatep_pct"] = round(int(r["inscritos_renatep"]) / int(r["pop_18_65"]) * 100, 1)
+    arq = CONTEXTO / "femicidios_provincias_2024.csv"
+    if arq.exists():
+        for r in _ler_csv(arq.name):
+            out.setdefault(r["provincia"], {})["femicidios_taxa_2024"] = float(r["taxa_por_100mil_mulheres"])
+    defs = [{"campo": c, "titulo": t, "unidade": u, "tema": te, "dec": d, "ano": a, "fonte": f, "definicao": df}
+            for c, t, u, te, d, a, f, df in LUTAS_PROV]
+    return out, defs
 
 
 def _toponimos():
@@ -211,7 +333,7 @@ def escrever_contexto_csv(res, caminho):
     conta = collections.Counter(x for r in unicas for x in r["v"]["departamento"])
     topo = json.loads((REFERENCIAS / "limites" / "departamentos.topo.json").read_text(encoding="utf-8"))
     obj = next(iter(topo["objects"].values()))
-    cols = ["pop", "viv", *INDEC_INDICADORES]
+    cols = ["pop", "viv", *INDEC_INDICADORES, *LUTAS_DEP]
     with open(caminho, "w", newline="", encoding="utf-8-sig") as fh:
         w = csv.writer(fh)
         w.writerow(["id", "departamento", "provincia", "regiao", "noticias", "noticias_100mil_hab"] + cols)

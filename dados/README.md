@@ -7,7 +7,7 @@ Arquivos gerados pelo [pipeline](../pipeline/). Não edite à mão: eles são re
 | [`acoes_2024.csv`](acoes_2024.csv) | Base tratada, uma linha por notícia. Campos com vários valores vêm separados por `; `. Abre no Excel, LibreOffice, R e Python. |
 | [`dicionario.md`](dicionario.md) | Descrição de cada variável e suas categorias mais frequentes. |
 | [`camadas/acoes_2024.gpkg`](camadas/acoes_2024.gpkg) | GeoPackage para QGIS ou ArcGIS (ver abaixo). |
-| [`contexto_censo2022_departamentos.csv`](contexto_censo2022_departamentos.csv) | Notícias, notícias por 100 mil hab. e 30 indicadores do Censo 2022 (INDEC, Geoportal) para cada um dos 512 departamentos/partidos. |
+| [`contexto_censo2022_departamentos.csv`](contexto_censo2022_departamentos.csv) | Notícias, notícias por 100 mil hab. 30 indicadores do Censo 2022 (INDEC, Geoportal), bairros populares (RENABAP 2023) e voto presidencial do 1º turno de 2023 (DINE) para cada um dos 512 departamentos/partidos. |
 | [`relatorio_geocodificacao.csv`](relatorio_geocodificacao.csv) | Como cada localidade foi posicionada (manual, GeoNames ou centro do departamento). |
 | `base.json`, `geo.json`, `resumo.json` | Formato compacto lido pela base interativa e pela página inicial. |
 | `fonte/acoes_2024_fonte.csv` | Entrada do pipeline: planilha de codificação sem dados pessoais. |
