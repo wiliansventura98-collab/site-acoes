@@ -9,7 +9,7 @@ Este documento registra, de forma cumulativa, tudo o que foi feito para transfor
 | Responsável | Wilians Ventura Ferreira Souza (Unesp) |
 | Site | <https://wiliansventura98-collab.github.io/site-acoes/> (base interativa em `/base/`) |
 | Repositório | <https://github.com/wiliansventura98-collab/site-acoes> |
-| Versão deste documento | 1.2 · 19/10/2026 |
+| Versão deste documento | 1.3 · 19/10/2026 |
 | Versão em Word | [`PROCESSO.docx`](PROCESSO.docx), gerada por `python pipeline/gerar_processo_docx.py` |
 | Licença | Base de dados: CC BY 4.0 · código: MIT (ver [`LICENCAS.md`](LICENCAS.md)) |
 
@@ -202,11 +202,25 @@ Código em `assets/js/app/` (módulos carregados em ordem por `carregar.js`). To
 | Tipologias | Mapa de árvore | Área ∝ notícias, contagem fracionada |
 | Correspondências | ACM | Codificação difusa, autovalores por Jacobi, inércia corrigida de Benzécri, 8 categorias por variável (validada contra numpy: inércia total 5,08; eixos 6,1% e 5,1% brutos, 41,7% e 17,2% corrigidos) |
 | Redes | Coocorrência | Ligação com 2 ou mais notícias em comum; comunidades de Louvain; intermediação de Brandes; grau e força |
-| Mapa | Pranchas e mapa navegável | Círculos com área ∝ notícias; taxa = notícias ÷ população × 100.000; classes em quintis; **destaques** pelo teste exato de Poisson (esperado = total × população do lugar ÷ população total; laranja com p < 0,01 e 3 ou mais notícias; azul com p < 0,01 para poucas); **bivariado** 3 × 3 (notícias: nenhuma / até a mediana / acima; indicador em tercis); **LISA** sobre taxas bayesianas empíricas (Marshall), 499 permutações, p < 0,05; animação mensal com escala comum |
+| Mapa | Pranchas e mapa navegável | Círculos com área ∝ notícias; taxa = notícias ÷ população × 100.000; classes em quintis; **destaques** pelo teste exato de Poisson (esperado = total × população do lugar ÷ população total; laranja com p < 0,01 e 3 ou mais notícias; azul com p < 0,01 para poucas); **bivariado** 3 × 3 (notícias: nenhuma / até a mediana / acima; indicador em tercis); **LISA** (ver 7.1); animação mensal com escala comum |
 | Contexto | Dispersão notícias por habitante × indicador | Pearson r e Spearman ρ (fraca até ±0,3; moderada até ±0,6; forte acima); reta de mínimos quadrados (log do indicador quando a escala é logarítmica); **muito acima/abaixo da tendência** quando o resíduo padronizado ≥ +1,5 ou ≤ −1,5; quadrantes pelas medianas |
 | No tempo | Mês, calendário diário e série semanal | Semana de segunda a domingo; **pico** acima de Q3 + 1,5 × (Q3 − Q1); 12 acontecimentos de 2024 com fonte (`acontecimentos_2024.csv`) |
 | Imprensa | Quem noticia | Curva de Lorenz, Gini, parcela dos 10 maiores, HHI, veículos × regiões em resíduos ajustados |
 | Fichas | Prancha de uma organização, tipo, lugar ou objetivo | Perfis em % das notícias da ficha; mapa, detalhe da AMBA, série mensal; exportação PNG/SVG com a fonte Urbanist embutida |
+
+### 7.1 Pontos quentes e frios (LISA)
+
+I de Moran local (Anselin, 1995), por departamento, calculado no navegador (`lisaCalc` em `assets/js/app/mapas.js`):
+
+1. **Taxa bruta** de cada um dos 511 departamentos com população: notícias que citam o departamento ÷ população do Censo 2022 × 100.000 (departamentos sem notícias entram com zero).
+2. **Taxa bayesiana empírica global** (Marshall, 1991): taxa suavizada = m + w × (taxa bruta − m), com m = taxa nacional e w = A ÷ (A + m ÷ população), em que A é a variância entre departamentos descontado o ruído de Poisson. Aproxima da média os departamentos pequenos.
+3. **Escore z** das taxas suavizadas (média e desvio-padrão dos departamentos).
+4. **Vizinhança por contiguidade “rainha”** (fronteira ou vértice em comum, `topojson.neighbors`), pesos padronizados por linha; defasagem espacial = média dos z dos vizinhos. Departamentos sem vizinhos ficam fora.
+5. **I local** = zᵢ × média dos z vizinhos. Classes pelos sinais: alto-alto (ponto quente), baixo-baixo (ponto frio), alto-baixo, baixo-alto.
+6. **Permutação condicional**: zᵢ fixo e k vizinhos sorteados sem reposição entre os demais departamentos, 499 vezes; p = (nº de sorteios tão extremos + 1) ÷ 500; classe pintada só com p < 0,05. Semente fixa (resultado reprodutível).
+7. **I de Moran global** = Σ zᵢ × defasagemᵢ ÷ Σ zᵢ², com p por 199 permutações das taxas.
+
+Cuidados registrados no site: cerca de 511 testes simultâneos (uns 26 falsos positivos esperados a 5%, sem correção de múltiplos testes); dependência da vizinhança e dos limites; a taxa mede cobertura da imprensa. No recorte completo (19/10/2026): 14 pontos quentes (sobretudo Patagônia andina e Tierra del Fuego), 55 pontos frios (sobretudo partidos do Gran Buenos Aires sem notícias), I global = 0,183 (p ≈ 0,005).
 
 **Critérios da Síntese:** combinações características com resíduo ajustado ≥ +3 (p < 0,003) e 5 ou mais notícias; combinações raras com resíduo ≤ −3; peso populacional por região a partir dos departamentos (separa o GBA do resto da província de Buenos Aires); correlações com Spearman nas 24 províncias, significativas a partir de ±0,41 (p < 0,05), só com indicadores ligados às lutas.
 
@@ -256,6 +270,7 @@ Datas no fuso de São Paulo. Os códigos entre colchetes são os commits do repo
 - Criado este documento de processo e o roteiro `pipeline/reconstruir.sh`.
 - **Licenças definidas:** base de dados sob CC BY 4.0 (arquivo `LICENSE`, que o GitHub reconhece) e código sob MIT (`LICENCA-CODIGO`); `LICENCAS.md` explica o que cada uma cobre, lista as condições dos dados de terceiros e traz a forma de citar; rodapés do site e README atualizados. Motivo: sem licença, ninguém tinha permissão formal de reutilizar a base; a CC BY 4.0 é o padrão em dados científicos abertos, garante o crédito e é compatível com o GeoNames e o datos.gob.ar.
 - **Versão em Word do documento de processo** (`PROCESSO.docx`), gerada a partir deste arquivo por `pipeline/gerar_processo_docx.py` (pandoc + python-docx), para circular no grupo.
+- **LISA explicado passo a passo** no quadro “Como foi calculado este mapa” (abre sozinho na primeira vez), com exemplo numérico de um ponto quente e de um ponto frio, lista dos departamentos, I global e cuidados; dica do mapa mostra z, média dos vizinhos e I local; glossário e guia ampliados. O teste de permutação passou a sortear os vizinhos **sem reposição** (permutação condicional, como no GeoDa); antes sorteava com reposição. Motivo: pedido de deixar claro como o LISA é calculado.
 
 ---
 

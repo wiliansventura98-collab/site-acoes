@@ -155,7 +155,9 @@ function lisaCalc(T){
   let rs=20241; const rnd=()=>{ rs=(rs*1103515245+12345)&0x7fffffff; return rs/0x7fffffff; };
   const R=499, cls=new Array(DEPTS.length).fill(null), pv=new Array(DEPTS.length).fill(null);
   z.forEach((zi,i)=>{ if(zi==null || !viz[i].length) return; const k=viz[i].length, Ii=zi*lag[i]; let cnt=0;
-    for(let r=0;r<R;r++){ let sm=0; for(let q=0;q<k;q++){ let j; do{ j=val[Math.floor(rnd()*val.length)]; }while(j===i); sm+=z[j]; } const Is=zi*sm/k; if(Ii>=0? Is>=Ii : Is<=Ii) cnt++; }
+    // permutação condicional: o valor do departamento fica fixo e sorteiam-se k “vizinhos” ao acaso entre os demais, sem reposição
+    const outros=val.filter(j=>j!==i), m=outros.length;
+    for(let r=0;r<R;r++){ let sm=0; for(let q=0;q<k;q++){ const t=q+Math.floor(rnd()*(m-q)); const tmp=outros[q]; outros[q]=outros[t]; outros[t]=tmp; sm+=z[outros[q]]; } const Is=zi*sm/k; if(Ii>=0? Is>=Ii : Is<=Ii) cnt++; }
     const p=(cnt+1)/(R+1); pv[i]=p; if(p<0.05) cls[i] = zi>0? (lag[i]>0? 'HH':'HL') : (lag[i]<0? 'LL':'LH'); else cls[i]='ns'; });
   const comViz=z.map((zi,i)=>zi!=null && viz[i].length? i : -1).filter(i=>i>=0), den=d3.sum(comViz,i=>z[i]**2);
   const Iglob=d3.sum(comViz,i=>z[i]*lag[i])/den;
@@ -163,7 +165,11 @@ function lisaCalc(T){
   for(let r=0;r<199;r++){ const perm=zz.slice(); for(let q=perm.length-1;q>0;q--){ const j=Math.floor(rnd()*(q+1)); [perm[q],perm[j]]=[perm[j],perm[q]]; }
     const pz=new Map(comViz.map((i,q)=>[i,perm[q]])); const Ir=d3.sum(comViz,i=>pz.get(i)*d3.mean(viz[i],j=>pz.has(j)? pz.get(j) : z[j]))/den; if(Ir>=Iglob) maior++; }
   const n={HH:0,LL:0,HL:0,LH:0,ns:0}; cls.forEach(c=>{ if(c) n[c]++; });
-  return { cls:new Map(DEPTS.map((f,i)=>[f.id, cls[i]])), pv:new Map(DEPTS.map((f,i)=>[f.id, pv[i]])), eb:new Map(DEPTS.map((f,i)=>[f.id, x[i]])), I:Iglob, pI:(maior+1)/200, n };
+  // detalhes por departamento, para a explicação do cálculo
+  const det=new Map(DEPTS.map((f,i)=>{ const t=T.get(f.id); return [f.id, t? {nome:/\(/.test(f.properties.n)? f.properties.n : `${f.properties.n} (${f.properties.p})`, n:t.n, pop:t.pop, bruta:t.n/t.pop*1e5, eb:x[i], z:z[i], lag:lag[i], k:viz[i].length, Ii: z[i]!=null && lag[i]!=null? z[i]*lag[i] : null, p:pv[i], cls:cls[i]} : null]; }));
+  const semViz=z.filter((zi,i)=>zi!=null && !viz[i].length).length;
+  return { cls:new Map(DEPTS.map((f,i)=>[f.id, cls[i]])), pv:new Map(DEPTS.map((f,i)=>[f.id, pv[i]])), eb:new Map(DEPTS.map((f,i)=>[f.id, x[i]])), I:Iglob, pI:(maior+1)/200, n, det,
+    par:{N, P, taxa:bb*1e5, a, mu, sd, R, nDep:val.length, semViz} };
 }
 const LISA_COR = { HH:'#c45a00', LL:'#2569ad', HL:'#f6c768', LH:'#a9cdee', ns:'#f4f4f1' };
 const LISA_ROT = { HH:'Alto cercado de alto (ponto quente)', LL:'Baixo cercado de baixo (ponto frio)', HL:'Alto cercado de baixo', LH:'Baixo cercado de alto', ns:'Não significativo (p ≥ 0,05)' };
@@ -207,7 +213,7 @@ function topoLayer(m, proj, box, k, modo){
 /* ---------- explicação do cálculo do mapa atual (caixa "Como foi calculado este mapa") ---------- */
 function explicaMapa(md, o, unit, cdef){
   const C0=$('mapCalcCorpo'); if(!C0) return; C0.textContent='';
-  const ul=el('ol'); C0.append(ul);
+  const ul=el('ul'); C0.append(ul);
   const item = html => { const li=el('li'); const pp=sinPseguro(html); li.append(...pp); ul.append(li); };
   const nUn = unit==='dept'? 'departamento' : unit==='prov'? 'província' : 'localidade';
   item(`**O que se conta.** Cada notícia do recorte é atribuída ${unit==='loc'? 'às localidades' : unit==='dept'? 'aos departamentos' : 'às províncias'} que ela cita (uma notícia que cita dois lugares conta para os dois). Notícias de escala nacional, virtuais ou sem lugar identificável ficam de fora: ${fmt(md.N-md.mapped)} das ${fmt(md.N)} neste recorte.`);
@@ -225,7 +231,25 @@ function explicaMapa(md, o, unit, cdef){
     if(ba.length) item(`**Abaixo do esperado (${ba.length}):** ${ba.slice(0,8).map(d=>`${nm(d)}: ${fmt(d.O)} observadas × ${nfmt1(d.E)} esperadas`).join('; ')}${ba.length>8? '; …' : '.'} Lugares abaixo do esperado podem ter pouca mobilização ou pouca cobertura da imprensa: confira na aba Imprensa.`);
   } else if(unit==='loc') item(`**Contornos de destaque** aparecem só por departamento ou província, porque dependem da população do lugar.`);
   if(cdef && cdef.nivel==='biv') item(`**Mapa bivariado.** Cada departamento recebe uma cor que junta duas informações. No eixo das notícias: nenhuma notícia; até a mediana das taxas dos departamentos com notícias; acima dela. No eixo do indicador (“${cdef.indTitulo}”): tercis, isto é, os departamentos ordenados pelo indicador e divididos em três grupos iguais (baixo, médio, alto). As nove combinações são cores misturadas de amarelo (notícias) e azul (indicador). Fonte do indicador: ${cdef.fonte}.`);
-  else if(cdef && cdef.nivel==='lisa') item(`**Pontos quentes (LISA).** (1) Para cada departamento calcula-se a taxa de notícias por 100 mil hab., “suavizada” pelo método bayesiano empírico (Marshall), que aproxima da média nacional as taxas de lugares muito pequenos, onde uma notícia faria a taxa disparar. (2) Compara-se a taxa de cada departamento com a média dos seus vizinhos (os que fazem fronteira). (3) Para saber se o padrão poderia ser acaso, os valores são embaralhados 499 vezes. Quente (laranja) = alto cercado de altos; frio (azul) = baixo cercado de baixos; só com p < 0,05.`);
+  else if(cdef && cdef.nivel==='lisa'){ const L=ESP_CACHE.v; const nf=(v,d=1)=>(v<0? '−' : '')+Math.abs(v).toLocaleString('pt-BR',{maximumFractionDigits:d, minimumFractionDigits:d});
+    const pfm=p=>p<0.0021? '0,002 (o menor possível com 499 sorteios)' : nf(p,3);
+    item(`**Pontos quentes e frios (LISA).** LISA quer dizer _Local Indicator of Spatial Association_ (indicador local de associação espacial). Aqui se usa o **I de Moran local** (Anselin, 1995). A pergunta é: _este departamento e os seus vizinhos têm, juntos, mais (ou menos) notícias por habitante do que o resto do país, de um jeito que dificilmente seria acaso?_ O cálculo tem seis passos.`);
+    if(L){ const P=L.par;
+      item(`**Passo 1 · Taxa bruta.** Para cada um dos ${fmt(P.nDep)} departamentos com população no Censo 2022: notícias do recorte que citam o departamento ÷ população × 100.000. Departamentos sem notícias entram com taxa zero. No país, ${fmt(P.N)} citações para ${fmt(P.P)} habitantes: ${nf(P.taxa,2)} por 100 mil.`);
+      item(`**Passo 2 · Suavização (taxa bayesiana empírica, método de Marshall).** Em departamentos pequenos, uma única notícia faz a taxa disparar. Por isso cada taxa é “puxada” em direção à média nacional, com mais força quanto menor a população: taxa suavizada = média + peso × (taxa bruta − média), com peso = A ÷ (A + média ÷ população), onde A = ${nf(P.a*1e10,2)} × 10⁻¹⁰ é a variação entre departamentos que não se explica pelo acaso. Um departamento grande mantém quase a sua taxa; um pequeno fica perto da média.`);
+      item(`**Passo 3 · Padronização.** As taxas suavizadas viram escores z: (taxa − ${nf(P.mu,2)}) ÷ ${nf(P.sd,2)}, isto é, quantos desvios-padrão cada departamento está acima (+) ou abaixo (−) da média dos departamentos.`);
+      item(`**Passo 4 · Vizinhos.** São vizinhos os departamentos que compartilham fronteira ou vértice com ele (contiguidade do tipo “rainha”), segundo a camada de limites. Calcula-se a **média dos escores z dos vizinhos** (a “defasagem espacial”). ${P.semViz? `${fmt(P.semViz)} departamentos sem vizinhos (ilhas) ficam fora.` : ''}`);
+      item(`**Passo 5 · I local = z do departamento × média dos z dos vizinhos.** Positivo quando os dois têm o mesmo sinal (alto com alto, baixo com baixo); negativo quando são opostos. A classe sai dos sinais: **alto-alto** (ponto quente, laranja), **baixo-baixo** (ponto frio, azul), **alto-baixo** (amarelo claro: departamento alto cercado de baixos) e **baixo-alto** (azul claro).`);
+      item(`**Passo 6 · Teste de permutação.** Para saber se o I local poderia ser acaso, o valor do departamento fica fixo e se sorteiam, ${fmt(P.R)} vezes, vizinhos ao acaso entre os demais departamentos (o mesmo número de vizinhos que ele tem), recalculando o I. O valor p é a parte dos sorteios com I tão extremo quanto o observado: p = (sorteios tão extremos + 1) ÷ (${fmt(P.R)} + 1). Só se pinta a classe quando **p < 0,05**; os demais ficam em cinza (“não significativo”).`);
+      const ds=[...L.det.values()].filter(Boolean), hh=ds.filter(d=>d.cls==='HH').sort((a,q)=>q.Ii-a.Ii), ll=ds.filter(d=>d.cls==='LL').sort((a,q)=>q.Ii-a.Ii);
+      const ex=hh.find(d=>d.n>0 && d.k>=2) || hh[0];
+      if(ex) item(`**Exemplo: ${ex.nome}.** ${fmt(ex.n)} notícias para ${fmt(ex.pop)} habitantes = taxa bruta de ${nf(ex.bruta,1)} por 100 mil; suavizada, ${nf(ex.eb,1)}; escore z = ${nf(ex.z,2)}. Tem ${fmt(ex.k)} vizinhos, cuja média de z é ${nf(ex.lag,2)}. I local = ${nf(ex.z,2)} × ${nf(ex.lag,2)} = ${nf(ex.Ii,2)}. Nos sorteios, p = ${pfm(ex.p)}: como os dois são positivos e p < 0,05, é um **ponto quente**.`);
+      const exl=ll[0];
+      if(exl) item(`**Exemplo de ponto frio: ${exl.nome}.** ${fmt(exl.n)} notícias para ${fmt(exl.pop)} habitantes; z = ${nf(exl.z,2)}, média dos ${fmt(exl.k)} vizinhos = ${nf(exl.lag,2)}, I local = ${nf(exl.Ii,2)}, p = ${pfm(exl.p)}.`);
+      item(`**Resultado neste recorte:** ${fmt(L.n.HH)} pontos quentes${hh.length? ` (${hh.slice(0,10).map(d=>d.nome).join('; ')}${hh.length>10? '; …' : ''})` : ''}; ${fmt(L.n.LL)} pontos frios${ll.length? ` (${ll.slice(0,8).map(d=>d.nome).join('; ')}${ll.length>8? '; …' : ''})` : ''}; ${fmt(L.n.HL)} altos isolados e ${fmt(L.n.LH)} baixos isolados; ${fmt(L.n.ns)} não significativos.`);
+      item(`**Medida global (I de Moran).** Resume o mapa inteiro: soma de z × média dos z vizinhos ÷ soma de z², com pesos padronizados por linha. Vale ${nf(L.I,3)}, com p ≈ ${nf(L.pI,3)} em 199 permutações das taxas entre os departamentos. ${L.pI<0.05 && L.I>0? 'Positivo e significativo: departamentos parecidos tendem a ficar perto uns dos outros, formando manchas.' : 'Sem agrupamento espacial claro no conjunto do mapa.'}`);
+      item(`**Cuidados.** (a) São cerca de ${fmt(P.nDep)} testes ao mesmo tempo: com p < 0,05, uns ${fmt(Math.round(P.nDep*0.05))} departamentos poderiam aparecer como significativos só por acaso; leia as manchas formadas por vários departamentos com mais confiança do que casos isolados. (b) O resultado depende da definição de vizinhança e da camada de limites. (c) A taxa mede notícias, não protestos: regiões com mais cobertura de imprensa tendem a sair mais quentes. (d) Os sorteios usam semente fixa, para que o mapa seja sempre o mesmo para o mesmo recorte.`);
+    } else item(`**Pontos quentes (LISA).** O cálculo aparece aqui quando o mapa termina de ser desenhado.`); }
   else if(cdef && cdef.nivel!=='pop') item(`**Camada de contexto.** “${cdef.titulo}”, ${cdef.nivel==='reg'? 'por região estatística' : cdef.nivel==='agl'? 'por aglomerado urbano' : cdef.nivel==='prov'? 'por província' : 'por departamento'}, em cinco classes de quintis (do mais claro ao mais escuro). Fonte: ${cdef.fonte}.${cdef.definicao? ' Definição: ' + cdef.definicao.split(/\n/)[0] : ''}`);
   if(mstate.mes) item(`**Período.** Só as notícias do mês escolhido; a escala dos círculos é comum a todos os meses, para que a animação compare meses entre si.`);
 }
@@ -614,7 +638,7 @@ function renderMap(b){
       const chave=JSON.stringify([b.length, b.length? b[0].k:0, b.length? b[b.length-1].k:0, Object.keys(st.f).map(k=>[k,[...st.f[k]]]), mstate.mes]);
       const L = ESP_CACHE.k===chave? ESP_CACHE.v : (ESP_CACHE={k:chave, v:lisaCalc(T)}).v;
       o.esp={ L, cor:f=>LISA_COR[L.cls.get(f.id)] || '#f1f1ef',
-        tip:f=>{ const t=T.get(f.id), c=L.cls.get(f.id); return t? [`${fmt(t.n)} notícias · ${fN(t.rate)} por 100 mil hab.`, `Taxa suavizada (bayesiana empírica): ${fN(L.eb.get(f.id)||0)}`, c? `${LISA_ROT[c]}${L.pv.get(f.id)!=null? ` (p = ${L.pv.get(f.id).toLocaleString('pt-BR',{maximumFractionDigits:3})})` : ''}` : 'sem vizinhos'] : ['sem dado']; } };
+        tip:f=>{ const t=T.get(f.id), c=L.cls.get(f.id); return t? [`${fmt(t.n)} notícias · ${fN(t.rate)} por 100 mil hab.`, `Taxa suavizada (bayesiana empírica): ${fN(L.eb.get(f.id)||0)}`, ...(()=>{ const d=L.det.get(f.id); if(!d || d.z==null || d.lag==null) return []; const g=v=>(v<0? '−' : '')+Math.abs(v).toLocaleString('pt-BR',{maximumFractionDigits:2, minimumFractionDigits:2}); return [`z = ${g(d.z)} · média dos ${d.k} vizinhos = ${g(d.lag)} · I local = ${g(d.Ii)}`]; })(), c? `${LISA_ROT[c]}${L.pv.get(f.id)!=null? ` (p = ${L.pv.get(f.id).toLocaleString('pt-BR',{maximumFractionDigits:3})})` : ''}` : 'sem vizinhos'] : ['sem dado']; } };
     }
     o.circles=false; o.fill=false;
   }
@@ -682,6 +706,7 @@ function renderMap(b){
     const altos = o.dest? o.dest.feats.filter(d=>d.t==='alto').sort((a,q)=>q.razao-a.razao) : [];
     const destNota = o.dest && o.dest.feats.length? `Destaques: ${altos.length} lugares com notícias muito acima do esperado pela população (contorno laranja${altos.length? ', por exemplo ' + altos.slice(0,4).map(d=>d.nome.replace(/ \((Buenos Aires|[^)]+)\)$/,'')).join(', ') : ''}) e ${o.dest.feats.length-altos.length} muito abaixo (contorno azul). ` : (unit==='loc' && mstate.dest!==false? 'Os destaques por população aparecem quando a unidade é departamento ou província. ' : '');
     explicaMapa(md, o, unit, cdef);
+    if(cdef && cdef.nivel==='lisa' && !explicaMapa.lisaAberto){ $('mapCalc').open=true; explicaMapa.lisaAberto=true; } // na primeira vez, mostra o cálculo do LISA aberto
     $('mapNote').textContent = destNota + bivNota + baWarn + (RATE_OK(unit)? '' : 'Para localidades, o mapa mostra valores absolutos (círculos); a taxa por habitante está disponível por departamento e por província. ') + `${fmt(md.N-md.mapped)} notícias do recorte ficam fora do mapa por serem de escala nacional, virtuais, sem referência espacial ou no exterior.`;
   } else {
     const cv = mstate.cmp, icv = VI[cv], cvar = VARS[icv];
