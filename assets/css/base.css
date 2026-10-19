@@ -367,3 +367,16 @@ h1.titulo-base span{display:block;margin-top:10px;font-size:clamp(18px,2.1vw,26p
   body.imprime-sin .sin-metodo{display:block}
   body.imprime-sin .sin-metodo > *{display:block}
 }
+.sin-explica{background:#fffaf0;border:1px solid #f3dcae;border-radius:12px;padding:14px 18px;margin:14px 0}
+.sin-explica h4{margin:0 0 8px;font-size:15px;font-weight:800}
+.sin-explica ol{margin:0 0 8px;padding-left:20px}
+.sin-explica li{margin-bottom:6px}.sin-explica li p{margin:0}
+.sin-regua{display:grid;grid-template-columns:1fr 1fr 1.3fr 1fr 1fr;gap:3px;margin:10px 0 12px;position:relative;padding-bottom:22px}
+.sin-regua .f{padding:6px 8px;border-radius:6px;font-size:12px;line-height:1.25;display:flex;flex-direction:column}
+.sin-regua .f b{font-size:13px}
+.sin-regua .mm{background:#2569ad;color:#fff}.sin-regua .m{background:#a9cdee}.sin-regua .z{background:#eef1f4}.sin-regua .p{background:#f6c768}.sin-regua .pp{background:#c45a00;color:#fff}
+.sin-regua .marca{position:absolute;right:0;bottom:0;font-size:12px;font-weight:800;color:#c45a00}
+@media (max-width:640px){.sin-regua{grid-template-columns:1fr 1fr}.sin-regua .z{grid-column:1/-1}}
+.sin-oxe{display:grid;gap:2px;width:110px}
+.sin-oxe i{display:block;height:6px;border-radius:2px;min-width:2px}
+.sin-oxe .o{background:var(--ink)}.sin-oxe .e{background:#b9c6d3}

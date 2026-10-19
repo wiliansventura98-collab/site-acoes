@@ -31,7 +31,7 @@ function sinResiduos(rows, va, vb){
     if(na>=N || nb>=N || ehSemInfo(VARS[ia].values[a]) || ehSemInfo(VARS[ib].values[b])) return;
     const ob=o.get(a+'|'+b)||0, e=na*nb/N; if(ob<5) return;
     const r=(ob-e)/Math.sqrt(e*(1-na/N)*(1-nb/N));
-    out.push({va, vb, a, b, A:VARS[ia].values[a], B:VARS[ib].values[b], na, ob, e, r, razao:ob/e}); }));
+    out.push({va, vb, a, b, A:VARS[ia].values[a], B:VARS[ib].values[b], na, nb, N, ob, e, r, razao:ob/e}); }));
   return out.sort((x,y)=>y.r-x.r);
 }
 
@@ -167,16 +167,42 @@ function renderSintese(b){
     const g=sinGrade(s); sinBarras(g, 'Ação matriz', mz.slice(0,8), N); sinBarras(g, 'Objetivos', ob.slice(0,8), N);
     // combinações características
     const pares=[['tipomov','objetivos'],['tipomov','matriz'],['matriz','objetivos'],['region','tipomov'],['objetivos','tipoinst']];
-    let res=[]; pares.forEach(([a,c])=>{ res=res.concat(sinResiduos(rows,a,c).filter(x=>x.r>=3)); });
-    res.sort((x,y)=>y.r-x.r);
-    const vistos=new Set(); const top=res.filter(x=>{ const k=x.A+'|'+x.B; if(vistos.has(k)) return false; vistos.add(k); return true; }).slice(0,8);
+    let todos=[]; pares.forEach(([a,c])=>{ todos=todos.concat(sinResiduos(rows,a,c)); });
+    const unicos = arr => { const vistos=new Set(); return arr.filter(x=>{ const k=x.A+'|'+x.B; if(vistos.has(k)) return false; vistos.add(k); return true; }); };
+    const top=unicos(todos.filter(x=>x.r>=3).sort((x,y)=>y.r-x.r)).slice(0,8);
+    const raras=unicos(todos.filter(x=>x.r<=-3).sort((x,y)=>x.r-y.r)).slice(0,6);
+    const VR={tipomov:'Tipo de movimento', objetivos:'Objetivos', matriz:'Ação matriz', region:'Região', tipoinst:'Instituição'};
+    const oxe = x => { const w=el('span','sin-oxe'), mx=Math.max(x.ob,x.e)||1; const a=el('i','o'), b=el('i','e'); a.style.width=(x.ob/mx*100)+'%'; b.style.width=(x.e/mx*100)+'%'; a.title=`observado: ${fmt(x.ob)}`; b.title=`esperado: ${nfmt1(x.e)}`; w.append(a,b); return w; };
     if(top.length){
       sinP(s, `As **combinações características** mostram o que é típico de cada grupo, e não só o que é frequente. As associações mais fortes do recorte são ${listaPt(top.slice(0,3).map(x=>`${aspas(x.A)} com ${aspas(x.B)} (${fmt(x.ob)} notícias, ${nfmt1(x.razao)} vezes o esperado)`))}.`);
       achados.push(`A associação mais marcante é ${aspas(top[0].A)} com ${aspas(top[0].B)}: ${nfmt1(top[0].razao)} vezes o esperado.`);
-      const VR={tipomov:'Tipo de movimento', objetivos:'Objetivos', matriz:'Ação matriz', region:'Região', tipoinst:'Instituição'};
-      sinTabela(s, 'Combinações características (resíduo ajustado ≥ 3)', ['Categoria','Ocorre junto com','Notícias','Esperado','Vezes o esperado','Resíduo'],
-        top.map(x=>[`${capS(x.A)} (${VR[x.va]})`, `${capS(x.B)} (${VR[x.vb]})`, fmt(x.ob), nfmt1(x.e), nfmt1(x.razao)+'×', nfmt1(x.r)]),
-        'Esperado: número de notícias se as duas variáveis fossem independentes. Resíduo ajustado acima de 3 indica uma associação muito improvável de ocorrer por acaso (p < 0,003). Só entram combinações com 5 ou mais notícias.', ['','','r','r','r','r']);
+      // explicação passo a passo, com um exemplo do próprio recorte
+      const ex = top.find(x=>x.va==='tipomov' && x.vb==='objetivos' && x.razao<8) || top[0];
+      const pa=ex.na/ex.N, pb=ex.nb/ex.N;
+      const porOb=[...todos].sort((x,y)=>y.ob-x.ob), freq=(porOb.find(x=>Math.abs(x.r)<1.96 && x.ob>=porOb[0].ob*0.25)||porOb[0]);
+      const box=el('div','sin-explica'); box.append(el('h4',null,'Como ler: o que é o resíduo ajustado'));
+      const ol=el('ol'); box.append(ol); const passo=t=>{ const li=el('li'); sinP(li,t); ol.append(li); };
+      passo(`**Contar.** Das ${fmt(ex.N)} notícias que informam ${VR[ex.va].toLowerCase()} e ${VR[ex.vb].toLowerCase()}, ${fmt(ex.na)} têm ${aspas(ex.A)} e ${fmt(ex.nb)} têm ${aspas(ex.B)}, ou seja, ${pct(ex.nb,ex.N)} do total.`);
+      passo(`**Calcular o esperado.** Se as duas coisas não tivessem relação nenhuma, ${aspas(ex.B)} apareceria nas notícias de ${aspas(ex.A)} na mesma proporção do total: ${fmt(ex.na)} × ${pct(ex.nb,ex.N)} ≈ **${nfmt1(ex.e)} notícias**. Esse é o valor esperado “por acaso”.`);
+      passo(`**Comparar.** Na base, as duas aparecem juntas em **${fmt(ex.ob)} notícias**, ${nfmt1(ex.razao)} vezes o esperado.`);
+      passo(`**Padronizar.** O resíduo ajustado divide a diferença entre observado e esperado (${fmt(ex.ob)} − ${nfmt1(ex.e)}) pela variação que o acaso costuma produzir, levando em conta o tamanho dos grupos: resíduo = (observado − esperado) ÷ √(esperado × (1 − ${pct(ex.na,ex.N)}) × (1 − ${pct(ex.nb,ex.N)})) = **${nfmt1(ex.r)}**. Como fica na mesma escala para qualquer par de categorias, permite comparar combinações de grupos grandes e pequenos.`);
+      passo(`**Ler o número na régua abaixo.** Perto de 0: a combinação acontece o quanto se esperaria. Positivo: acontece mais do que o esperado (atração). Negativo: menos do que o esperado (afastamento). Valores além de ±1,96 dificilmente são acaso (p < 0,05); aqui usamos ±3, mais exigente (p < 0,003).`);
+      // régua
+      const reg=el('div','sin-regua'); const fx=[['≤ −3','muito menos que o esperado','mm'],['−3 a −1,96','menos','m'],['−1,96 a +1,96','dentro do acaso','z'],['+1,96 a +3','mais','p'],['≥ +3','muito mais que o esperado','pp']];
+      fx.forEach(([v,t,c])=>{ const d=el('div','f '+c); d.append(el('b',null,v), el('span',null,t)); reg.append(d); });
+      const mk=el('div','marca'); mk.textContent=`exemplo: ${nfmt1(ex.r)} →`; reg.append(mk); box.append(reg);
+      sinP(box, `**Por que não basta a porcentagem?** Grupos grandes aparecem em quase tudo. A combinação ${aspas(freq.A)} com ${aspas(freq.B)} é ${freq===porOb[0]? 'a mais _frequente_ do recorte' : 'muito _frequente_'} (${fmt(freq.ob)} notícias), mas o seu resíduo é ${nfmt1(freq.r).replace("-","−")}: ${Math.abs(freq.r)<1.96? 'ela acontece mais ou menos o quanto se esperaria pelo tamanho dos dois grupos, então é comum, mas não característica' : freq.r>0? 'ela é frequente e também acima do esperado' : 'apesar de frequente, acontece menos do que o tamanho dos grupos faria esperar'}. O resíduo desconta o tamanho dos grupos e responde a outra pergunta: _o que distingue este grupo dos demais?_`);
+      sinP(box, `**Cuidados.** O resíduo mede associação nas notícias, não causa. Como uma notícia pode ter várias categorias, as contagens são de notícias que têm as duas categorias. Combinações com menos de 5 notícias não entram.`);
+      s.append(box);
+      sinTabela(s, 'Combinações características: muito mais do que o esperado (resíduo ≥ +3)', ['Categoria','Ocorre junto com','Notícias','Esperado','Observado × esperado','Vezes','Resíduo'],
+        top.map(x=>[`${capS(x.A)} (${VR[x.va]})`, `${capS(x.B)} (${VR[x.vb]})`, fmt(x.ob), nfmt1(x.e), oxe(x), nfmt1(x.razao)+'×', nfmt1(x.r)]),
+        'Barra escura: notícias observadas; barra clara: esperadas se não houvesse relação. Quanto maior o resíduo, mais improvável que a combinação seja fruto do acaso.', ['','','r','r','','r','r']);
+    }
+    if(raras.length){
+      sinP(s, `Também é revelador o que **quase não acontece**. Combinações bem abaixo do esperado indicam afastamento entre grupos e pautas: ${listaPt(raras.slice(0,3).map(x=>`${aspas(x.A)} com ${aspas(x.B)} (${fmt(x.ob)} notícias, quando se esperariam ${nfmt1(x.e)})`))}.`);
+      sinTabela(s, 'Combinações raras: muito menos do que o esperado (resíduo ≤ −3)', ['Categoria','Ocorre junto com','Notícias','Esperado','Observado × esperado','Vezes','Resíduo'],
+        raras.map(x=>[`${capS(x.A)} (${VR[x.va]})`, `${capS(x.B)} (${VR[x.vb]})`, fmt(x.ob), nfmt1(x.e), oxe(x), nfmt1(x.razao)+'×', nfmt2(x.r).replace(/(,\d)\d$/,'$1')]),
+        'Resíduo negativo: a combinação aparece menos do que o tamanho dos dois grupos faria esperar.', ['','','r','r','','r','r']);
     }
     sinIr(s, [['Movimentos × objetivos (associação)', ()=>{ st.v='tipomov'; st.x='objetivos'; st.mode='res'; setTab('dist'); }], ['Fluxo quem → como → por quê', ()=>{ Object.assign(FLOW,{a:'tipomov', b:'matriz', c:'objetivos'}); setTab('flow'); }], ['Tipologia de ações', ()=>{ Object.assign(TYPO,{a:'matriz', b:'derivada'}); setTab('typo'); }]]);
   }

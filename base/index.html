@@ -10,10 +10,10 @@
 <meta property="og:description" content="Base interativa de notícias sobre ações coletivas na Argentina em 2024: distribuições, fluxos, tipologias, redes de movimentos, mapas com indicadores do INDEC e calendário.">
 <meta property="og:type" content="website">
 <link rel="preload" href="../assets/fonts/urbanist-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="../assets/css/fontes.css?v=20261018i">
+<link rel="stylesheet" href="../assets/css/fontes.css?v=20261018j">
 <link rel="stylesheet" href="../assets/js/vendor/leaflet-1.9.4/leaflet.css">
-<link rel="stylesheet" href="../assets/css/base.css?v=20261018i">
-<script src="../assets/js/marcha.js?v=20261018i" defer></script>
+<link rel="stylesheet" href="../assets/css/base.css?v=20261018j">
+<script src="../assets/js/marcha.js?v=20261018j" defer></script>
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="sol" viewBox="-28 -28 56 56"><g fill="#f6b40e" stroke="#85340a" stroke-width=".6" stroke-linejoin="round"><path d="M-1.69 -12.38L0.00 -27.00L1.69 -12.38ZM3.17 -12.09L10.33 -24.94L6.31 -10.79ZM7.56 -9.96L19.09 -19.09L9.96 -7.56ZM10.79 -6.31L24.94 -10.33L12.09 -3.17ZM12.38 -1.69L27.00 0.00L12.38 1.69ZM12.09 3.17L24.94 10.33L10.79 6.31ZM9.96 7.56L19.09 19.09L7.56 9.96ZM6.31 10.79L10.33 24.94L3.17 12.09ZM1.69 12.38L0.00 27.00L-1.69 12.38ZM-3.17 12.09L-10.33 24.94L-6.31 10.79ZM-7.56 9.96L-19.09 19.09L-9.96 7.56ZM-10.79 6.31L-24.94 10.33L-12.09 3.17ZM-12.38 1.69L-27.00 0.00L-12.38 -1.69ZM-12.09 -3.17L-24.94 -10.33L-10.79 -6.31ZM-9.96 -7.56L-19.09 -19.09L-7.56 -9.96ZM-6.31 -10.79L-10.33 -24.94L-3.17 -12.09Z"/><path d="M1.08 -12.45C0.45 -16.99 6.22 -19.01 6.09 -23.22C6.27 -17.94 2.33 -15.83 3.77 -11.92ZM5.76 -11.09C6.92 -15.53 13.02 -15.18 14.51 -19.12C12.66 -14.17 8.21 -13.73 8.04 -9.57ZM9.57 -8.04C12.33 -11.70 17.84 -9.04 20.72 -12.11C17.12 -8.25 12.84 -9.54 11.09 -5.76ZM11.92 -3.77C15.87 -6.09 19.94 -1.53 23.78 -3.26C18.97 -1.07 15.52 -3.90 12.45 -1.08ZM12.45 1.08C16.99 0.45 19.01 6.22 23.22 6.09C17.94 6.27 15.83 2.33 11.92 3.77ZM11.09 5.76C15.53 6.92 15.18 13.02 19.12 14.51C14.17 12.66 13.73 8.21 9.57 8.04ZM8.04 9.57C11.70 12.33 9.04 17.84 12.11 20.72C8.25 17.12 9.54 12.84 5.76 11.09ZM3.77 11.92C6.09 15.87 1.53 19.94 3.26 23.78C1.07 18.97 3.90 15.52 1.08 12.45ZM-1.08 12.45C-0.45 16.99 -6.22 19.01 -6.09 23.22C-6.27 17.94 -2.33 15.83 -3.77 11.92ZM-5.76 11.09C-6.92 15.53 -13.02 15.18 -14.51 19.12C-12.66 14.17 -8.21 13.73 -8.04 9.57ZM-9.57 8.04C-12.33 11.70 -17.84 9.04 -20.72 12.11C-17.12 8.25 -12.84 9.54 -11.09 5.76ZM-11.92 3.77C-15.87 6.09 -19.94 1.53 -23.78 3.26C-18.97 1.07 -15.52 3.90 -12.45 1.08ZM-12.45 -1.08C-16.99 -0.45 -19.01 -6.22 -23.22 -6.09C-17.94 -6.27 -15.83 -2.33 -11.92 -3.77ZM-11.09 -5.76C-15.53 -6.92 -15.18 -13.02 -19.12 -14.51C-14.17 -12.66 -13.73 -8.21 -9.57 -8.04ZM-8.04 -9.57C-11.70 -12.33 -9.04 -17.84 -12.11 -20.72C-8.25 -17.12 -9.54 -12.84 -5.76 -11.09ZM-3.77 -11.92C-6.09 -15.87 -1.53 -19.94 -3.26 -23.78C-1.07 -18.97 -3.90 -15.52 -1.08 -12.45Z"/><circle r="11.5"/></g><circle r="8.4" fill="none" stroke="#85340a" stroke-width=".5" opacity=".55"/></symbol></svg>
@@ -382,7 +382,8 @@
         <div><dt>Taxa por 100 mil habitantes</dt><dd>Número de notícias dividido pela população e multiplicado por 100.000. Permite comparar lugares de tamanhos diferentes.</dd></div>
         <div><dt>Pontos percentuais (p.p.)</dt><dd>Diferença entre duas porcentagens. De 43% para 52% são 9 pontos percentuais (e não 9%).</dd></div>
         <div><dt>Esperado</dt><dd>O valor que apareceria se não houvesse nenhuma relação entre as coisas comparadas. Por exemplo, nos mapas, o total de notícias repartido conforme a população de cada lugar.</dd></div>
-        <div><dt>Resíduo ajustado</dt><dd>Mede quanto um valor observado se afasta do esperado, em unidades comparáveis. Acima de +1,96 ou abaixo de −1,96, a diferença dificilmente é acaso (5% de chance).</dd></div>
+        <div><dt>Resíduo ajustado</dt><dd>Mede quanto um valor observado se afasta do esperado, em unidades comparáveis. Primeiro se calcula quantas notícias teriam as duas categorias se não houvesse relação entre elas (o esperado); depois se divide a diferença entre observado e esperado pela variação que o acaso costuma produzir. Positivo = acontece mais que o esperado (atração); negativo = menos (afastamento); perto de 0 = o que se esperaria. Acima de +1,96 ou abaixo de −1,96, a diferença dificilmente é acaso (5% de chance); acima de ±3, menos de 0,3%. Ex.: estudantis × objetivos educativos: 85 notícias observadas contra 22,4 esperadas, resíduo +15,9.</dd></div>
+        <div><dt>Combinação característica</dt><dd>Par de categorias que aparece junto muito mais do que o tamanho dos dois grupos faria esperar (resíduo ajustado ≥ +3). Não é a combinação mais frequente, e sim a que distingue um grupo dos demais.</dd></div>
         <div><dt>Significativo</dt><dd>Uma diferença é chamada de significativa quando é grande demais para ser explicada pelo acaso. Os testes usam o limite usual de 5% (p < 0,05) ou o mais exigente de 1% (p < 0,01).</dd></div>
         <div><dt>Valor p</dt><dd>A probabilidade de ver uma diferença tão grande quanto a observada se, na verdade, não houvesse diferença. Quanto menor, mais confiável é o resultado.</dd></div>
         <div><dt>Qui-quadrado (χ²) e V de Cramér</dt><dd>O qui-quadrado testa se duas variáveis têm relação; o V de Cramér diz a força dessa relação, de 0 (nenhuma) a 1 (total).</dd></div>
@@ -436,6 +437,6 @@
 <script src="../assets/js/vendor/d3-sankey-0.12.3.min.js"></script>
 <script src="../assets/js/vendor/topojson-client-3.1.0.min.js"></script>
 <script src="../assets/js/vendor/leaflet-1.9.4/leaflet.js"></script>
-<script src="../assets/js/app/carregar.js?v=20261018i"></script>
+<script src="../assets/js/app/carregar.js?v=20261018j"></script>
 </body>
 </html>
