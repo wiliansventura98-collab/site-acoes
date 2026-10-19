@@ -147,3 +147,9 @@ Wilians Ventura Ferreira Souza · Universidade Estadual Paulista (Unesp)
 Para citar a plataforma:
 
 > SOUZA, Wilians Ventura Ferreira. *Ações Socioespaciais na Argentina: base interativa de notícias 2024*. 2026. Disponível em: https://wiliansventura98-collab.github.io/site-acoes/
+
+## Licença e como citar
+
+A **base de dados** (codificação, dados tratados, referências compiladas e documentação) está sob a licença [Creative Commons Atribuição 4.0 Internacional (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/deed.pt-br): pode ser usada e adaptada para qualquer fim, desde que se dê o crédito. O **código** está sob a [licença MIT](LICENCA-CODIGO). Detalhes, dados de terceiros e forma de citação em [`LICENCAS.md`](LICENCAS.md).
+
+> SOUZA, Wilians Ventura Ferreira et al. **Banco de Dados das Lutas por Espaços e Territórios (DATALUTA) Argentina 2024: Movimentos Socioespaciais e Socioterritoriais Urbanos**. 2026. Base de dados. Disponível em: https://wiliansventura98-collab.github.io/site-acoes/. Licença CC BY 4.0.

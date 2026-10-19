@@ -9,7 +9,8 @@ Este documento registra, de forma cumulativa, tudo o que foi feito para transfor
 | Responsável | Wilians Ventura Ferreira Souza (Unesp) |
 | Site | <https://wiliansventura98-collab.github.io/site-acoes/> (base interativa em `/base/`) |
 | Repositório | <https://github.com/wiliansventura98-collab/site-acoes> |
-| Versão deste documento | 1.0 · 19/10/2026 |
+| Versão deste documento | 1.1 · 19/10/2026 |
+| Licença | Base de dados: CC BY 4.0 · código: MIT (ver [`LICENCAS.md`](LICENCAS.md)) |
 
 > **Como manter este documento.** A cada avanço (correção da base, nova variável, nova fonte, nova análise ou mudança de critério): (1) atualize a seção correspondente; (2) acrescente uma entrada no [Registro de alterações](#9-registro-de-alterações), com data, o que mudou e por quê; (3) mova o que foi resolvido para fora das [Pendências](#10-pendências); (4) aumente o número da versão. O documento é versionado junto com o código, então o histórico do Git guarda todas as versões anteriores.
 
@@ -252,11 +253,14 @@ Datas no fuso de São Paulo. Os códigos entre colchetes são os commits do repo
 - **Contexto ligado às lutas:** entram RENABAP, ReNaTEP, voto presidencial de 2023 e femicídios; indicadores separados em “ligados às lutas” e “controles” [6f0fe22].
 - **Indicadores sem ligação com as lutas retirados do site**; El Cuy deixado vazio no RENABAP; painel do mapa reorganizado em três blocos; quadro “Como foi calculado este mapa”; cálculo da tendência explicado no Contexto; **leitura em três partes para as 139 combinações prontas** [5839d6f].
 - Criado este documento de processo e o roteiro `pipeline/reconstruir.sh`.
+- **Licenças definidas:** base de dados sob CC BY 4.0 (arquivo `LICENSE`, que o GitHub reconhece) e código sob MIT (`LICENCA-CODIGO`); `LICENCAS.md` explica o que cada uma cobre, lista as condições dos dados de terceiros e traz a forma de citar; rodapés do site e README atualizados. Motivo: sem licença, ninguém tinha permissão formal de reutilizar a base; a CC BY 4.0 é o padrão em dados científicos abertos, garante o crédito e é compatível com o GeoNames e o datos.gob.ar.
 
 ---
 
 ## 10. Pendências
 
+- [ ] Confirmar a escolha das licenças com o grupo/centro de pesquisa e, se houver, com a política de dados da instituição.
+- [ ] Depositar a base no Zenodo (ou repositório institucional) para obter um DOI e atualizar a citação em `LICENCAS.md`.
 - [ ] **Unificar nomes de organizações duplicados** (ex.: grafias diferentes de CTA e CGT). Afeta contagens, fichas e redes.
 - [ ] Resultado do **2º turno de 2023** por departamento, se a DINE publicar no formato mesa a mesa.
 - [ ] Outras fontes sugeridas e ainda não coletadas: estudantes de universidades nacionais por província, emprego público por província, titulares do Potenciar Trabajo, projetos de mineração e comunidades indígenas registradas.
