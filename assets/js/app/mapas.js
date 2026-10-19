@@ -72,8 +72,6 @@ const CTXDEF = {
            fonte:'INDEC, Censo 2022, resultados definitivos; área calculada pelo projeto (projeção equivalente de Albers)'},
   hom24:  {nivel:'prov', campo:'taxa_homicidios_2024', titulo:'Homicídios dolosos por 100 mil hab., 2024', curto:'por 100 mil hab.', dec:2,
            fonte:'Ministerio de Seguridad Nacional, SNIC-SAT, Informe de Homicidios Dolosos 2024'},
-  hom23:  {nivel:'prov', campo:'taxa_homicidios_2023', titulo:'Homicídios dolosos por 100 mil hab., 2023', curto:'por 100 mil hab.', dec:2,
-           fonte:'Ministerio de Seguridad Nacional, SNIC-SAT, Informe de Homicidios Dolosos 2024'},
   pob:    {nivel:'reg', campo:'pobreza_personas_2s2024', titulo:'Pessoas abaixo da linha de pobreza (%), 2º sem. 2024', curto:'% de pessoas', dec:1,
            fonte:'INDEC, Encuesta Permanente de Hogares, 31 aglomerados urbanos (por região estatística)'},
   ind:    {nivel:'reg', campo:'indigencia_personas_2s2024', titulo:'Pessoas abaixo da linha de indigência (%), 2º sem. 2024', curto:'% de pessoas', dec:1,
@@ -205,6 +203,34 @@ function topoLayer(m, proj, box, k, modo){
         .attr('paint-order','stroke').attr('stroke','#ffffff').attr('stroke-width',2.5).attr('stroke-opacity',.85).text(d.t); });
   return out.length;
 }
+
+/* ---------- explicação do cálculo do mapa atual (caixa "Como foi calculado este mapa") ---------- */
+function explicaMapa(md, o, unit, cdef){
+  const C0=$('mapCalcCorpo'); if(!C0) return; C0.textContent='';
+  const ul=el('ol'); C0.append(ul);
+  const item = html => { const li=el('li'); const pp=sinPseguro(html); li.append(...pp); ul.append(li); };
+  const nUn = unit==='dept'? 'departamento' : unit==='prov'? 'província' : 'localidade';
+  item(`**O que se conta.** Cada notícia do recorte é atribuída ${unit==='loc'? 'às localidades' : unit==='dept'? 'aos departamentos' : 'às províncias'} que ela cita (uma notícia que cita dois lugares conta para os dois). Notícias de escala nacional, virtuais ou sem lugar identificável ficam de fora: ${fmt(md.N-md.mapped)} das ${fmt(md.N)} neste recorte.`);
+  if(o.circles) item(`**Círculos.** A área de cada círculo é proporcional ao número de notícias que citam a ${nUn} (o raio cresce com a raiz quadrada), para que um círculo com o dobro de notícias tenha o dobro da área, e não o dobro do diâmetro. O maior círculo do mapa corresponde a ${fmt(md.max||0)} notícias.`);
+  if(o.fill) item(`**Cores (taxa por habitante).** Para cada ${nUn}: notícias ÷ população do Censo 2022 × 100.000. As classes são quintis: os lugares com pelo menos uma notícia são ordenados pela taxa e divididos em cinco grupos do mesmo tamanho; o branco indica nenhuma notícia. A taxa compara lugares de tamanhos diferentes, mas em lugares pouco populosos uma só notícia já gera um valor alto.`);
+  if(o.dest && o.dest.feats.length){
+    const al=o.dest.feats.filter(d=>d.t==='alto').sort((a,q)=>q.razao-a.razao), ba=o.dest.feats.filter(d=>d.t==='baixo').sort((a,q)=>a.razao-q.razao);
+    const ex=al[0], P=d3.sum(unit==='dept'? DEPTS.filter(f=>(IND_DEP[f.id]||{}).pop).map(f=>IND_DEP[f.id].pop) : PROVS_FC.filter(f=>f.properties.pi>=0 && POP[f.properties.pi]).map(f=>POP[f.properties.pi]));
+    const pe = d => unit==='dept'? IND_DEP[d.f.id].pop : POP[d.f.properties.pi];
+    const nm = d => d.nome; // com a província entre parênteses, para evitar ambiguidades (ex.: “Capital”)
+    const pfmt = p => p<0.0001? '< 0,0001' : p.toLocaleString('pt-BR',{maximumFractionDigits:4});
+    item(`**Contornos: muito acima ou muito abaixo do esperado.** A pergunta é: _este lugar tem mais (ou menos) notícias do que o tamanho da sua população faria esperar?_ (1) O **esperado** é a parte do total que caberia ao lugar se as notícias se distribuíssem exatamente como a população: total de notícias do mapa (${fmt(o.dest.tot)}) × população do lugar ÷ população do país. (2) Compara-se com o **observado**. (3) Como números pequenos variam muito por acaso, usa-se o **teste exato de Poisson**, que dá a probabilidade de ver uma diferença tão grande só por acaso. O contorno **laranja** marca lugares com 3 notícias ou mais e probabilidade menor que 1% (p < 0,01) de ter tantas notícias por acaso; o **azul**, lugares com probabilidade menor que 1% de ter tão poucas.`
+      + (ex? ` **Exemplo:** ${nm(ex)} tem ${fmt(pe(ex))} habitantes (${(pe(ex)/P*100).toLocaleString('pt-BR',{maximumFractionDigits:3})}% da população); o esperado seria ${fmt(o.dest.tot)} × ${(pe(ex)/P*100).toLocaleString('pt-BR',{maximumFractionDigits:3})}% ≈ ${nfmt1(ex.E)} notícia${ex.E>=1.95? 's' : ''}, mas há ${fmt(ex.O)}: ${nfmt1(ex.razao)} vezes o esperado (p ${pfmt(ex.p)}).` : ''));
+    if(al.length) item(`**Acima do esperado (${al.length}):** ${al.slice(0,8).map(d=>`${nm(d)}: ${fmt(d.O)} observadas × ${nfmt1(d.E)} esperadas`).join('; ')}${al.length>8? '; …' : '.'}`);
+    if(ba.length) item(`**Abaixo do esperado (${ba.length}):** ${ba.slice(0,8).map(d=>`${nm(d)}: ${fmt(d.O)} observadas × ${nfmt1(d.E)} esperadas`).join('; ')}${ba.length>8? '; …' : '.'} Lugares abaixo do esperado podem ter pouca mobilização ou pouca cobertura da imprensa: confira na aba Imprensa.`);
+  } else if(unit==='loc') item(`**Contornos de destaque** aparecem só por departamento ou província, porque dependem da população do lugar.`);
+  if(cdef && cdef.nivel==='biv') item(`**Mapa bivariado.** Cada departamento recebe uma cor que junta duas informações. No eixo das notícias: nenhuma notícia; até a mediana das taxas dos departamentos com notícias; acima dela. No eixo do indicador (“${cdef.indTitulo}”): tercis, isto é, os departamentos ordenados pelo indicador e divididos em três grupos iguais (baixo, médio, alto). As nove combinações são cores misturadas de amarelo (notícias) e azul (indicador). Fonte do indicador: ${cdef.fonte}.`);
+  else if(cdef && cdef.nivel==='lisa') item(`**Pontos quentes (LISA).** (1) Para cada departamento calcula-se a taxa de notícias por 100 mil hab., “suavizada” pelo método bayesiano empírico (Marshall), que aproxima da média nacional as taxas de lugares muito pequenos, onde uma notícia faria a taxa disparar. (2) Compara-se a taxa de cada departamento com a média dos seus vizinhos (os que fazem fronteira). (3) Para saber se o padrão poderia ser acaso, os valores são embaralhados 499 vezes. Quente (laranja) = alto cercado de altos; frio (azul) = baixo cercado de baixos; só com p < 0,05.`);
+  else if(cdef && cdef.nivel!=='pop') item(`**Camada de contexto.** “${cdef.titulo}”, ${cdef.nivel==='reg'? 'por região estatística' : cdef.nivel==='agl'? 'por aglomerado urbano' : cdef.nivel==='prov'? 'por província' : 'por departamento'}, em cinco classes de quintis (do mais claro ao mais escuro). Fonte: ${cdef.fonte}.${cdef.definicao? ' Definição: ' + cdef.definicao.split(/\n/)[0] : ''}`);
+  if(mstate.mes) item(`**Período.** Só as notícias do mês escolhido; a escala dos círculos é comum a todos os meses, para que a animação compare meses entre si.`);
+}
+// texto com **negrito** e _itálico_ → nós (sem HTML)
+function sinPseguro(t){ const out=[]; t.split(/(\*\*[^*]+\*\*|_[^_]+_)/).forEach(x=>{ if(!x) return; if(x.startsWith('**')) out.push(el('b',null,x.slice(2,-2))); else if(/^_.+_$/.test(x)) out.push(el('i',null,x.slice(1,-1))); else out.push(document.createTextNode(x)); }); return out; }
 
 /* ---------- destaques: lugares com notícias muito acima ou abaixo do esperado pela população ----------
    Esperado = total de notícias do recorte × (população do lugar ÷ população total). Teste exato de Poisson, p < 0,01. */
@@ -574,7 +600,7 @@ function renderMap(b){
   const ehWeb = mstate.vis==='web';
   document.querySelectorAll('#mapVis button').forEach(x=>x.setAttribute('aria-pressed', String(x.dataset.v===(ehWeb? 'web' : 'prancha'))));
   $('sheet').hidden=ehWeb; $('wmap').hidden=!ehWeb; const sb=document.querySelector('#mapSec .sheetbar'); if(sb) sb.hidden=ehWeb; $('mapMode').closest('label').hidden=ehWeb;
-  if(ehWeb){ $('mapRank').textContent=''; $('cmpWrap').hidden=$('cmpNWrap').hidden=true; if(typeof renderWeb==='function') renderWeb(b, cdef); return; }
+  if(ehWeb){ $('mapCalcCorpo').textContent='No mapa navegável valem os mesmos cálculos da prancha: círculos com área proporcional às notícias que citam cada lugar; cores com notícias por 100 mil habitantes (Censo 2022) em quintis; contornos laranja e azul para lugares com muito mais ou muito menos notícias do que a população faria esperar (teste exato de Poisson, p < 0,01). Volte à prancha cartográfica para ver o cálculo detalhado, com exemplos.'; $('mapRank').textContent=''; $('cmpWrap').hidden=$('cmpNWrap').hidden=true; if(typeof renderWeb==='function') renderWeb(b, cdef); return; }
   const box=$('sheet'); box.querySelectorAll('svg').forEach(s=>s.remove()); $('mapRank').textContent='';
   if(!HAS_D3){ $('mapNote').textContent='Não foi possível carregar a biblioteca de mapas nesta visualização.'; return; }
   const unit = mstate.unit, vid = UNIT_VID[unit];
@@ -655,6 +681,7 @@ function renderMap(b){
     const bivNota = cdef && cdef.nivel==='biv'? `Mapa bivariado: a cor de cada departamento combina o nível de “${cdef.indTitulo}” (do branco ao azul, de baixo a alto) com as notícias por habitante (do branco ao amarelo, de nenhuma a muitas). Onde os dois são altos, a cor fica verde-escura. Veja “Como ler” na legenda. ` : '';
     const altos = o.dest? o.dest.feats.filter(d=>d.t==='alto').sort((a,q)=>q.razao-a.razao) : [];
     const destNota = o.dest && o.dest.feats.length? `Destaques: ${altos.length} lugares com notícias muito acima do esperado pela população (contorno laranja${altos.length? ', por exemplo ' + altos.slice(0,4).map(d=>d.nome.replace(/ \((Buenos Aires|[^)]+)\)$/,'')).join(', ') : ''}) e ${o.dest.feats.length-altos.length} muito abaixo (contorno azul). ` : (unit==='loc' && mstate.dest!==false? 'Os destaques por população aparecem quando a unidade é departamento ou província. ' : '');
+    explicaMapa(md, o, unit, cdef);
     $('mapNote').textContent = destNota + bivNota + baWarn + (RATE_OK(unit)? '' : 'Para localidades, o mapa mostra valores absolutos (círculos); a taxa por habitante está disponível por departamento e por província. ') + `${fmt(md.N-md.mapped)} notícias do recorte ficam fora do mapa por serem de escala nacional, virtuais, sem referência espacial ou no exterior.`;
   } else {
     const cv = mstate.cmp, icv = VI[cv], cvar = VARS[icv];
@@ -703,6 +730,7 @@ function renderMap(b){
     const nh = textBlock(svg, noteX, noteY, techNote(md0, sh, o, true), 10, noteW, {fill:C.ink2, lh:1.38});
     H = Math.max(ly+lgH, noteY+nh) + M;
     $('mapTitle').textContent = 'Mapas por categoria'; $('mapMeta').textContent = `${cats.length} mapas · ${cvar.label}`;
+    $('mapCalcCorpo').textContent=''; $('mapCalcCorpo').append(...sinPseguro(`Cada mapa repete o cálculo só com as notícias que têm a categoria indicada (${cvar.label}), dentro do recorte atual. Todos os mapas usam a mesma escala de círculos${RATE_OK(unit)? ' e as mesmas classes de cores (quintis calculados com as taxas de todos os mapas juntos)' : ''}, para que possam ser comparados lado a lado. Taxa = notícias ÷ população do Censo 2022 × 100.000.`));
     $('mapNote').textContent = `Cada mapa mostra as notícias que têm a categoria indicada, dentro do recorte atual, na mesma escala para comparação.` + (RATE_OK(unit)? '' : ' Para localidades, os mapas mostram valores absolutos (círculos).');
   }
   svg.attr('viewBox', `0 0 ${W} ${Math.ceil(H)}`); svg.select('.bgpaper').attr('width',W).attr('height',Math.ceil(H));

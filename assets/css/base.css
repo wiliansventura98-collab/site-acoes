@@ -380,3 +380,42 @@ h1.titulo-base span{display:block;margin-top:10px;font-size:clamp(18px,2.1vw,26p
 .sin-oxe{display:grid;gap:2px;width:110px}
 .sin-oxe i{display:block;height:6px;border-radius:2px;min-width:2px}
 .sin-oxe .o{background:var(--ink)}.sin-oxe .e{background:#b9c6d3}
+
+/* ---------- painel de controles do mapa (sem elementos esmagados) ---------- */
+.mapctl.mc{display:flex;flex-direction:column;gap:12px;margin-bottom:16px}
+.mc-grupo{border:1px solid var(--line);border-radius:14px;padding:12px 16px 14px;margin:0;min-width:0;background:#fff}
+.mc-grupo legend{font-size:12.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2);padding:0 6px;display:flex;align-items:center;gap:6px}
+.mc-grupo legend span{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--ink);color:#fff;font-size:11px;letter-spacing:0}
+.mc-linha{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,350px),1fr));gap:14px 22px;align-items:end}
+.mc-linha > label{min-width:0}
+.mc-linha .mc-largo{grid-column:span 2}
+@media (max-width:720px){.mc-linha .mc-largo{grid-column:auto}}
+.mapctl.mc .seg{display:flex;width:100%}
+.mapctl.mc .seg button{flex:1 1 0;min-width:max-content;white-space:nowrap;padding:8px 12px;font-size:13.5px;line-height:1.2}
+.mapctl.mc .seg button + button{border-left:1px solid var(--line-2)}
+.mapctl select{width:100%}
+.mc-opcoes{grid-template-columns:repeat(auto-fill,minmax(min(100%,280px),1fr));align-items:center}
+.mc-opcoes .opt{padding:0;line-height:1.35}
+.mapctl.mc .perio{display:flex;gap:8px}
+.mapctl.mc .perio select{flex:1 1 auto;min-width:0}
+.mapctl.mc input[type=text]{box-sizing:border-box}
+.mapctl.mc{align-items:stretch}
+@media (max-width:640px){.mapctl.mc .seg button{min-width:0;white-space:normal;padding:8px 6px;font-size:13px}}
+@media (max-width:420px){.mapctl.mc .seg button{font-size:12px;padding:8px 4px}}
+details.calc{margin-top:8px;font-size:13.5px;color:var(--ink-2)}
+details.calc summary{cursor:pointer;font-weight:800;color:var(--ink)}
+details.calc ol,details.calc ul{margin:6px 0 0;padding-left:20px}
+details.calc li{margin-bottom:5px}
+
+/* ---------- leitura das combinações prontas ---------- */
+.presets button.ativo{background:var(--ink);color:#fff;border-color:var(--ink)}
+.pronto-leitura{border:1px solid #f3dcae;background:#fffaf0;border-radius:14px;padding:12px 18px 8px;margin:4px 0 16px;max-width:1080px}
+.pl-cab{display:flex;align-items:baseline;gap:10px;margin-bottom:6px}
+.pl-kicker{font-size:11.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#c45a00}
+.pl-cab b{font-size:16px;color:var(--ink)}
+.pl-fecha{margin-left:auto;border:0;background:none;font-size:22px;line-height:1;color:var(--ink-3);cursor:pointer;padding:0 4px}
+.pl-fecha:hover{color:var(--ink)}
+.pl-aviso{font-size:13px;color:#8a4b00;background:#fff1d6;border-radius:8px;padding:6px 10px;margin:0 0 8px}
+.pl-bloco h4{margin:6px 0 2px;font-size:13px;font-weight:800;color:var(--ink-2);text-transform:uppercase;letter-spacing:.04em}
+.pl-bloco p{margin:0 0 6px;max-width:82ch;font-size:14.5px;line-height:1.55}
+@media (max-width:520px){.mapctl.mc .perio{flex-wrap:wrap}.mapctl.mc .perio select{flex:1 1 100%}.mapctl.mc .perio .btn{flex:1 1 100%}}

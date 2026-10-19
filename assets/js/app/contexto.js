@@ -15,9 +15,9 @@ const REG_COR = new Map(REG_ORDEM.map((r,i)=>[r, ['#1c4f8a','#5fa3dc','#c96a1b',
 const PROV_REG = (()=>{ const m=new Map(); DEPTS.forEach(f=>{ const p=f.properties.p, r=f.properties.r; const c=m.get(p)||new Map(); c.set(r,(c.get(r)||0)+1); m.set(p,c); });
   const out=new Map(); m.forEach((c,p)=>{ out.set(p, p==='Buenos Aires'? 'Pampeana' : [...c].sort((a,b)=>b[1]-a[1])[0][0]); }); return out; })();
 const CTX_ROT = { densidade_hab_km2:['Densidade demográfica, 2022','hab./km²',true], populacao_2022:['População, 2022','habitantes',true],
-  taxa_homicidios_2024:['Homicídios dolosos, 2024','por 100 mil hab.',false], taxa_homicidios_2023:['Homicídios dolosos, 2023','por 100 mil hab.',false] };
+  taxa_homicidios_2024:['Homicídios dolosos, 2024','por 100 mil hab.',false] };
 // indicadores do Censo 2022 (INDEC, Geoportal): disponíveis por província e por departamento
-const SO_PROV = new Set(['densidade_hab_km2','populacao_2022','taxa_homicidios_2024','taxa_homicidios_2023']);
+const SO_PROV = new Set(['densidade_hab_km2','populacao_2022','taxa_homicidios_2024']);
 IND.forEach(d=>{ CTX_ROT['i_'+d.k]=[indTit(d), d.unidade, d.k==='dens']; });
 LUTAS_PROV.forEach(d=>{ CTX_ROT[d.campo]=[`${d.titulo}, ${d.ano}`, d.unidade, false]; SO_PROV.add(d.campo); });
 // chaves dos indicadores ligados às lutas (usadas também na Síntese)
@@ -90,7 +90,9 @@ function renderCtx(b){
   const prev=d=>cr? cr.a+cr.b*(logX? Math.log10(d.x) : d.x) : d.y;
   pts.forEach(d=>{ d.res=d.y-prev(d); });
   const sdRes=d3.deviation(pts,d=>d.res)||1;
-  const acima=[...pts].filter(d=>d.n>0 && d.res>1.5*sdRes).sort((a,q)=>q.res-a.res).slice(0,4), abaixo=[...pts].filter(d=>d.res< -1*sdRes).sort((a,q)=>a.res-q.res).slice(0,3);
+  // destaques: resíduo padronizado (observado − previsto pela reta) ÷ desvio-padrão dos resíduos; |z| ≥ 1,5, até 4 de cada lado
+  const LIM_Z=1.5; pts.forEach(d=>{ d.prev=prev(d); d.z=d.res/sdRes; });
+  const acima=[...pts].filter(d=>d.n>0 && d.z>=LIM_Z).sort((a,q)=>q.z-a.z).slice(0,4), abaixo=[...pts].filter(d=>d.z<=-LIM_Z).sort((a,q)=>a.z-q.z).slice(0,4);
   const dest=new Set([...acima,...abaixo]);
   const tip=tipFor(box);
   svg.append('g').selectAll('circle').data([...pts].sort((a,q)=>q.n-a.n)).join('circle').attr('cx',d=>x(d.x)).attr('cy',d=>y(d.y)).attr('r',d=>rr(d.n))
@@ -108,18 +110,26 @@ function renderCtx(b){
   box.querySelectorAll('.net-legend').forEach(e=>e.remove());
   const lgd=el('div','net-legend'); REG_ORDEM.forEach(r=>{ const s=el('span'); const sw=el('i'); sw.style.background=REG_COR.get(r); s.append(sw, document.createTextNode(r)); lgd.append(s); });
   const sep=el('b',null,'Destaques e linhas'); sep.style.marginTop='6px'; lgd.append(sep);
-  [[COR_ALTO,'Contorno laranja: muito acima da tendência (mais notícias do que o indicador faria esperar)'],[COR_BAIXO,'Contorno azul: muito abaixo da tendência'],['#9aa6b2','Linhas cinzas: medianas (metade dos lugares de cada lado)'],['#7c8aa0','Tracejado: tendência média']].forEach(([c,t],j)=>{
+  [[COR_ALTO,'Contorno laranja: muito acima da tendência (o lugar tem mais notícias por habitante do que a reta prevê para o seu valor do indicador, com diferença de 1,5 desvio-padrão ou mais)'],[COR_BAIXO,'Contorno azul: muito abaixo da tendência (diferença de −1,5 desvio-padrão ou menos)'],['#9aa6b2','Linhas cinzas: medianas (metade dos lugares de cada lado)'],['#7c8aa0','Tracejado: tendência média']].forEach(([c,t],j)=>{
     const sp=el('span'); const sw=el('i'); sw.style.background= j<2? 'transparent' : c; if(j<2){ sw.style.border=`2.5px solid ${c}`; } else { sw.style.height='3px'; sw.style.borderRadius='0'; } sp.append(sw, document.createTextNode(t)); lgd.append(sp); });
   box.append(lgd);
+  const nfmt2v = v => (v<0? '−' : '') + Math.abs(v).toLocaleString('pt-BR',{maximumFractionDigits:2, minimumFractionDigits:2});
   const f2 = v => (v<0? '−' : '') + Math.abs(v).toLocaleString('pt-BR',{minimumFractionDigits:2, maximumFractionDigits:2});
   $('ctxMeta').textContent= dep? `${fmt(pts.length)} departamentos · ${fmt(pts.filter(d=>d.n).length)} com notícias` : `${pts.length} jurisdições`;
   const defX = IND.find(d=>'i_'+d.k===CTXV.x) || LUTAS_PROV.find(d=>d.campo===CTXV.x);
   { const rho=cr? cr.rho : 0, ar=Math.abs(rho), discorda = cr && Math.sign(cr.r)!==Math.sign(cr.rho) && Math.max(Math.abs(cr.r),ar)>=0.1, forca= discorda? 'inconsistente' : ar<0.1? 'praticamente nenhuma' : ar<0.3? 'fraca' : ar<0.6? 'moderada' : 'forte';
     const nomeInd=(t=>/^[A-ZÁÉÍÓÚ][a-záéíóúâêôãõç]/.test(t)? t.charAt(0).toLowerCase()+t.slice(1) : t)(titX.replace(/, 20\d\d$/,'')), uni=dep? 'departamentos' : 'províncias';
     const sentido = discorda? `a linha de tendência (Pearson, r = ${f2(cr.r)}) e a ordem dos lugares (Spearman) apontam em direções opostas, sinal de que poucos casos extremos puxam a linha; na prática, não há relação consistente entre ${nomeInd} e notícias por habitante` : ar<0.1? `não há relação clara entre ${nomeInd} e notícias por habitante` : rho>0? `onde ${nomeInd} é maior, tende a haver <b>mais</b> notícias por habitante` : `onde ${nomeInd} é maior, tende a haver <b>menos</b> notícias por habitante`;
-    const lista=l=>l.map(d=>d.p.replace(/ \((Buenos Aires|[^)]+)\)$/,'')).join(', ');
+    const nfz=v=>(v<0? '−' : '+')+Math.abs(v).toLocaleString('pt-BR',{maximumFractionDigits:1, minimumFractionDigits:1});
+    const lista=l=>l.map(d=>`${d.p.replace(/ \((Buenos Aires|[^)]+)\)$/,'')} (${nfmt1(d.y)} notícias por 100 mil hab., quando a tendência previa ${nfmt1(Math.max(0,d.prev))}; ${nfz(d.z)} desvios-padrão)`).join('; ');
     const Lg=$('ctxLeitura'); Lg.hidden=!cr;
-    if(cr) Lg.innerHTML=`<b>Leitura:</b> relação <b>${forca}</b> (ρ = ${f2(rho)}): ${sentido}, entre ${fmt(pts.length)} ${uni}.` + (acima.length? ` <span style="color:#c45a00">●</span> Muito <b>acima</b> do esperado pela tendência: ${lista(acima)}.` : '') + (abaixo.length? ` <span style="color:#2569ad">●</span> Muito <b>abaixo</b>: ${lista(abaixo)}.` : '') + ` Os quadrantes usam as medianas dos dois eixos.`; }
+    if(cr) Lg.innerHTML=`<b>Leitura:</b> relação <b>${forca}</b> (ρ = ${f2(rho)}): ${sentido}, entre ${fmt(pts.length)} ${uni}.` + (acima.length? ` <span style="color:#c45a00">●</span> Muito <b>acima</b> do esperado pela tendência: ${lista(acima)}.` : '') + (abaixo.length? ` <span style="color:#2569ad">●</span> Muito <b>abaixo</b>: ${lista(abaixo)}.` : '') + ` Os quadrantes usam as medianas dos dois eixos.`
+      + `<details class="calc"><summary>Como foi calculado</summary><ol>`
+      + `<li><b>Eixo vertical (taxa):</b> número de notícias do recorte que citam o lugar ÷ população do Censo 2022 × 100.000. Uma notícia que cita dois lugares conta para os dois; notícias nacionais ou virtuais, sem lugar, ficam de fora.</li>`
+      + `<li><b>Relação (ρ de Spearman):</b> ordena os lugares pelo indicador e pela taxa e mede se as duas ordens coincidem: +1 = mesma ordem, −1 = ordem inversa, 0 = nenhuma relação. Até ±0,3 é fraca; de ±0,3 a ±0,6, moderada; acima, forte. O r de Pearson, na nota abaixo do gráfico, mede o mesmo pela reta.</li>`
+      + `<li><b>Tendência (linha tracejada):</b> reta de mínimos quadrados que melhor resume a relação${logX? ', calculada com o logaritmo do indicador' : ''} (taxa prevista = ${nfmt2v(cr.a)} ${cr.b<0? '−' : '+'} ${Math.abs(cr.b).toLocaleString('pt-BR',{maximumSignificantDigits:3})} × ${logX? 'log₁₀ do indicador' : 'indicador'}).</li>`
+      + `<li><b>Muito acima ou muito abaixo:</b> para cada lugar, a reta dá a taxa “prevista” pelo seu valor do indicador. A diferença entre a taxa observada e a prevista (o resíduo) é dividida pelo desvio-padrão de todos os resíduos (${nfmt2v(sdRes)} notícias por 100 mil hab.). Quem fica a <b>+1,5 desvio-padrão ou mais</b> recebe contorno laranja; a <b>−1,5 ou menos</b>, contorno azul. São mostrados até quatro de cada lado. Em outras palavras: são os lugares que o indicador sozinho não explica, e que merecem ser olhados de perto.</li>`
+      + `</ol></details>`; }
   $('ctxNote').textContent = (dep? `Cada ponto é um departamento ou partido (área ∝ número de notícias; pontos claros = sem notícias no recorte; cor = região estatística). Eixo vertical: notícias que citam o departamento por 100 mil habitantes (Censo 2022), no recorte atual. `
       : `Cada ponto é uma jurisdição (área ∝ número de notícias; cor = região estatística, com Buenos Aires em Pampeana). Eixo vertical: notícias que citam a província por 100 mil habitantes (Censo 2022, resultados definitivos), no recorte atual. `)
     + (defX && defX.definicao? `Indicador${defX.fonte? '' : ' (INDEC)'}: ${defX.definicao.split(/\n/)[0]} ` : '') + (defX && defX.fonte && !/^INDEC/.test(defX.fonte)? `Fonte: ${defX.fonte}. ` : '')
@@ -127,7 +137,7 @@ function renderCtx(b){
     + 'Associação entre agregados territoriais não indica causalidade nem se aplica a indivíduos (falácia ecológica); a cobertura da imprensa também varia entre províncias.';
   renderCtxTabela(dep? mapData(b.filter(r=>match(r,'provincia')),'prov') : md);
   renderCtxRegioes(b);
-  $('ctxSources').textContent = 'Fontes: RENABAP, Registro Nacional de Barrios Populares (versão de 05/12/2023); ReNaTEP, registro da economia popular (dados de 04/04/2023); Dirección Nacional Electoral, eleições gerais de 2023 (categoria Presidente, resultados provisórios); Corte Suprema de Justicia, Registro Nacional de Femicidios 2024; INDEC, Censo Nacional de Población, Hogares y Viviendas 2022, resultados definitivos (população) e indicadores por província e departamento obtidos no Geoportal estadístico do INDEC (portalgeoestadistico.indec.gob.ar: privação material dos domicílios, serviços, conectividade, educação, trabalho, saúde, estrutura demográfica, diversidade e migração); área calculada pelo projeto em projeção equivalente; Ministerio de Seguridad Nacional, SNIC-SAT, Informe de Homicidios Dolosos 2024 (homicídios 2023 e 2024); INDEC, Encuesta Permanente de Hogares: pobreza e indigência no segundo semestre de 2024 e mercado de trabalho no quarto trimestre de 2024 (regiões). Detalhes em pipeline/referencias/contexto/FONTES.md no repositório.';
+  $('ctxSources').textContent = 'Fontes: RENABAP, Registro Nacional de Barrios Populares (versão de 05/12/2023); ReNaTEP, registro da economia popular (dados de 04/04/2023); Dirección Nacional Electoral, eleições gerais de 2023 (categoria Presidente, resultados provisórios); Corte Suprema de Justicia, Registro Nacional de Femicidios 2024; INDEC, Censo Nacional de Población, Hogares y Viviendas 2022, resultados definitivos (população) e indicadores por província e departamento obtidos no Geoportal estadístico do INDEC (portalgeoestadistico.indec.gob.ar: privação material dos domicílios, serviços, conectividade, educação, trabalho, saúde, estrutura demográfica, diversidade e migração); área calculada pelo projeto em projeção equivalente; Ministerio de Seguridad Nacional, SNIC-SAT, Informe de Homicidios Dolosos 2024 (homicídios 2024); INDEC, Encuesta Permanente de Hogares: pobreza e indigência no segundo semestre de 2024 e mercado de trabalho no quarto trimestre de 2024 (regiões). Detalhes em pipeline/referencias/contexto/FONTES.md no repositório.';
 }
 
 function barCell(td, v, max, txt, cor){

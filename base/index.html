@@ -10,10 +10,10 @@
 <meta property="og:description" content="Base interativa de notícias sobre ações coletivas na Argentina em 2024: distribuições, fluxos, tipologias, redes de movimentos, mapas com indicadores do INDEC e calendário.">
 <meta property="og:type" content="website">
 <link rel="preload" href="../assets/fonts/urbanist-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="../assets/css/fontes.css?v=20261019a">
+<link rel="stylesheet" href="../assets/css/fontes.css?v=20261019c">
 <link rel="stylesheet" href="../assets/js/vendor/leaflet-1.9.4/leaflet.css">
-<link rel="stylesheet" href="../assets/css/base.css?v=20261019a">
-<script src="../assets/js/marcha.js?v=20261019a" defer></script>
+<link rel="stylesheet" href="../assets/css/base.css?v=20261019c">
+<script src="../assets/js/marcha.js?v=20261019c" defer></script>
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="sol" viewBox="-28 -28 56 56"><g fill="#f6b40e" stroke="#85340a" stroke-width=".6" stroke-linejoin="round"><path d="M-1.69 -12.38L0.00 -27.00L1.69 -12.38ZM3.17 -12.09L10.33 -24.94L6.31 -10.79ZM7.56 -9.96L19.09 -19.09L9.96 -7.56ZM10.79 -6.31L24.94 -10.33L12.09 -3.17ZM12.38 -1.69L27.00 0.00L12.38 1.69ZM12.09 3.17L24.94 10.33L10.79 6.31ZM9.96 7.56L19.09 19.09L7.56 9.96ZM6.31 10.79L10.33 24.94L3.17 12.09ZM1.69 12.38L0.00 27.00L-1.69 12.38ZM-3.17 12.09L-10.33 24.94L-6.31 10.79ZM-7.56 9.96L-19.09 19.09L-9.96 7.56ZM-10.79 6.31L-24.94 10.33L-12.09 3.17ZM-12.38 1.69L-27.00 0.00L-12.38 -1.69ZM-12.09 -3.17L-24.94 -10.33L-10.79 -6.31ZM-9.96 -7.56L-19.09 -19.09L-7.56 -9.96ZM-6.31 -10.79L-10.33 -24.94L-3.17 -12.09Z"/><path d="M1.08 -12.45C0.45 -16.99 6.22 -19.01 6.09 -23.22C6.27 -17.94 2.33 -15.83 3.77 -11.92ZM5.76 -11.09C6.92 -15.53 13.02 -15.18 14.51 -19.12C12.66 -14.17 8.21 -13.73 8.04 -9.57ZM9.57 -8.04C12.33 -11.70 17.84 -9.04 20.72 -12.11C17.12 -8.25 12.84 -9.54 11.09 -5.76ZM11.92 -3.77C15.87 -6.09 19.94 -1.53 23.78 -3.26C18.97 -1.07 15.52 -3.90 12.45 -1.08ZM12.45 1.08C16.99 0.45 19.01 6.22 23.22 6.09C17.94 6.27 15.83 2.33 11.92 3.77ZM11.09 5.76C15.53 6.92 15.18 13.02 19.12 14.51C14.17 12.66 13.73 8.21 9.57 8.04ZM8.04 9.57C11.70 12.33 9.04 17.84 12.11 20.72C8.25 17.12 9.54 12.84 5.76 11.09ZM3.77 11.92C6.09 15.87 1.53 19.94 3.26 23.78C1.07 18.97 3.90 15.52 1.08 12.45ZM-1.08 12.45C-0.45 16.99 -6.22 19.01 -6.09 23.22C-6.27 17.94 -2.33 15.83 -3.77 11.92ZM-5.76 11.09C-6.92 15.53 -13.02 15.18 -14.51 19.12C-12.66 14.17 -8.21 13.73 -8.04 9.57ZM-9.57 8.04C-12.33 11.70 -17.84 9.04 -20.72 12.11C-17.12 8.25 -12.84 9.54 -11.09 5.76ZM-11.92 3.77C-15.87 6.09 -19.94 1.53 -23.78 3.26C-18.97 1.07 -15.52 3.90 -12.45 1.08ZM-12.45 -1.08C-16.99 -0.45 -19.01 -6.22 -23.22 -6.09C-17.94 -6.27 -15.83 -2.33 -11.92 -3.77ZM-11.09 -5.76C-15.53 -6.92 -15.18 -13.02 -19.12 -14.51C-14.17 -12.66 -13.73 -8.21 -9.57 -8.04ZM-8.04 -9.57C-11.70 -12.33 -9.04 -17.84 -12.11 -20.72C-8.25 -17.12 -9.54 -12.84 -5.76 -11.09ZM-3.77 -11.92C-6.09 -15.87 -1.53 -19.94 -3.26 -23.78C-1.07 -18.97 -3.90 -15.52 -1.08 -12.45Z"/><circle r="11.5"/></g><circle r="8.4" fill="none" stroke="#85340a" stroke-width=".5" opacity=".55"/></symbol></svg>
@@ -138,7 +138,9 @@
 
   <section class="panel" id="mapSec" role="tabpanel" aria-labelledby="tab-map" hidden>
     <div class="sechead"><h2 id="mapTitle">Mapa</h2><span class="meta" id="mapMeta"></span></div>
-    <div class="mapctl">
+    <div class="mapctl mc">
+      <fieldset class="mc-grupo"><legend><span>1</span> O que mapear</legend>
+        <div class="mc-linha">
       <label class="f">Visualização
         <span class="seg" id="mapVis">
           <button data-v="prancha" aria-pressed="true">Prancha cartográfica</button>
@@ -165,13 +167,11 @@
           <button data-v="multi" aria-pressed="false">Por categoria</button>
         </span>
       </label>
-      <label class="f" for="cmpVar" id="cmpWrap" hidden>Comparar categorias de
-        <select id="cmpVar"></select>
-      </label>
-      <label class="f" for="cmpN" id="cmpNWrap" hidden>Categorias
-        <select id="cmpN"><option value="4">4 principais</option><option value="6" selected>6 principais</option><option value="9">9 principais</option><option value="12">12 principais</option></select>
-      </label>
-      <label class="f" for="ctxLayer">Camada de contexto
+        </div>
+      </fieldset>
+      <fieldset class="mc-grupo"><legend><span>2</span> Camadas, categorias e período</legend>
+        <div class="mc-linha">
+      <label class="f mc-largo" for="ctxLayer">Camada de contexto
         <select id="ctxLayer">
           <option value="">Nenhuma</option>
           <optgroup label="População · Censo 2022">
@@ -187,18 +187,29 @@
           </optgroup>
           <optgroup label="Violência · SNIC">
             <option value="hom24">Homicídios 2024 (província)</option>
-            <option value="hom23">Homicídios 2023 (província)</option>
           </optgroup>
         </select>
       </label>
       <label class="f" for="mapMes">Período
         <span class="perio"><select id="mapMes"><option value="">Ano inteiro (2024)</option></select><button class="btn" id="mapPlay" type="button" aria-pressed="false">Animar mês a mês</button></span>
       </label>
+      <label class="f" for="cmpVar" id="cmpWrap" hidden>Comparar categorias de
+        <select id="cmpVar"></select>
+      </label>
+      <label class="f" for="cmpN" id="cmpNWrap" hidden>Categorias
+        <select id="cmpN"><option value="4">4 principais</option><option value="6" selected>6 principais</option><option value="9">9 principais</option><option value="12">12 principais</option></select>
+      </label>
+        </div>
+      </fieldset>
+      <fieldset class="mc-grupo"><legend><span>3</span> Opções da prancha</legend>
+        <div class="mc-linha mc-opcoes">
       <label class="opt" for="mapDest"><input type="checkbox" id="mapDest" checked> Destacar lugares muito acima ou abaixo do esperado</label>
       <label class="opt" for="mapTopo"><input type="checkbox" id="mapTopo" checked> Mostrar nomes de lugares (mudam com o zoom)</label>
       <label class="f" for="author">Elaboração (aparece na nota)
         <input type="text" id="author" placeholder="ex.: Nome, instituição">
       </label>
+        </div>
+      </fieldset>
     </div>
     <details class="guia"><summary>Como ler: Mapas</summary><div class="guia-corpo"><h4>O que mostra</h4><p>Onde acontecem as ações noticiadas. A regra cartográfica é: <b>valores absolutos em círculos</b> (quantas notícias) e <b>valores relativos em cores</b> (notícias por 100 mil habitantes ou indicadores do Censo).</p>
 <h4>Como ler</h4><ul><li><b>Círculos amarelos:</b> a área é proporcional ao número de notícias que citam o lugar.</li><li><b>Coroplético (cores):</b> do mais claro ao mais escuro, valores maiores. As classes estão na legenda.</li>
@@ -211,6 +222,7 @@
 <h4>Cuidados</h4><p>Em lugares pouco populosos, uma única notícia gera taxas altas; leia a taxa junto com os círculos. Notícias nacionais, virtuais ou sem lugar não entram no mapa.</p></div></details>
     <div class="presets" id="mapPresets"></div>
     <p class="note" id="mapNote"></p>
+    <details class="calc calcbox" id="mapCalc"><summary>Como foi calculado este mapa</summary><div id="mapCalcCorpo"></div></details>
     <div class="wmap" id="wmap" hidden></div>
     <div class="sheet" id="sheet"></div>
     <div class="sheetbar">
@@ -235,7 +247,6 @@
           <option value="densidade_hab_km2">Densidade demográfica, 2022 (hab./km², escala log)</option>
           <option value="populacao_2022">População, 2022 (escala log)</option>
           <option value="taxa_homicidios_2024">Homicídios dolosos por 100 mil hab., 2024</option>
-          <option value="taxa_homicidios_2023">Homicídios dolosos por 100 mil hab., 2023</option>
         </select>
       </label>
     </div>
@@ -244,7 +255,7 @@
 <li><b>Linhas cinzas de mediana:</b> dividem o gráfico em quatro quadrantes, com o nome de cada situação (por exemplo, “indicador alto, poucas notícias”).</li><li><b>Linha tracejada:</b> tendência média. Subindo para a direita = relação positiva; descendo = negativa.</li>
 <li><b>r e ρ:</b> força da relação, de −1 a +1. Perto de 0 = sem relação; até ±0,3 = fraca; ±0,3 a ±0,6 = moderada; acima de ±0,6 = forte.</li><li><b>Pontos com contorno:</b> laranja = muito acima da tendência (mais notícias do que o indicador faria esperar); azul = muito abaixo. São os casos que merecem um olhar específico, e aparecem nomeados na leitura acima do gráfico.</li></ul>
 <h4>Exemplo nesta base</h4><p>Por departamento, com a privação material dos domicílios no eixo horizontal, a correlação de Spearman é −0,27: relação fraca e negativa. Os departamentos mais pobres tendem levemente a ter <i>menos</i> notícias por habitante.</p>
-<h4>Dois grupos de indicadores</h4><p>No seletor, aparecem primeiro os indicadores <b>ligados às lutas</b>: privação material, moradia e serviços, educação, trabalho e proteção, povos originários, bairros populares (RENABAP), economia popular (ReNaTEP), voto presidencial de 2023 e femicídios. No fim ficam os <b>controles demográficos</b> (internet, computador, piso, envelhecimento, migração etc.), que descrevem o perfil da população mas não têm ligação direta com as ações; servem para checar se uma relação não é só efeito de urbanização ou renda.</p><h4>Cuidados</h4><p>Correlação não é causa. A relação vale para lugares, não para pessoas (falácia ecológica). E a base mede notícias, não todos os protestos: a cobertura da imprensa varia (veja a aba Imprensa).</p></div></details>
+<h4>Indicadores disponíveis</h4><p>O seletor traz só indicadores <b>ligados às lutas</b>: privação material, moradia e serviços, educação, trabalho e proteção, povos originários, bairros populares (RENABAP), economia popular (ReNaTEP), voto presidencial de 2023 e femicídios. A densidade e a população ficam como <b>controles</b>, para checar se uma relação não é só efeito do tamanho das cidades. Indicadores sem ligação direta com as ações (internet, computador, piso, envelhecimento, migração, fecundidade etc.) foram retirados do site; continuam no CSV de contexto, na área de dados abertos.</p><h4>Cuidados</h4><p>Correlação não é causa. A relação vale para lugares, não para pessoas (falácia ecológica). E a base mede notícias, não todos os protestos: a cobertura da imprensa varia (veja a aba Imprensa).</p></div></details>
     <div class="presets" id="ctxPresets"></div>
     <div class="leitura" id="ctxLeitura" hidden></div>
     <p class="note" id="ctxNote"></p>
@@ -384,6 +395,10 @@
         <div><dt>Esperado</dt><dd>O valor que apareceria se não houvesse nenhuma relação entre as coisas comparadas. Por exemplo, nos mapas, o total de notícias repartido conforme a população de cada lugar.</dd></div>
         <div><dt>Resíduo ajustado</dt><dd>Mede quanto um valor observado se afasta do esperado, em unidades comparáveis. Primeiro se calcula quantas notícias teriam as duas categorias se não houvesse relação entre elas (o esperado); depois se divide a diferença entre observado e esperado pela variação que o acaso costuma produzir. Positivo = acontece mais que o esperado (atração); negativo = menos (afastamento); perto de 0 = o que se esperaria. Acima de +1,96 ou abaixo de −1,96, a diferença dificilmente é acaso (5% de chance); acima de ±3, menos de 0,3%. Ex.: estudantis × objetivos educativos: 85 notícias observadas contra 22,4 esperadas, resíduo +15,9.</dd></div>
         <div><dt>Combinação característica</dt><dd>Par de categorias que aparece junto muito mais do que o tamanho dos dois grupos faria esperar (resíduo ajustado ≥ +3). Não é a combinação mais frequente, e sim a que distingue um grupo dos demais.</dd></div>
+        <div><dt>Muito acima ou abaixo do esperado pela população (mapas e Síntese)</dt><dd>Compara as notícias de um lugar com a parte do total que lhe caberia se as notícias se distribuíssem como a população: esperado = total de notícias × população do lugar ÷ população do país (Censo 2022). O teste exato de Poisson calcula a chance de uma diferença tão grande ser acaso; marcamos só os lugares com chance menor que 1% (p < 0,01) e, no caso de “acima”, com pelo menos 3 notícias. Ex.: Los Lagos (Neuquén) tem 0,034% da população; de 830 notícias mapeadas, esperaríamos 0,3; há 5 (17,8 vezes o esperado).</dd></div>
+        <div><dt>Muito acima ou abaixo da tendência (Contexto)</dt><dd>Na dispersão, a reta de tendência prevê a taxa de notícias de cada lugar a partir do seu valor no indicador. A diferença entre a taxa observada e a prevista, dividida pelo desvio-padrão de todas essas diferenças, diz quão fora da tendência o lugar está. A partir de +1,5 desvio-padrão, contorno laranja; a partir de −1,5, azul. São os lugares que o indicador sozinho não explica.</dd></div>
+        <div><dt>Semana de pico</dt><dd>Semana com muito mais notícias do que o normal: acima de Q3 + 1,5 × (Q3 − Q1), em que Q1 e Q3 são o primeiro e o terceiro quartis das 53 semanas do ano. É o critério usual para valores atípicos.</dd></div>
+        <div><dt>Índice notícias ÷ população (regiões)</dt><dd>Porcentagem das notícias de uma região dividida pela sua porcentagem da população. Acima de 1, a região tem mais notícias do que o seu peso populacional faria esperar; abaixo de 1, menos.</dd></div>
         <div><dt>Significativo</dt><dd>Uma diferença é chamada de significativa quando é grande demais para ser explicada pelo acaso. Os testes usam o limite usual de 5% (p < 0,05) ou o mais exigente de 1% (p < 0,01).</dd></div>
         <div><dt>Valor p</dt><dd>A probabilidade de ver uma diferença tão grande quanto a observada se, na verdade, não houvesse diferença. Quanto menor, mais confiável é o resultado.</dd></div>
         <div><dt>Qui-quadrado (χ²) e V de Cramér</dt><dd>O qui-quadrado testa se duas variáveis têm relação; o V de Cramér diz a força dessa relação, de 0 (nenhuma) a 1 (total).</dd></div>
@@ -437,6 +452,6 @@
 <script src="../assets/js/vendor/d3-sankey-0.12.3.min.js"></script>
 <script src="../assets/js/vendor/topojson-client-3.1.0.min.js"></script>
 <script src="../assets/js/vendor/leaflet-1.9.4/leaflet.js"></script>
-<script src="../assets/js/app/carregar.js?v=20261019a"></script>
+<script src="../assets/js/app/carregar.js?v=20261019c"></script>
 </body>
 </html>

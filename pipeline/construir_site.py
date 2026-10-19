@@ -242,7 +242,12 @@ def lutas_departamentos(ids, deps, provs, nome_site, inds):
 
     def valores(c, pop):
         out = {}
-        if pop:
+        # famílias acima de 1/3 da população (≈ 3 pessoas por família) indicam que as duas fontes não são compatíveis
+        # naquele recorte (caso de El Cuy, Río Negro: bairros de Las Perlas, junto a Neuquén, com mais famílias do que
+        # habitantes no Censo); o valor fica vazio em vez de distorcer escalas e correlações
+        if pop and c["bp_f"] * 3 > pop:
+            print("RENABAP incompatível com a população (deixado vazio):", c["bp_f"], "famílias para", pop, "hab.")
+        elif pop:
             out["bp_fam"] = round(c["bp_f"] / pop * 1000, 1)
             out["bp_n"] = round(c["bp_n"] / pop * 1e5, 1)
         if c["pos"]:
@@ -272,6 +277,27 @@ def lutas_provincias():
     defs = [{"campo": c, "titulo": t, "unidade": u, "tema": te, "dec": d, "ano": a, "fonte": f, "definicao": df}
             for c, t, u, te, d, a, f, df in LUTAS_PROV]
     return out, defs
+
+
+# Indicadores retirados do site por terem pouca ligação com as ações coletivas (continuam no CSV de contexto para download)
+FORA_DO_SITE = CONTROLES - {"dens"}
+
+
+def contexto_site():
+    """Cópia do contexto sem os indicadores retirados do site e sem a série de homicídios de 2023 (repetia a de 2024)."""
+    import copy
+    c = copy.deepcopy(contexto())
+    ind = c["indec"]
+    ind["indicadores"] = [d for d in ind["indicadores"] if d["k"] not in FORA_DO_SITE]
+    for v in ind["departamentos"].values():
+        for k in FORA_DO_SITE: v.pop(k, None)
+    for v in ind["provincias"].values():
+        for k in FORA_DO_SITE: v.pop(k, None)
+    for v in c["provincias"].values():
+        for k in list(v):
+            if k[2:] in FORA_DO_SITE and k.startswith("i_") or k in ("homicidios_2023", "taxa_homicidios_2023"):
+                v.pop(k)
+    return c
 
 
 def _toponimos():
@@ -481,7 +507,7 @@ def main():
     _json({"deptos": json.loads((limites / "departamentos.topo.json").read_text(encoding="utf-8")),
            "neigh": json.loads((limites / "paises_vizinhos.topo.json").read_text(encoding="utf-8")),
            "coords": coords, "pop": _populacao(), "locinfo": res.locinfo, "deptLabels": res.rotulos_departamento,
-           "contexto": contexto(), "eventos": _eventos(), "toponimos": _toponimos()},
+           "contexto": contexto_site(), "eventos": _eventos(), "toponimos": _toponimos()},
           DADOS / "geo.json")
     escrever_csv(res, DADOS / f"acoes_{a.ano}.csv")
     escrever_contexto_csv(res, DADOS / "contexto_censo2022_departamentos.csv")
