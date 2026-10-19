@@ -4,6 +4,8 @@ Banco de Dados das Lutas por Espaços e Territórios (DATALUTA) Argentina 2024 �
 
 **Acesse:** https://wiliansventura98-collab.github.io/site-acoes/ · **Base interativa:** https://wiliansventura98-collab.github.io/site-acoes/base/
 
+**Processo de construção:** o registro completo e atualizado de tudo o que foi feito para gerar a base (fontes, tratamentos, critérios, verificações, alterações e pendências) está em [`PROCESSO.md`](PROCESSO.md); o roteiro executável está em [`pipeline/reconstruir.sh`](pipeline/reconstruir.sh).
+
 Base de dados e plataforma de visualização sobre **ações coletivas de movimentos sociais na Argentina em 2024**, construída a partir de notícias publicadas na imprensa e em meios de organizações sociais. Cada notícia foi lida na íntegra e codificada segundo quem se mobiliza, por quais objetivos, com que tipo de ação, contra ou diante de quais instituições e **onde** a ação acontece.
 
 A plataforma permite explorar a base sem instalar nada: escolher variáveis, cruzá-las, filtrar, consultar as notícias de origem e produzir mapas temáticos com padrão cartográfico para uso em pesquisa, aulas e publicações.
