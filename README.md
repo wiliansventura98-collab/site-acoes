@@ -1,4 +1,6 @@
-# Ações Socioespaciais na Argentina · Base interativa 2024
+# DATALUTA Argentina 2024 · Ações Socioespaciais na Argentina
+
+Banco de Dados das Lutas por Espaços e Territórios (DATALUTA) Argentina 2024 · Movimentos Socioespaciais e Socioterritoriais Urbanos. Base interativa.
 
 **Acesse:** https://wiliansventura98-collab.github.io/site-acoes/ · **Base interativa:** https://wiliansventura98-collab.github.io/site-acoes/base/
 
@@ -22,6 +24,7 @@ A plataforma permite explorar a base sem instalar nada: escolher variáveis, cru
 
 | Aba | Para quê |
 |---|---|
+| **Síntese** | Leitura em texto corrido do recorte atual, gerada a partir dos dados, com produtos que reúnem as discussões das outras abas: indicadores, barras, combinações características (resíduos ajustados), mapa das localidades, notícias × população por região, destaques de Poisson, série semanal com picos e acontecimentos, organizações mais articuladas, eixos da ACM, correlações com o Censo 2022 e concentração da imprensa. Tem 12 sínteses prontas (sindicais, economia popular, feministas, GBA, Patagônia…), atalhos para aprofundar em cada aba e versão para imprimir ou salvar em PDF. |
 | **Distribuição** | Frequência de qualquer variável e cruzamento entre duas variáveis em tabela de calor: contagem, % da linha, % da coluna ou **associação** (resíduos ajustados, qui-quadrado e V de Cramér), com filtros combináveis. |
 | **Comparar** | Dois recortes lado a lado (uma categoria contra outra, ou contra as demais) em gráfico de halteres, com diferença em pontos percentuais e teste de proporções. |
 | **Fluxos** | Diagrama de Sankey com duas ou três variáveis encadeadas (por exemplo, tipo de movimento → ação matriz → objetivos), em contagem fracionada que preserva o total do recorte. |
@@ -36,7 +39,7 @@ A plataforma permite explorar a base sem instalar nada: escolher variáveis, cru
 
 O mapa tem dois modos: a **prancha cartográfica** (escala, grade, nota técnica, exportação) e o **mapa navegável**, que pode ser arrastado para qualquer lugar do mundo sobre o mapa base cinza claro da Esri ou o OpenStreetMap. Por departamento e por província, **contornos** destacam lugares com notícias muito acima (laranja) ou abaixo (azul) do esperado pela população (teste exato de Poisson). Há **combinações prontas** em todas as abas e um **glossário** dos termos técnicos.
 
-Cada aba tem um guia **Como ler**, com explicação, exemplos tirados da própria base e cuidados de interpretação; Comparar, Correspondências e Contexto trazem também uma **leitura automática** do resultado em palavras, e Comparar e Correspondências têm **exemplos prontos**. Nos mapas, os **nomes de lugares mudam com o zoom**: capitais e províncias no país inteiro, cidades menores e departamentos ao aproximar (GeoNames, CC BY 4.0).
+Cada aba tem um guia **Como ler**, com explicação, exemplos tirados da própria base e cuidados de interpretação; Comparar, Correspondências e Contexto trazem também uma **leitura automática** do resultado em palavras, e todas as abas têm **combinações prontas** (mais de 130 botões) que abrem cruzamentos já montados, para replicar em aula, em textos ou em outros recortes; a Síntese faz essa leitura em texto para o recorte inteiro. Nos mapas, os **nomes de lugares mudam com o zoom**: capitais e províncias no país inteiro, cidades menores e departamentos ao aproximar (GeoNames, CC BY 4.0).
 
 O endereço da página guarda a aba, as variáveis e os filtros: o botão **Copiar link deste recorte** permite enviar a outra pessoa exatamente o mesmo gráfico.
 

@@ -44,8 +44,8 @@ function render(){
 /* ---------- tabs ---------- */
 let TAB='dist';
 const EXTRA = {}; // abas acrescentadas por módulos posteriores: EXTRA[chave] = função de desenho
-const TABS={distribuicao:'dist', comparar:'cmp', fluxos:'flow', tipologias:'typo', correspondencias:'acm', redes:'net', mapa:'map', contexto:'ctx', tempo:'time', imprensa:'imp', fichas:'fic'};
-const PAINEIS=[['dist','tab-dist','dist'],['cmp','tab-cmp','cmpSec'],['flow','tab-flow','flowSec'],['typo','tab-typo','typoSec'],['acm','tab-acm','acmSec'],['net','tab-net','netSec'],['map','tab-map','mapSec'],['ctx','tab-ctx','ctxSec'],['time','tab-time','timeSec'],['imp','tab-imp','impSec'],['fic','tab-fic','ficSec']];
+const TABS={sintese:'sin', distribuicao:'dist', comparar:'cmp', fluxos:'flow', tipologias:'typo', correspondencias:'acm', redes:'net', mapa:'map', contexto:'ctx', tempo:'time', imprensa:'imp', fichas:'fic'};
+const PAINEIS=[['sin','tab-sin','sinSec'],['dist','tab-dist','dist'],['cmp','tab-cmp','cmpSec'],['flow','tab-flow','flowSec'],['typo','tab-typo','typoSec'],['acm','tab-acm','acmSec'],['net','tab-net','netSec'],['map','tab-map','mapSec'],['ctx','tab-ctx','ctxSec'],['time','tab-time','timeSec'],['imp','tab-imp','impSec'],['fic','tab-fic','ficSec']];
 const hashTab = () => (location.hash||'').slice(1).split('?')[0];
 function setTab(t, push){
   TAB=t;

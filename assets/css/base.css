@@ -307,3 +307,63 @@ i.evb{flex:none;display:inline-grid;place-items:center;width:18px;height:18px;bo
 /* título da base (DATALUTA) */
 h1.titulo-base{font-size:clamp(30px,4.2vw,52px);line-height:1.04;letter-spacing:-.025em;max-width:30ch}
 h1.titulo-base span{display:block;margin-top:10px;font-size:clamp(18px,2.1vw,26px);font-weight:600;letter-spacing:-.01em;color:var(--ink-2);line-height:1.2}
+
+/* ---------- Síntese ---------- */
+.sin-tools{display:flex;justify-content:flex-end;margin:4px 0 8px}
+#sinBody{max-width:1080px}
+.sin-cab{border-top:3px solid var(--ink);padding-top:14px;margin-bottom:8px}
+.sin-kicker{margin:0;font-size:12.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#c45a00}
+.sin-titulo{margin:4px 0 14px;font-size:clamp(20px,2.6vw,28px);line-height:1.2;font-weight:800;color:var(--ink);max-width:40ch}
+.sin-kpis{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-bottom:16px}
+.sin-kpis div{padding:10px 12px 10px 0;display:flex;flex-direction:column}
+.sin-kpis b{font-size:clamp(22px,3vw,32px);font-weight:800;line-height:1.1;color:var(--ink)}
+.sin-kpis span{font-size:13px;color:var(--ink-2)}
+.sin-kpis small{font-size:12px;color:var(--ink-3)}
+@media (max-width:640px){.sin-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.sin-resumo{background:var(--mist);border-left:4px solid #f2a900;border-radius:0 12px 12px 0;padding:12px 18px 6px;margin:0 0 16px}
+.sin-resumo h4{margin:0 0 6px;font-size:15px;font-weight:800}
+.sin-resumo ol{margin:0 0 6px;padding-left:20px}
+.sin-resumo li{margin:0 0 4px}
+.sin-resumo li p{margin:0}
+#sinBody p{max-width:78ch}
+.sin-lead{font-size:16.5px;color:var(--ink)}
+.sin-sec{border-top:1px solid var(--line);padding-top:16px;margin-top:22px}
+.sin-sec h3{display:flex;align-items:baseline;gap:10px;margin:0 0 4px;font-size:21px;font-weight:800;color:var(--ink)}
+.sin-num{font-size:13px;font-weight:800;color:#fff;background:var(--ink);border-radius:6px;padding:1px 7px;transform:translateY(-2px)}
+.sin-sub{margin:0 0 8px;color:var(--ink-3);font-size:14px}
+.sin-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 28px;margin:10px 0 6px;align-items:start}
+@media (max-width:760px){.sin-grid{grid-template-columns:minmax(0,1fr)}}
+.sin-bars h4,.sin-tab h4{margin:0 0 6px;font-size:14px;font-weight:800;color:var(--ink)}
+.sin-bar{display:grid;grid-template-columns:minmax(0,42%) minmax(0,1fr) auto;gap:8px;align-items:center;width:100%;background:none;border:0;padding:3px 0;font:inherit;font-size:13px;color:var(--ink);text-align:left;cursor:pointer;border-radius:6px}
+.sin-bar:hover{background:var(--accent-soft)}
+.sin-bar .l{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sin-bar .t{height:12px;background:var(--line);border-radius:3px;overflow:hidden}
+.sin-bar .t i{display:block;height:100%;background:var(--bar);border-radius:3px}
+.sin-bar .t i.um{background:var(--ink)}
+.sin-bar .n{font-size:12px;color:var(--ink-2);white-space:nowrap}
+.sin-nota{font-size:12.5px;color:var(--ink-3);margin:6px 0 0}
+.sin-scroll{overflow-x:auto}
+.sin-tab{margin:10px 0}
+.sin-tab table{border-collapse:collapse;width:100%;font-size:13px}
+.sin-tab th{text-align:left;font-weight:800;border-bottom:2px solid var(--ink);padding:5px 8px 5px 0;white-space:nowrap}
+.sin-tab td{border-bottom:1px solid var(--line);padding:5px 8px 5px 0;vertical-align:top}
+.sin-tab .r{text-align:right}
+.sin-rho{display:inline-flex;align-items:center;gap:6px;justify-content:flex-end}
+.sin-rho i{display:inline-block;height:9px;max-width:60px;border-radius:2px}
+.sin-rho.pos i{background:#c45a00}.sin-rho.neg i{background:#2569ad}
+.sin-mapa{position:relative}
+.sin-chart{position:relative;margin:10px 0}
+.sin-ir{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:12px 0 0;font-size:13px;color:var(--ink-3)}
+.sin-ir .btn{font-size:13px;padding:5px 10px}
+.sin-perg{max-width:78ch}
+.sin-perg li{margin-bottom:6px}
+.sin-metodo{margin-top:14px;font-size:13.5px;color:var(--ink-2)}
+.sin-metodo summary{cursor:pointer;font-weight:800;color:var(--ink)}
+@media print{
+  body.imprime-sin .hero, body.imprime-sin .controls-panel, body.imprime-sin .tabs, body.imprime-sin .panel:not(#sinSec), body.imprime-sin footer, body.imprime-sin .guia, body.imprime-sin #sinPresets, body.imprime-sin .sin-tools, body.imprime-sin .sin-ir, body.imprime-sin #glossario{display:none!important}
+  body.imprime-sin #sinSec{display:block!important;border:0;box-shadow:none;padding:0}
+  body.imprime-sin .sin-sec{break-inside:auto}
+  body.imprime-sin .sin-grid, body.imprime-sin .sin-tab, body.imprime-sin .sin-chart{break-inside:avoid}
+  body.imprime-sin .sin-metodo{display:block}
+  body.imprime-sin .sin-metodo > *{display:block}
+}

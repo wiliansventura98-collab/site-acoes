@@ -20,6 +20,13 @@ prontos('distPresets', 'Combinações prontas:', [
   ['Escala × instituição interpelada', 'A quem as ações se dirigem em cada escala', ()=>{ st.v='escala'; st.x='tipoinst'; st.mode='res'; }],
   ['Onde acontecem as ações', 'Tipos de lugar: ruas, praças, sedes públicas, espaço virtual', ()=>{ st.v='localizacion'; st.x=''; }],
   ['Objetivos × ODS', 'Como os objetivos se ligam aos Objetivos de Desenvolvimento Sustentável', ()=>{ st.v='objetivos'; st.x='ods'; st.mode='res'; }],
+  ['Modalidade × tipo de movimento', 'Ações socioespaciais, socioterritoriais e virtuais: quem faz cada uma', ()=>{ st.v='modalidad'; st.x='tipomov'; st.mode='res'; }],
+  ['Movimentos × instituição interpelada', 'A quem cada tipo de movimento se dirige', ()=>{ st.v='tipomov'; st.x='tipoinst'; st.mode='res'; }],
+  ['Objetivos × direcionalidade', 'Que objetivos são reivindicados, defendidos ou propostos', ()=>{ st.v='objetivos'; st.x='direccion'; st.mode='res'; }],
+  ['Ação derivada × lugar', 'Onde acontece cada forma concreta de ação (marcha, assembleia, ocupação…)', ()=>{ st.v='derivada'; st.x='localizacion'; st.mode='res'; }],
+  ['Regiões × objetivos (% da linha)', 'O perfil das reivindicações em cada região', ()=>{ st.v='region'; st.x='objetivos'; st.mode='row'; }],
+  ['Escala × tipo de movimento', 'Que movimentos agem em cada escala', ()=>{ st.v='escala'; st.x='tipomov'; st.mode='res'; }],
+  ['Virtual × ação matriz (% da linha)', 'O repertório das ações virtuais e presenciais', ()=>{ st.v='virtual'; st.x='matriz'; st.mode='row'; }],
 ]);
 
 prontos('flowPresets', 'Fluxos prontos:', [
@@ -28,6 +35,10 @@ prontos('flowPresets', 'Fluxos prontos:', [
   ['Ação → sentido → escala', 'Ação matriz → direcionalidade → escala', ()=>Object.assign(FLOW,{a:'matriz', b:'direccion', c:'escala'})],
   ['Objetivos → ODS', 'Objetivos da ação → Objetivos de Desenvolvimento Sustentável', ()=>Object.assign(FLOW,{a:'objetivos', b:'ods', c:''})],
   ['Ação matriz → derivada → lugar', 'Do tipo geral de ação à forma concreta e ao lugar onde acontece', ()=>Object.assign(FLOW,{a:'matriz', b:'derivada', c:'localizacion'})],
+  ['Modalidade → ação → lugar', 'Socioespacial ou socioterritorial → ação matriz → lugar da ação', ()=>Object.assign(FLOW,{a:'modalidad', b:'matriz', c:'localizacion'})],
+  ['Quem → por quê → contra quem', 'Tipo de movimento → objetivos → instituição interpelada', ()=>Object.assign(FLOW,{a:'tipomov', b:'objetivos', c:'tipoinst'})],
+  ['Onde → como → em que sentido', 'Região → ação matriz → direcionalidade', ()=>Object.assign(FLOW,{a:'region', b:'matriz', c:'direccion'})],
+  ['Escala → interlocutor → objetivo', 'Escala → instituição interpelada → objetivos', ()=>Object.assign(FLOW,{a:'escala', b:'tipoinst', c:'objetivos'})],
 ]);
 
 prontos('typoPresets', 'Tipologias prontas:', [
@@ -36,6 +47,10 @@ prontos('typoPresets', 'Tipologias prontas:', [
   ['Região › província', 'O peso de cada província dentro da sua região', ()=>Object.assign(TYPO,{a:'region', b:'provincia'})],
   ['Objetivos › ação matriz', 'Com que tipo de ação se persegue cada objetivo', ()=>Object.assign(TYPO,{a:'objetivos', b:'matriz'})],
   ['Instituição › escala', 'A quem se dirigem as ações e em que escala', ()=>Object.assign(TYPO,{a:'tipoinst', b:'escala'})],
+  ['Modalidade › ação matriz', 'O repertório das ações socioespaciais, socioterritoriais e virtuais', ()=>Object.assign(TYPO,{a:'modalidad', b:'matriz'})],
+  ['Região › tipo de movimento', 'Quem se mobiliza em cada região', ()=>Object.assign(TYPO,{a:'region', b:'tipomov'})],
+  ['Lugar › ação derivada', 'Que formas de ação acontecem em cada tipo de lugar', ()=>Object.assign(TYPO,{a:'localizacion', b:'derivada'})],
+  ['Objetivos › ODS', 'Os Objetivos de Desenvolvimento Sustentável dentro de cada objetivo', ()=>Object.assign(TYPO,{a:'objetivos', b:'ods'})],
 ]);
 
 prontos('netPresets', 'Redes prontas:', [
@@ -45,6 +60,9 @@ prontos('netPresets', 'Redes prontas:', [
   ['Objetivos que andam juntos', 'Quais objetivos aparecem nas mesmas notícias', ()=>Object.assign(NET,{v:'objetivos', n:25, min:5, cor:'com'})],
   ['Tipos de movimento que se encontram', 'Alianças entre tipos de movimento', ()=>Object.assign(NET,{v:'tipomov', n:25, min:3, cor:'com'})],
   ['Instituições interpeladas juntas', 'A quem as ações se dirigem ao mesmo tempo', ()=>Object.assign(NET,{v:'tipoinst', n:25, min:3, cor:'com'})],
+  ['Lugares que se combinam', 'Tipos de lugar citados na mesma ação (rua, praça, sede pública…)', ()=>Object.assign(NET,{v:'localizacion', n:25, min:3, cor:'com'})],
+  ['Formas de ação combinadas', 'Ações derivadas que aparecem juntas (marcha + ato, assembleia + paralisação…)', ()=>Object.assign(NET,{v:'derivada', n:30, min:3, cor:'com'})],
+  ['ODS que andam juntos', 'Objetivos de Desenvolvimento Sustentável nas mesmas notícias', ()=>Object.assign(NET,{v:'ods', n:20, min:3, cor:'com'})],
 ]);
 
 const mapa = o => ()=>{ Object.assign(mstate, {mode:'one', ctx:'', mes:'', measure:'abs'}, o); if(typeof pararAnim==='function') pararAnim(); };
@@ -58,6 +76,12 @@ prontos('mapPresets', 'Mapas prontos:', [
   ['Notícias sobre a densidade', 'Círculos por departamento sobre a densidade do Censo 2022', mapa({unit:'dept', ctx:'c_dens'})],
   ['Principais movimentos, um mapa cada', 'Mapas lado a lado para as organizações mais citadas', mapa({unit:'loc', mode:'multi', cmp:'nombremov', n:6})],
   ['Tipos de movimento, um mapa cada', 'Mapas lado a lado por tipo de movimento', mapa({unit:'prov', mode:'multi', cmp:'tipomov', n:6, measure:'rate'})],
+  ['Desocupação × protestos (bivariado)', 'Desocupação do Censo 2022 e notícias por habitante, por departamento', mapa({unit:'dept', ctx:'biv_desocup'})],
+  ['Esgoto × protestos (bivariado)', 'Acesso a esgoto em rede e notícias por habitante, por departamento', mapa({unit:'dept', ctx:'biv_cloaca'})],
+  ['Jovens nem-nem × protestos (bivariado)', 'Jovens que não estudam nem trabalham e notícias por habitante', mapa({unit:'dept', ctx:'biv_nini'})],
+  ['Objetivos, um mapa cada', 'Taxa por província para cada objetivo principal', mapa({unit:'prov', mode:'multi', cmp:'objetivos', n:6, measure:'rate'})],
+  ['Ações matriz, um mapa cada', 'Onde acontece cada tipo de ação', mapa({unit:'loc', mode:'multi', cmp:'matriz', n:6})],
+  ['Modalidade, um mapa cada', 'Ações socioespaciais, socioterritoriais e virtuais no território', mapa({unit:'loc', mode:'multi', cmp:'modalidad', n:3})],
 ]);
 
 const ctxp = (nivel, x) => ()=>{ CTXV.nivel=nivel; CTXV.x=x; };
@@ -69,6 +93,11 @@ prontos('ctxPresets', 'Perguntas prontas:', [
   ['Violência e protesto', 'Homicídios dolosos 2024 × notícias, por província', ctxp('prov','taxa_homicidios_2024')],
   ['Povos indígenas', 'População indígena × notícias, por departamento', ctxp('dept','i_indig')],
   ['Serviços básicos', 'Esgoto em rede × notícias, por departamento', ctxp('dept','i_cloaca')],
+  ['Aluguel e mobilização', 'Domicílios em moradia alugada × notícias, por departamento', ctxp('dept','i_alquila')],
+  ['Conectividade e mobilização', 'Domicílios com internet × notícias, por departamento', ctxp('dept','i_internet')],
+  ['Jovens nem-nem', 'Jovens que não estudam nem trabalham × notícias, por departamento', ctxp('dept','i_nini')],
+  ['Migração interna', 'População nascida em outra província × notícias, por província', ctxp('prov','i_otraProv')],
+  ['Envelhecimento', 'Índice de envelhecimento × notícias, por província', ctxp('prov','i_env')],
 ]);
 
 prontos('timePresets', 'Ver no tempo:', [
@@ -78,6 +107,9 @@ prontos('timePresets', 'Ver no tempo:', [
   ['Por região', 'Onde se concentra a mobilização em cada semana', ()=>{ SEM.v='region'; }],
   ['Por escala', 'Ações locais, provinciais e nacionais ao longo do ano', ()=>{ SEM.v='escala'; }],
   ['Por direcionalidade', 'Reivindicar, defender, propor: o sentido das ações no tempo', ()=>{ SEM.v='direccion'; }],
+  ['Por instituição interpelada', 'A quem as ações se dirigem em cada momento do ano', ()=>{ SEM.v='tipoinst'; }],
+  ['Por lugar da ação', 'Ruas, praças, sedes públicas e espaço virtual ao longo do ano', ()=>{ SEM.v='localizacion'; }],
+  ['Por modalidade', 'Ações socioespaciais, socioterritoriais e virtuais no tempo', ()=>{ SEM.v='modalidad'; }],
 ]);
 
 const fic = (vid, nome) => [vid, idxDe(vid, nome)];
@@ -91,6 +123,13 @@ prontos('ficPresets', 'Fichas sugeridas:', [
   ['Río Negro', 'Província', fic('provincia','Río Negro')],
   ['Bariloche', 'Localidade', fic('localidad','San Carlos de Bariloche (Río Negro)')],
   ['Objetivos educativos', 'Objetivo', fic('objetivos','Objetivos educativos')],
+  ['CTA', 'Central de Trabajadores de la Argentina', fic('nombremov','Central de Trabajadores de la Argentina (CTA)')],
+  ['MTE', 'Movimiento de Trabajadores Excluidos', fic('nombremov','Movimiento de Trabajadores Excluidos (MTE)')],
+  ['Polo Obrero', 'Organização de trabalhadores desocupados', fic('nombremov','Polo Obrero')],
+  ['Movimiento Evita', 'Organização da economia popular', fic('nombremov','Movimiento Evita')],
+  ['Movimentos ambientalistas', 'Tipo de movimento', fic('tipomov','Movimientos Ambientalistas')],
+  ['Neuquén', 'Província', fic('provincia','Neuquén')],
+  ['Moradia e hábitat', 'Objetivo', fic('objetivos','Objetivos por la vivienda y hábitat')],
 ].filter(([, , [vid,k]])=>k>=0).map(([t,d,[vid,k]])=>[t,d,()=>{ FIC.v=vid; FIC.k=k; $('ficK').value=''; $('ficList').dataset.v=''; }]));
 
 // link do glossário no topo: abre e rola até ele

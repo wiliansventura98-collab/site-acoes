@@ -27,6 +27,12 @@ const CMP_EX = [
   ['Pampeana × Patagônia, por ação matriz', {av:'region', akNome:'Pampeana', bkNome:'Patagonia', y:'matriz'}],
   ['Economia popular × sindicais, por instituição interpelada', {av:'tipomov', akNome:'Movimientos de Economía Social y Solidaria', bkNome:'Movimientos sindicales', y:'tipoinst'}],
   ['Desocupados × sindicais, por lugar da ação', {av:'tipomov', akNome:'Movimientos de trabajadores Desocupados', bkNome:'Movimientos sindicales', y:'localizacion'}],
+  ['Socioterritoriais × socioespaciais, por tipo de movimento', {av:'modalidad', akNome:'Acción Socioterritorial', bkNome:'Acción Socioespacial', y:'tipomov'}],
+  ['UTEP × ATE, por ação matriz', {av:'nombremov', akNome:'Unión de Trabajadores y Trabajadoras de la Economía Popular (UTEP)', bkNome:'Asociación de Trabajadores del Estado (ATE)', y:'matriz'}],
+  ['CGT × CTA, por objetivos', {av:'nombremov', akNome:'Confederación General del Trabajo (CGT)', bkNome:'Central de Trabajadores de la Argentina (CTA)', y:'objetivos'}],
+  ['GBA × Pampeana, por objetivos', {av:'region', akNome:'Gran Buenos Aires', bkNome:'Pampeana', y:'objetivos'}],
+  ['Defensivas × propositivas, por objetivos', {av:'direccion', akNome:'Defensiva', bkNome:'Propositiva', y:'objetivos'}],
+  ['Ambientalistas × demais, por lugar da ação', {av:'tipomov', akNome:'Movimientos Ambientalistas', bk:'resto', y:'localizacion'}],
 ];
 (()=>{ const box=$('cmpPresets'); box.append(el('span',null,'Exemplos prontos:'));
   CMP_EX.forEach(([rot,ex])=>{ const b=el('button','btn',rot); b.type='button'; b.onclick=()=>{ const vals=VARS[VI[ex.av]].values; CMP.av=ex.av; CMP.ak=vals.indexOf(ex.akNome); CMP.bk= ex.bkNome? String(vals.indexOf(ex.bkNome)) : 'resto'; CMP.y=ex.y; render(); }; box.append(b); }); })();
