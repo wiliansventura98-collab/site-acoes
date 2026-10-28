@@ -9,7 +9,7 @@ Este documento registra, de forma cumulativa, tudo o que foi feito para transfor
 | Responsável | Wilians Ventura Ferreira Souza (Unesp) |
 | Site | <https://wiliansventura98-collab.github.io/site-acoes/> (base interativa em `/base/`) |
 | Repositório | <https://github.com/wiliansventura98-collab/site-acoes> |
-| Versão deste documento | 1.3 · 19/10/2026 |
+| Versão deste documento | 1.4 · 28/10/2026 |
 | Versão em Word | [`PROCESSO.docx`](PROCESSO.docx), gerada por `python pipeline/gerar_processo_docx.py` |
 | Licença | Base de dados: CC BY 4.0 · código: MIT (ver [`LICENCAS.md`](LICENCAS.md)) |
 
@@ -272,6 +272,9 @@ Datas no fuso de São Paulo. Os códigos entre colchetes são os commits do repo
 - **Versão em Word do documento de processo** (`PROCESSO.docx`), gerada a partir deste arquivo por `pipeline/gerar_processo_docx.py` (pandoc + python-docx), para circular no grupo.
 - **LISA explicado passo a passo** no quadro “Como foi calculado este mapa” (abre sozinho na primeira vez), com exemplo numérico de um ponto quente e de um ponto frio, lista dos departamentos, I global e cuidados; dica do mapa mostra z, média dos vizinhos e I local; glossário e guia ampliados. O teste de permutação passou a sortear os vizinhos **sem reposição** (permutação condicional, como no GeoDa); antes sorteava com reposição. Motivo: pedido de deixar claro como o LISA é calculado.
 
+
+### 28/10/2026
+- **Fichas:** a escolha passou a ser uma lista fechada só com as categorias do tipo de ficha escolhido (por exemplo, só objetivos), com o número de notícias, e um campo para filtrar a lista. Motivo: o campo de texto anterior, com sugestões, deixava o navegador misturar valores digitados antes em outros tipos de ficha (nomes de movimentos, províncias).
 ---
 
 ## 10. Pendências

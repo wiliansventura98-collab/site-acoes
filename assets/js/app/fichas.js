@@ -10,10 +10,10 @@
 
 const FIC = { v:'nombremov', k:null };
 try{ Object.assign(FIC, JSON.parse(localStorage.getItem('as24fic')||'{}')); }catch(e){}
-const ficNome = s => s.replace(/\s+\(\d[\d.]*\)$/,'');
-$('ficV').onchange=e=>{ FIC.v=e.target.value; FIC.k=null; $('ficK').value=''; render(); };
-const ficEscolhe = e => { const v=VARS[VI[FIC.v]]; const k=v.values.indexOf(ficNome(e.target.value)); if(k>=0 && k!==FIC.k){ FIC.k=k; render(); } };
-$('ficK').onchange=ficEscolhe; $('ficK').oninput=ficEscolhe;
+// a lista de escolha mostra só as categorias do tipo de ficha escolhido (por exemplo, só objetivos), com o número de notícias
+$('ficV').onchange=e=>{ FIC.v=e.target.value; FIC.k=null; $('ficBusca').value=''; $('ficK').dataset.v=''; render(); };
+$('ficK').onchange=e=>{ const k=+e.target.value; if(!isNaN(k) && k!==FIC.k){ FIC.k=k; render(); } };
+$('ficBusca').oninput=()=>{ $('ficK').dataset.v=''; render(); };
 function abrirFicha(vid, k){ FIC.v=vid; FIC.k=k; setTab('fic'); }
 let FIC_SVG = null;
 
@@ -50,16 +50,23 @@ function renderFicha(b){
   $('ficV').value=FIC.v;
   const iv=VI[FIC.v], v=VARS[iv];
   const c=counts(b, FIC.v); const ks=[...c.keys()].filter(k=>!ehSemInfo(v.values[k])).sort((a,q)=>c.get(q)-c.get(a));
-  const dl=$('ficList'); if(dl.dataset.v!==FIC.v){ dl.textContent=''; ks.forEach(k=>{ const o=el('option'); o.value=`${v.values[k]} (${fmt(c.get(k))})`; dl.append(o); }); dl.dataset.v=FIC.v; }
-  if(FIC.k==null || !c.has(FIC.k)) FIC.k=ks[0];
+  const sem=t=>t.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+  const busca=sem($('ficBusca').value.trim()), visiveis=busca? ks.filter(k=>sem(v.values[k]).includes(busca)) : ks;
+  if(FIC.k==null || !c.has(FIC.k)) FIC.k=visiveis[0]!=null? visiveis[0] : ks[0];
+  else if(busca && visiveis.length && !visiveis.includes(FIC.k)) FIC.k=visiveis[0];
+  const sel=$('ficK'), assin=FIC.v+'|'+busca+'|'+FIC.k;
+  if(sel.dataset.v!==assin){ sel.textContent='';
+    const lista = visiveis.includes(FIC.k)? visiveis : [FIC.k, ...visiveis];
+    lista.forEach(k=>{ const o=el('option', null, `${v.values[k]} (${fmt(c.get(k))})`); o.value=String(k); sel.append(o); });
+    if(busca && !visiveis.length){ const o=el('option', null, 'Nada encontrado com esse texto'); o.disabled=true; sel.append(o); }
+    sel.value=String(FIC.k); sel.dataset.v=assin; }
   try{ localStorage.setItem('as24fic', JSON.stringify(FIC)); }catch(e){}
-  if(document.activeElement!==$('ficK')) $('ficK').value=v.values[FIC.k]||'';
   const box=$('ficBody'); box.querySelectorAll('.fic-sheet,.fic-bar-tools,.fic-news').forEach(e=>e.remove());
   if(FIC.k==null || !HAS_D3) return;
   const rows=b.filter(r=>r.v[iv].includes(FIC.k)), N=rows.length, nome=v.values[FIC.k];
   const datas=rows.map(r=>r.sort).filter(s=>s && s!=='00000000').sort(), dd=s=>`${s.slice(6,8)}/${s.slice(4,6)}/${s.slice(0,4)}`;
   $('ficMeta').textContent=`${fmt(N)} notícias`;
-  const abre=(vid)=>(k)=>{ FIC.v=vid; FIC.k=k; $('ficK').value=''; $('ficList').dataset.v=''; render(); };
+  const abre=(vid)=>(k)=>{ FIC.v=vid; FIC.k=k; $('ficBusca').value=''; $('ficK').dataset.v=''; render(); };
   const ficaveis=new Set([...$('ficV').options].map(o=>o.value));
   const top=(vid, n=6)=>{ const vv=VARS[VI[vid]], cc=counts(rows,vid); return [...cc].filter(([k])=>!ehSemInfo(vv.values[k]) && !(vid===FIC.v && k===FIC.k)).sort((a,q)=>q[1]-a[1]).slice(0,n).map(([k,n2])=>[vv.values[k], n2, k]); };
   const distintos=vid=>{ const vv=VARS[VI[vid]]; return [...counts(rows,vid).keys()].filter(k=>!ehSemInfo(vv.values[k]) && !/nacional|virtual/i.test(vv.values[k]) && !(vid===FIC.v && k===FIC.k)).length; };

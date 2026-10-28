@@ -137,7 +137,7 @@ prontos('ficPresets', 'Fichas sugeridas:', [
   ['Movimentos ambientalistas', 'Tipo de movimento', fic('tipomov','Movimientos Ambientalistas')],
   ['Neuquén', 'Província', fic('provincia','Neuquén')],
   ['Moradia e hábitat', 'Objetivo', fic('objetivos','Objetivos por la vivienda y hábitat')],
-].filter(([, , [vid,k]])=>k>=0).map(([t,d,[vid,k]])=>[t,d,()=>{ FIC.v=vid; FIC.k=k; $('ficK').value=''; $('ficList').dataset.v=''; }]));
+].filter(([, , [vid,k]])=>k>=0).map(([t,d,[vid,k]])=>[t,d,()=>{ FIC.v=vid; FIC.k=k; $('ficBusca').value=''; $('ficK').dataset.v=''; }]));
 
 // link do glossário no topo: abre e rola até ele
 (()=>{ const a=$('linkGloss'); if(!a) return; a.onclick=e=>{ e.preventDefault(); const g=$('glossario'); g.querySelector('details').open=true; g.scrollIntoView({behavior:'smooth', block:'start'}); }; })();
