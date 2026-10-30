@@ -2,6 +2,7 @@
 .mapa-entrada{margin:0;display:grid;gap:6px;justify-items:center;min-width:0}
 .mapa-entrada .me-mapa{display:block;height:var(--me-altura,560px);width:auto;max-width:100%;overflow:visible}
 .me-mar{fill:#cfe4f5}
+.me-grade{fill:none;stroke:#b4d2ec;stroke-width:1}
 .me-viz{fill:#efebe2;stroke:#b9b3a6;stroke-width:1;stroke-linejoin:round}
 .me-terra path{fill:#fffdf6;stroke:none}
 .me-divisas path{fill:none;stroke:#7f9dbd;stroke-width:1.25;stroke-linejoin:round}
@@ -19,13 +20,6 @@
   @keyframes me-nasce{0%{transform:scale(0);fill:#f2a900;fill-opacity:1}45%{transform:scale(1.9);fill:#f2a900;fill-opacity:1}100%{transform:scale(1)}}
   @keyframes me-onda{from{transform:scale(1);opacity:.95}to{transform:scale(5.5);opacity:0}}
 }
-.me-tempo{display:block;width:min(100%,360px);height:46px;overflow:visible}
-.me-barra{fill:#d7e3ef}
-.me-barra.on{fill:#13294b}
-.me-eixo{stroke:#9fb2c8;stroke-width:1}
-.me-mes{font:600 9px "Urbanist","Helvetica Neue",Arial,sans-serif;fill:#7c8aa0}
-.me-agulha{stroke:#f2a900;stroke-width:2.5}
-.me-fim .me-agulha{opacity:0}
 .me-leg{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:center;gap:4px 12px;width:min(100%,360px);min-height:2.6em}
 .me-cont{margin:0;font-size:14.5px;line-height:1.35;color:#4a5b74;text-align:center;font-variant-numeric:tabular-nums}
 .me-cont b{color:#13294b;font-weight:800}
@@ -33,3 +27,11 @@
 .me-rever:hover{text-decoration:underline;text-underline-offset:3px}
 .me-rever:focus-visible{outline:2px solid #2569ad;outline-offset:2px}
 .mapa-entrada figcaption{font-size:12.5px;line-height:1.4;color:#7c8aa0;text-align:center;max-width:36ch}
+
+/* modo fundo: o mapa ocupa todo o cabeçalho, atrás do texto (telas a partir de 1200 px; ver data-fundo) */
+.mapa-entrada.me-fundo{position:absolute;inset:0;display:block;z-index:0}
+.me-fundo .me-mapa{width:100%;height:100%;max-width:none}
+.me-fundo .me-moldura,.me-fundo .me-rot-pacifico{display:none}
+.me-fundo .me-leg{position:absolute;right:24px;bottom:24px;width:auto;max-width:260px;
+  flex-direction:column;align-items:center;gap:2px;background:rgba(255,255,255,.88);border-radius:14px;padding:10px 16px;box-shadow:0 2px 10px rgba(19,41,75,.08)}
+.me-fundo figcaption{max-width:32ch}

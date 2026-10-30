@@ -507,7 +507,10 @@ def escrever_entrada(res, coords, caminho, altura=1000):
     # moldura: a Argentina com uma margem para mostrar Chile, Bolívia, Paraguai, Uruguai, Brasil e os oceanos
     ax0, ay0, ax1, ay1 = pais.bounds
     w, h = ax1 - ax0, ay1 - ay0
-    x0, x1, y0, y1 = ax0 - 0.30 * w, ax1 + 0.26 * w, ay0 - 0.025 * h, ay1 + 0.05 * h
+    # quadro largo (Pacífico a oeste), para o mapa ocupar todo o cabeçalho; "recorte" é o quadro justo da Argentina,
+    # usado em telas estreitas e na base interativa
+    x0, x1, y0, y1 = ax0 - 4.2 * w, ax1 + 0.95 * w, ay0 - 0.03 * h, ay1 + 0.06 * h
+    rx0, rx1 = ax0 - 0.30 * w, ax1 + 0.26 * w
     moldura = box(x0, y0, x1, y1)
     viz = [transform(proj, g).buffer(0).intersection(moldura)
            for _id, props, g in _topo_para_geometrias(json.loads((lim / "paises_vizinhos.topo.json").read_text(encoding="utf-8")))
@@ -528,6 +531,19 @@ def escrever_entrada(res, coords, caminho, altura=1000):
                 partes.append("M" + "L".join(f"{x:.1f},{y:.1f}" for x, y in pts[:-1]) + "Z")
         return "".join(partes)
 
+    # grade de meridianos e paralelos a cada 5°, só como textura do mar
+    from shapely.geometry import LineString
+    linhas = [LineString([_lambert(lon, la / 2) for la in range(-120, -1)]) for lon in range(-120, -29, 5)]
+    linhas += [LineString([_lambert(lo / 2, lat) for lo in range(-240, -59)]) for lat in range(-60, 1, 5)]
+    grade = []
+    for ln in linhas:
+        g = ln.intersection(moldura)
+        if g.is_empty:
+            continue
+        for parte in getattr(g, "geoms", [g]):
+            pts = [tela(x, y) for x, y in parte.coords]
+            grade.append("M" + "L".join(f"{x:.0f},{y:.0f}" for x, y in pts))
+
     # rótulos: chave (traduzida na página), posição em graus, rotação
     rot = []
     for chave, lon, lat, ang in [("chile", -71.4, -36.5, -90), ("bolivia", -64.6, -21.0, 0), ("paraguai", -58.4, -22.9, 0),
@@ -546,7 +562,7 @@ def escrever_entrada(res, coords, caminho, altura=1000):
                 continue
         return None
 
-    pontos = []
+    pontos, locs = [], set()
     for reg in res.registros:
         if reg["status"] == "Repetida":
             continue
@@ -556,14 +572,16 @@ def escrever_entrada(res, coords, caminho, altura=1000):
         for loc in reg["v"]["localidad"]:
             if loc in coords:
                 x, y = tela(*_lambert(*coords[loc]))
-                pontos.append([round(x, 1), round(y, 1), d])
+                pontos.append([round(x, 1), round(y, 1), d]); locs.add(loc)
     pontos.sort(key=lambda p: p[2])
     _json({"largura": larg, "altura": altura,
+           "recorte": [round((rx0 - x0) * k, 1), 0, round((rx1 - rx0) * k, 1), altura],
+           "grade": "".join(grade),
            "vizinhos": caminho_svg(vizinhos, 1.6, 4),
            "pais": caminho_svg(pais, 1.2),
            "provincias": [caminho_svg(g, 1.6) for g in provs.values()],
            "rotulos": rot,
-           "pontos": pontos, "localidades": len({(p[0], p[1]) for p in pontos})}, caminho)
+           "pontos": pontos, "localidades": len(locs)}, caminho)
 
 def lemas(regs, n=9):
     from comum import chave

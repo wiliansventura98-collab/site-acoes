@@ -3,7 +3,8 @@
  * e, ao fim do ano, fica parada. Cada ponto é uma ação (notícia única) na localidade citada; pontos no mesmo
  * lugar se espalham num pequeno “girassol”, e por isso as cidades com muitas ações viram manchas.
  *
- * Uso: <figure class="mapa-entrada" data-entrada="dados/entrada.json" data-duracao="8000">…</figure>
+ * Uso: <figure class="mapa-entrada" data-entrada="dados/entrada.json" data-duracao="8000" data-fundo>…</figure>
+ * Com data-fundo, em telas a partir de 1200 px, o mapa ocupa todo o cabeçalho (o CSS o põe atrás do texto).
  * Os dados (contorno já projetado e pontos ordenados por data) são gerados por pipeline/construir_site.py.
  * Sem bibliotecas. Com “reduzir movimento” ativado no sistema, o mapa aparece direto no estado final.
  */
@@ -43,19 +44,22 @@
     if (sol) el('use', { href: '#sol', x: w / 2 - h * 0.16, y: h / 2 - h * 0.16, width: h * 0.32, height: h * 0.32 }, g);
     else el('circle', { cx: w / 2, cy: h / 2, r: h * 0.1, fill: '#f6b40e', stroke: '#85340a', 'stroke-width': .8 }, g);
     el('rect', { width: w, height: h, class: 'me-bandeira-borda' }, g);
+    return g;
   }
 
   async function montar(fig) {
     let D;
     try { const r = await fetch(fig.dataset.entrada); if (!r.ok) throw 0; D = await r.json(); } catch (e) { fig.hidden = true; return; }
-    const W = D.largura, H = D.altura, PAD = 2;
+    const W = D.largura, H = D.altura;
+    const [rx, ry, rw, rh] = D.recorte || [0, 0, W, H];
 
-    // ---- mapa: oceano, países vizinhos, províncias, contorno, nomes e bandeira ----
-    const svg = el('svg', { viewBox: `${-PAD} ${-PAD} ${W + 2 * PAD} ${H + 2 * PAD}`, role: 'img', 'aria-label': T.rotulo, class: 'me-mapa' });
+    // ---- mapa: mar com grade, países vizinhos, províncias, contorno, nomes e bandeira ----
+    const svg = el('svg', { role: 'img', 'aria-label': T.rotulo, class: 'me-mapa' });
     const cid = 'me-clip-' + Math.random().toString(36).slice(2, 8);
-    el('rect', { width: W, height: H, rx: 16 }, el('clipPath', { id: cid }, el('defs', {}, svg)));
+    const clipRect = el('rect', {}, el('clipPath', { id: cid }, el('defs', {}, svg)));
     const quadro = el('g', { 'clip-path': `url(#${cid})` }, svg);
     el('rect', { width: W, height: H, class: 'me-mar' }, quadro);
+    if (D.grade) el('path', { d: D.grade, class: 'me-grade' }, quadro);
     if (D.vizinhos) el('path', { d: D.vizinhos, class: 'me-viz' }, quadro);
     const terra = el('g', { class: 'me-terra' }, quadro);
     D.provincias.forEach(p => el('path', { d: p }, terra));
@@ -65,14 +69,30 @@
     (D.rotulos || []).forEach(([k, x, y, ang]) => {
       const nome = T.nomes[k]; if (!nome) return;
       const oceano = k === 'atlantico' || k === 'pacifico';
-      const t = el('text', { x, y, class: oceano ? 'me-rot me-oceano' : 'me-rot', 'text-anchor': 'middle',
+      const t = el('text', { x, y, class: (oceano ? 'me-rot me-oceano' : 'me-rot') + ' me-rot-' + k, 'text-anchor': 'middle',
         transform: ang ? `rotate(${ang} ${x} ${y})` : '' }, quadro);
       nome.split('\n').forEach((linha, i) => { const ts = el('tspan', { x, dy: i ? '1.2em' : (nome.includes('\n') ? '-0.2em' : '0.35em') }, t); ts.textContent = linha; });
     });
-    bandeira(quadro, W - 140, H - 170, 108);
-    el('rect', { width: W, height: H, rx: 16, class: 'me-moldura' }, svg);
+    const flag = bandeira(quadro, 0, 0, 108);
     const gp = el('g', { class: 'me-pontos' }, quadro);
     const gf = el('g', { class: 'me-flash' }, quadro);
+    const moldura = el('rect', { class: 'me-moldura' }, svg);
+
+    // Em tela larga, com data-fundo, o mapa ocupa todo o cabeçalho (quadro largo, ancorado à direita);
+    // nos demais casos mostra só o recorte da Argentina, numa moldura de cantos arredondados.
+    const largo = fig.hasAttribute('data-fundo') && window.matchMedia ? matchMedia('(min-width: 1200px)') : null;
+    const ajusta = () => {
+      const fundo = !!(largo && largo.matches);
+      fig.classList.toggle('me-fundo', fundo);
+      const vb = fundo ? [0, 0, W, H] : [rx - 2, ry - 2, rw + 4, rh + 4];
+      svg.setAttribute('viewBox', vb.join(' '));
+      svg.setAttribute('preserveAspectRatio', fundo ? 'xMaxYMid slice' : 'xMidYMid meet');
+      const r = fundo ? { x: 0, y: 0, width: W, height: H, rx: 0 } : { x: rx, y: ry, width: rw, height: rh, rx: 16 };
+      for (const k in r) { clipRect.setAttribute(k, r[k]); moldura.setAttribute(k, r[k]); }
+      // bandeira: no Atlântico Sul, junto às Malvinas (recorte) ou no Atlântico aberto, à direita (fundo)
+      flag.setAttribute('transform', fundo ? `translate(${W - 250},${H * 0.36})` : `translate(${rx + rw - 140},${ry + rh - 170})`);
+    };
+    ajusta(); if (largo) largo.addEventListener('change', ajusta);
 
     // posição final de cada ponto: espiral de girassol em torno da localidade
     const vistos = new Map();
@@ -82,20 +102,11 @@
       return { x: x + r * Math.cos(a), y: y + r * Math.sin(a), d };
     });
 
-    // ---- linha do tempo: barras por semana e contador ----
-    const semanas = new Array(53).fill(0); P.forEach(p => semanas[Math.min(52, Math.floor((p.d - 1) / 7))]++);
-    const mx = Math.max(...semanas);
-    const tl = el('svg', { viewBox: '0 0 530 46', class: 'me-tempo', 'aria-hidden': 'true', preserveAspectRatio: 'none' });
-    const barras = semanas.map((n, i) => el('rect', { x: i * 10 + 1, width: 8, y: 34 - Math.max(1.5, n / mx * 32), height: Math.max(1.5, n / mx * 32), class: 'me-barra' }, tl));
-    el('line', { x1: 0, x2: 530, y1: 34.5, y2: 34.5, class: 'me-eixo' }, tl);
-    INICIO_MES.forEach((d, m) => { const x = (d - 1) / 366 * 530; const t = el('text', { x: x + 2, y: 45, class: 'me-mes' }, tl); t.textContent = T.meses[m].slice(0, 3); });
-    const agulha = el('line', { x1: 0, x2: 0, y1: 0, y2: 36, class: 'me-agulha' }, tl);
-
     const leg = document.createElement('div'); leg.className = 'me-leg';
     const cont = document.createElement('p'); cont.className = 'me-cont'; cont.setAttribute('aria-live', 'off');
     const btn = document.createElement('button'); btn.type = 'button'; btn.className = 'me-rever'; btn.textContent = '↻ ' + T.rever; btn.hidden = true;
-    leg.append(cont, btn);
-    fig.replaceChildren(svg, tl, leg, ...fig.querySelectorAll('figcaption'));
+    leg.append(cont, btn, ...fig.querySelectorAll('figcaption'));
+    fig.replaceChildren(svg, leg);
 
     const nLoc = D.localidades;
     const fimTexto = () => { cont.innerHTML = T.fim(fmt(P.length), fmt(nLoc)); };
@@ -105,11 +116,10 @@
     function estatico() {
       cancelAnimationFrame(raf); gp.replaceChildren(); gf.replaceChildren();
       P.forEach(pontoFinal);
-      barras.forEach(b => b.classList.add('on')); agulha.setAttribute('transform', 'translate(530,0)');
       fimTexto(); btn.hidden = false; fig.classList.add('me-fim');
     }
     function animar() {
-      cancelAnimationFrame(raf); gp.replaceChildren(); gf.replaceChildren(); barras.forEach(b => b.classList.remove('on'));
+      cancelAnimationFrame(raf); gp.replaceChildren(); gf.replaceChildren();
       fig.classList.remove('me-fim'); btn.hidden = true;
       const dur = +fig.dataset.duracao || 8000; let i = 0, t0 = null;
       const passo = (t) => {
@@ -120,8 +130,6 @@
           const f = el('circle', { cx: p.x.toFixed(1), cy: p.y.toFixed(1), r: 2.4, class: 'onda' }, gf);
           f.addEventListener('animationend', () => f.remove(), { once: true });
         }
-        const sem = Math.floor((dia - 1) / 7); barras.forEach((b, k) => b.classList.toggle('on', k <= sem));
-        agulha.setAttribute('transform', `translate(${((dia - 1) / 366 * 530).toFixed(1)},0)`);
         cont.innerHTML = `<b>${T.meses[mesDe(Math.floor(dia))]} de 2024</b> · ${fmt(i)} ${T.acao(i)}`;
         if (dia < 366) raf = requestAnimationFrame(passo);
         else { gf.replaceChildren(); fimTexto(); btn.hidden = false; fig.classList.add('me-fim'); }
