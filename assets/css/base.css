@@ -474,3 +474,45 @@ dialog.fn::backdrop{background:rgba(19,41,75,.45)}
 /* data de atualização dos dados (atualizado.js) */
 .atualizado{margin:0;font-size:13.5px;color:#4a5b74}
 .atualizado time{font-weight:700;color:#13294b}
+
+/* ===================== Novas leituras (nl-*.js), acrescentadas ao fim das abas ===================== */
+.nl-painel{margin-top:34px;padding-top:22px;border-top:2px solid var(--line-2)}
+.nl-selo{font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#1d5994;background:#e6f0f9;border-radius:999px;padding:3px 10px}
+.nl-intro{max-width:90ch}
+.nl-ctl{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:flex-end;margin:6px 0 8px}
+.nl-leitura{margin:6px 0 10px;font-size:15px;line-height:1.5;color:var(--ink);max-width:95ch}
+.nl-chart{position:relative}
+.nl-dados{margin-top:8px}
+.nl-dados summary,.nl-calc summary{cursor:pointer;font-size:13.5px;font-weight:700;color:#2569ad}
+.nl-tab{border-collapse:collapse;font-size:13px;margin-top:8px;width:100%;max-width:900px}
+.nl-tab th{text-align:left;border-bottom:1px solid var(--line-2);padding:5px 8px;color:var(--ink-2);font-weight:650}
+.nl-tab td{border-bottom:1px solid var(--line);padding:4px 8px}
+.nl-tab td:not(:first-child),.nl-tab th:not(:first-child){text-align:right;font-variant-numeric:tabular-nums}
+.nl-dados{max-height:none}
+.nl-dados[open]{max-height:420px;overflow:auto}
+.nl-calc ul{margin:8px 0 0;padding-left:1.2em;font-size:13.5px;color:var(--ink-2);display:grid;gap:4px;max-width:95ch}
+.nl-leg{display:flex;flex-wrap:wrap;gap:6px 14px;margin:0 0 8px;font-size:13px;color:var(--ink-2)}
+.nl-leg-it{display:inline-flex;align-items:center;gap:6px;cursor:default}
+.nl-leg-it i{width:11px;height:11px;border-radius:50%;display:inline-block}
+.nl-apagado{opacity:.12}
+/* funil */
+.nl-funil-998{fill:#e7eef6}
+.nl-funil-95{fill:#d3e1ef}
+.nl-funil-media{stroke:#1d5994;stroke-width:1.4;stroke-dasharray:5 4}
+.nl-funil-rot{font-size:11.5px;fill:#1d5994;font-weight:650}
+.nl-funil-nome{font-size:11.5px;fill:var(--ink);paint-order:stroke;stroke:#fff;stroke-width:3px;stroke-linejoin:round;pointer-events:none}
+.nl-fp{stroke:#fff;stroke-width:1}
+.nl-fp-m{fill:#9aa7b6}
+.nl-fp-a1{fill:#E69F00}.nl-fp-a2{fill:#D55E00}
+.nl-fp-b1{fill:#56B4E9}.nl-fp-b2{fill:#0072B2}
+.nl-mapa-tit{font-size:12.5px;font-weight:700;fill:var(--ink)}
+.nl-mapa-rot{font-size:11.5px;fill:var(--ink-2)}
+.nl-carto-rot{fill:#13294b;font-weight:700;pointer-events:none}
+.nl-carto-rot.nl-claro{fill:#fff}
+.nl-carto-rot.nl-fora{font-size:10.5px;font-weight:650;paint-order:stroke;stroke:#fff;stroke-width:3px;stroke-linejoin:round}
+.nl-vazio-c{font-size:14px;color:var(--ink-2);display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.nl-calor-v{font-size:10.5px;font-weight:700;fill:#13294b;pointer-events:none}
+.nl-calor-v.nl-claro{fill:#fff}
+.nl-perfil-g{display:grid;grid-template-columns:repeat(auto-fit,minmax(380px,1fr));gap:12px 28px}
+.nl-perfil-c h3{margin:6px 0 2px;font-size:13px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-2)}
+.nl-ev-n{font-size:9.5px;font-weight:800;fill:#fff;pointer-events:none}

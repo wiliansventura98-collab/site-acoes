@@ -130,6 +130,7 @@ index.html                    página inicial
 base/index.html               base interativa (estrutura da página)
 sobre/index.html              página “Sobre e metodologia”
 producoes/index.html          página “Produções” (lista lida de dados/producoes.csv)
+historia/index.html           história guiada “2024 em ações” (rolagem com mapa e série semanal)
 es/                           versão em espanhol das páginas (GERADA por i18n/ferramenta.js)
 assets/js/app-es/             módulos em espanhol (GERADOS por i18n/ferramenta.js)
 i18n/                         catálogo de tradução (es.json), exceções e ferramenta que gera a versão em espanhol

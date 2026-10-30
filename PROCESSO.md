@@ -7,9 +7,9 @@ Este documento registra, de forma cumulativa, tudo o que foi feito para transfor
 | Item | Informação |
 |---|---|
 | Responsável | Wilians Ventura Ferreira Souza (Unesp) |
-| Site | <https://wiliansventura98-collab.github.io/site-acoes/> (base interativa em `/base/`, metodologia em `/sobre/`, produções em `/producoes/`, versão em espanhol em `/es/`) |
+| Site | <https://wiliansventura98-collab.github.io/site-acoes/> (base interativa em `/base/`, metodologia em `/sobre/`, produções em `/producoes/`, história guiada em `/historia/`, versão em espanhol em `/es/`) |
 | Repositório | <https://github.com/wiliansventura98-collab/site-acoes> |
-| Versão deste documento | 2.3 · 30/10/2026 |
+| Versão deste documento | 2.4 · 30/10/2026 |
 | Versão em Word | [`PROCESSO.docx`](PROCESSO.docx), gerada por `python pipeline/gerar_processo_docx.py` |
 | Licença | Base de dados: CC BY 4.0 · código: MIT (ver [`LICENCAS.md`](LICENCAS.md)) |
 
@@ -253,6 +253,24 @@ Todos entram como módulos ou páginas novas; abas, cálculos, combinações pro
 - **Página “Produções”** (`/producoes/`): artigos, apresentações e outros produtos feitos com a base, agrupados por ano, com busca e filtro por tipo. A lista vem de `dados/producoes.csv` (colunas ano, tipo, titulo, autores, onde, link, resumo, resumo_es), editável no GitHub ou no Excel; sugestões pelo formulário `.github/ISSUE_TEMPLATE/producao.yml`. Ligada no menu de todas as páginas.
 - A ferramenta da versão em espanhol passou a manter os links entre páginas dentro de `es/` (antes, links da página inicial em espanhol levavam à base em português) e a gerar também `es/producoes/`.
 
+### 7.6 Novas leituras (30/10/2026, sem mudar o que já existia)
+
+Painéis acrescentados ao fim de algumas abas, marcados com o selo “Nova leitura”, cada um com leitura automática, tabela de dados e “Como foi calculado”. Ficam em módulos próprios (`assets/js/app/nl-*.js`), desenhados depois do `render()` original e só quando a aba está aberta; um erro num painel novo não interrompe a base. Cores dos gráficos novos: paleta Okabe-Ito (segura para daltonismo) e escala divergente azul–laranja.
+
+| Aba | Painel | Método |
+|---|---|---|
+| Contexto | **Funil** das taxas por província ou departamento | Taxa = notícias ÷ população × 100.000; média do país = soma das notícias ÷ soma da população; limites de 95% e 99,8% pelos quantis de Poisson do esperado (média × população), interpolados (Spiegelhalter, 2005); em departamentos entram os 511, inclusive os sem notícias; eixo vertical em raiz quadrada. |
+| Mapa | **Mapa de pontos por categoria** | Um ponto por notícia × localidade, colorido pela categoria principal (entre as 7 mais frequentes) da variável escolhida; espiral de girassol por lugar; detalhe da AMBA; composição por região; clique abre a ficha da notícia. |
+| Mapa | **Cartograma de províncias** | Dorling: círculo com área ∝ população (Censo 2022), posição inicial no centro da província, afastamento por simulação de forças com colisão; cor = taxa em quintis. |
+| Distribuição | **Mapa de calor reordenado** | Resíduos ajustados de Haberman das 16 categorias mais frequentes de cada variável; linhas e colunas ordenadas pela coordenada no 1º eixo de uma análise de correspondências simples (iteração de potência). Aparece quando “Cruzar com” está escolhido. |
+| Fichas | **Perfil comparado** | Para 6 variáveis centrais, % na ficha × % nas demais notícias da base; diferença em p.p.; cor forte com teste z de duas proporções significativo a 5%. |
+| No tempo | **Linha do tempo de notícias** | Cada notícia é um ponto na semana de início (segunda a domingo), empilhado em colunas de três e colorido pela categoria; acontecimentos de 2024 marcados; clique abre a ficha. |
+| Comparar | **Margem de erro** | Diferença A − B por categoria com intervalo de 95% = d ± 1,96 × erro-padrão combinado (o mesmo do teste z do gráfico de halteres; o intervalo cruza o zero exatamente quando a diferença não é significativa). |
+
+### 7.7 História guiada de 2024 (`/historia/`)
+
+Página com rolagem: à esquerda, oito passos de texto (abertura; janeiro; março; abril; maio–junho; setembro–outubro; novembro–dezembro; o ano inteiro); à direita, fixos, o mapa da Argentina (os mesmos dados de `dados/entrada.json`) e a série semanal. Ao chegar a cada passo, acendem as ações do período (laranja), as anteriores ficam em segundo plano e a série marca o período. A contagem de cada passo (ações no mapa = notícia × localidade) é calculada no navegador. As datas dos acontecimentos vêm de `pipeline/referencias/acontecimentos_2024.csv`. Ligada na página inicial (botão “A história de 2024”).
+
 ### 7.4 Versão em espanhol
 
 - Endereços: `/es/`, `/es/base/` e `/es/sobre/`; o link “Español”/“Português” no menu troca de idioma (na base, mantendo aba e filtros).
@@ -325,6 +343,7 @@ Datas no fuso de São Paulo. Os códigos entre colchetes são os commits do repo
 - **Linha com o nome da base** (acima do título, na página inicial e na Sobre) e rótulos da Síntese e das leituras passam do laranja-amarronzado para o azul da paleta (#1d5994 e #2569ad). O laranja segue só nos gráficos e mapas, onde indica “acima do esperado”. Motivo: pedido do responsável, para combinar com a paleta.
 - **Quatro recursos novos e página de produções**, sem mudar a estrutura da base (seção 7.5): ficha de cada notícia com link próprio e notícias parecidas; correção colaborativa por formulário; data de atualização dos dados; galeria “Perguntas para começar” na página inicial; página “Produções”. Corrigido também o link da página inicial em espanhol, que levava à base em português. Motivo: levantamento de bases interativas de referência (IBGE, Crowd Counting, EJAtlas, Carnegie) e pedido do responsável.
 - **Ajustes na página inicial:** saiu o cartão “A mobilização aparece onde estão os bairros populares?” da galeria; saiu a bandeira do mapa da abertura (atributo `data-sem-bandeira`; no mapa menor da base ela continua); a marca no canto superior (sol + “Ações Socioespaciais”) passou a ser sol + “Início” em todas as páginas, e o link “Início” repetido no menu saiu; sugestões e correções ficaram mais visíveis (seção “Contribua com a base”, link “Contribuir” no menu e quadro acima da lista de notícias). Motivo: pedido do responsável.
+- **Novas leituras e história guiada** (seções 7.6 e 7.7): funil, mapa de pontos por categoria, cartograma, mapa de calor reordenado, perfil comparado nas fichas, linha do tempo de notícias, margem de erro no Comparar e a página “2024 em ações”. Tudo acrescentado, sem mudar abas, cálculos ou endereços existentes. Motivo: pedido do responsável para melhorar a representação.
 ---
 
 ## 10. Pendências
