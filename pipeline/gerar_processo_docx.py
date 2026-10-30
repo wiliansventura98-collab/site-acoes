@@ -85,7 +85,7 @@ def acabamento(caminho: Path) -> None:
                     cel._tc.get_or_add_tcPr().append(sh)
     # rodapé com o nome do documento
     rod = d.sections[0].footer.paragraphs[0]
-    rod.text = "DATALUTA Argentina 2024 · Processo de construção da base"
+    rod.text = "DATALUTA · Movimentos Socioespaciais e Socioterritoriais Urbanos Argentinos (2024) · Processo de construção da base"
     for r in rod.runs: r.font.size = Pt(8); r.font.color.rgb = RGBColor(0x7C, 0x8A, 0xA0)
     d.save(caminho)
 

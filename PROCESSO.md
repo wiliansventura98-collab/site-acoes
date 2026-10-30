@@ -1,6 +1,6 @@
 # Processo de construção da base · DATALUTA Argentina 2024
 
-**Banco de Dados das Lutas por Espaços e Territórios (DATALUTA) Argentina 2024 · Movimentos Socioespaciais e Socioterritoriais Urbanos**
+**Banco de Dados das Lutas por Espaços e Territórios (DATALUTA) - Movimentos Socioespaciais e Socioterritoriais Urbanos Argentinos (2024)**
 
 Este documento registra, de forma cumulativa, tudo o que foi feito para transformar a planilha de codificação das notícias na base interativa publicada. Serve de memória metodológica, de roteiro para refazer a base do zero e de registro das decisões tomadas a cada etapa.
 
@@ -9,7 +9,7 @@ Este documento registra, de forma cumulativa, tudo o que foi feito para transfor
 | Responsável | Wilians Ventura Ferreira Souza (Unesp) |
 | Site | <https://wiliansventura98-collab.github.io/site-acoes/> (base interativa em `/base/`, página de metodologia em `/sobre/`, versão em espanhol em `/es/`) |
 | Repositório | <https://github.com/wiliansventura98-collab/site-acoes> |
-| Versão deste documento | 1.9 · 30/10/2026 |
+| Versão deste documento | 2.0 · 30/10/2026 |
 | Versão em Word | [`PROCESSO.docx`](PROCESSO.docx), gerada por `python pipeline/gerar_processo_docx.py` |
 | Licença | Base de dados: CC BY 4.0 · código: MIT (ver [`LICENCAS.md`](LICENCAS.md)) |
 
@@ -310,6 +310,7 @@ Datas no fuso de São Paulo. Os códigos entre colchetes são os commits do repo
 - **Ajustes no mapa da abertura:** países vizinhos e oceanos com nomes, como no mapa navegável; cores mais vivas (mar celeste, país em branco quente, vizinhos em bege); divisas das províncias mais fortes; bandeira argentina. Motivo: pedido do responsável (o fundo estava muito apagado e faltava situar a Argentina no continente).
 - **Mapa no cabeçalho inteiro** da página inicial (telas a partir de 1200 px), com grade de meridianos e paralelos no mar, e **sem o gráfico de semanas** embaixo do mapa (na página inicial e na base). Contagem de localidades do mapa passou a usar os nomes das localidades (123), e não as coordenadas arredondadas. Motivo: pedido do responsável.
 - **Mapa cobrindo o cabeçalho inteiro em qualquer tela** (a versão anterior só fazia isso a partir de 1200 px e deixava o menu sobre fundo branco): menu dentro do cabeçalho, sobre o mapa, com fundo branco translúcido; enquadramento calculado no navegador a partir do tamanho do cabeçalho e do texto. Motivo: o responsável avaliou que o mapa não ocupava todo o cabeçalho.
+- **Nome oficial da base** passa a ser “Banco de Dados das Lutas por Espaços e Territórios (DATALUTA) - Movimentos Socioespaciais e Socioterritoriais Urbanos Argentinos (2024)” (em espanhol, “Banco de Datos de las Luchas por Espacios y Territorios (DATALUTA) - Movimientos Socioespaciales y Socioterritoriales Urbanos Argentinos (2024)”), na página inicial, na base, na página Sobre, nas citações (README, `LICENCAS.md`, Sobre), neste documento e no rodapé da versão em Word. Título da página inicial: “Ações no espaço urbano argentino em 2024”. Bandeira do mapa da abertura reposicionada para o Atlântico aberto, a leste da Patagônia. Motivo: pedido do responsável.
 ---
 
 ## 10. Pendências

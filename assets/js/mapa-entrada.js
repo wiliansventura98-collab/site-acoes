@@ -103,8 +103,8 @@
       svg.setAttribute('preserveAspectRatio', fundo ? 'xMinYMin meet' : 'xMidYMid meet');
       const r = fundo ? { x: -W, y: -H, width: 3 * W, height: 3 * H, rx: 0 } : { x: rx, y: ry, width: rw, height: rh, rx: sangria ? 0 : 16 };
       for (const k in r) { clipRect.setAttribute(k, r[k]); moldura.setAttribute(k, r[k]); }
-      // bandeira: no Atlântico, a leste de Buenos Aires (fundo) ou junto às Malvinas (recorte)
-      flag.setAttribute('transform', fundo ? `translate(${ax1 + 10},${ayT + (ayB - ayT) * 0.3})` : `translate(${rx + rw - 140},${ry + rh - 170})`);
+      // bandeira: no Atlântico aberto, a leste da Patagônia (fundo) ou junto às Malvinas (recorte)
+      flag.setAttribute('transform', fundo ? `translate(${Math.min(ax1 + 30, vb[0] + vb[2] - 135)},${ayT + (ayB - ayT) * 0.55})` : `translate(${rx + rw - 140},${ry + rh - 170})`);
     };
     ajusta();
     if (cab && 'ResizeObserver' in window) new ResizeObserver(() => ajusta()).observe(cab); else window.addEventListener('resize', ajusta);
