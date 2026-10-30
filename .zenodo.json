@@ -1,0 +1,11 @@
+{
+  "title": "Banco de Dados das Lutas por Espaços e Territórios (DATALUTA): Movimentos Socioespaciais e Socioterritoriais Urbanos Argentinos (2024)",
+  "upload_type": "dataset",
+  "description": "Base de notícias de 2024 sobre ações coletivas na Argentina, codificadas pelo projeto DATALUTA (tipo de movimento, objetivos, lugar, escala, instituição interpelada e outras variáveis), com o site interativo e o pipeline que gera os dados. Site: https://wiliansventura98-collab.github.io/site-acoes/",
+  "creators": [
+    { "name": "Souza, Wilians Ventura Ferreira", "affiliation": "Universidade Estadual Paulista (Unesp)" }
+  ],
+  "license": "cc-by-4.0",
+  "language": "por",
+  "keywords": ["ações coletivas", "movimentos socioespaciais", "movimentos socioterritoriais", "Argentina", "análise de eventos de protesto", "DATALUTA"]
+}

@@ -35,3 +35,7 @@
 .ferramentas p{margin:0;font-size:15.5px;color:var(--tinta-2)}
 @media (max-width:720px){.ferramentas{grid-template-columns:1fr}}
 .citacao{margin:14px 0;padding:14px 18px;background:var(--nevoa);border-radius:12px;font-size:15.5px}
+
+.cit-formatos{margin:10px 0 14px}
+.cit-formatos summary{cursor:pointer;font-weight:700;color:#1d5994}
+.cit-formatos pre{white-space:pre-wrap;word-break:break-word;font:13px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;background:var(--nevoa);padding:10px 12px;border-radius:10px}

@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+message: "Se usar esta base, cite-a como indicado abaixo. Licença dos dados: CC BY 4.0; código: MIT."
+type: dataset
+title: "Banco de Dados das Lutas por Espaços e Territórios (DATALUTA): Movimentos Socioespaciais e Socioterritoriais Urbanos Argentinos (2024)"
+authors:
+  - family-names: Souza
+    given-names: Wilians Ventura Ferreira
+    affiliation: Universidade Estadual Paulista (Unesp)
+date-released: 2026-10-30
+url: "https://wiliansventura98-collab.github.io/site-acoes/"
+repository-code: "https://github.com/wiliansventura98-collab/site-acoes"
+license: CC-BY-4.0
+keywords:
+  - ações coletivas
+  - movimentos socioespaciais
+  - movimentos socioterritoriais
+  - Argentina
+  - análise de eventos de protesto
+  - DATALUTA

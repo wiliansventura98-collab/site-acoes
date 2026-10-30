@@ -28,4 +28,6 @@ A CC BY 4.0 permite copiar, redistribuir, adaptar e reutilizar a base para qualq
 
 > SOUZA, Wilians Ventura Ferreira et al. **Banco de Dados das Lutas por Espaços e Territórios (DATALUTA): Movimentos Socioespaciais e Socioterritoriais Urbanos Argentinos (2024)**. 2026. Base de dados. Disponível em: https://wiliansventura98-collab.github.io/site-acoes/. Licença CC BY 4.0.
 
+Outros formatos: APA e BibTeX na página [Sobre](https://wiliansventura98-collab.github.io/site-acoes/sobre/#citar) e no botão “Como citar” da base interativa; o arquivo [`CITATION.cff`](CITATION.cff) alimenta o botão “Cite this repository” do GitHub, e [`.zenodo.json`](.zenodo.json) traz os metadados para o arquivamento no Zenodo.
+
 Quando a base receber um identificador permanente (DOI), a citação será atualizada aqui.

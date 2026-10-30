@@ -9,7 +9,7 @@ Este documento registra, de forma cumulativa, tudo o que foi feito para transfor
 | Responsável | Wilians Ventura Ferreira Souza (Unesp) |
 | Site | <https://wiliansventura98-collab.github.io/site-acoes/> (base interativa em `/base/`, metodologia em `/sobre/`, produções em `/producoes/`, história guiada em `/historia/`, versão em espanhol em `/es/`) |
 | Repositório | <https://github.com/wiliansventura98-collab/site-acoes> |
-| Versão deste documento | 2.4 · 30/10/2026 |
+| Versão deste documento | 2.5 · 30/10/2026 |
 | Versão em Word | [`PROCESSO.docx`](PROCESSO.docx), gerada por `python pipeline/gerar_processo_docx.py` |
 | Licença | Base de dados: CC BY 4.0 · código: MIT (ver [`LICENCAS.md`](LICENCAS.md)) |
 
@@ -271,6 +271,15 @@ Painéis acrescentados ao fim de algumas abas, marcados com o selo “Nova leitu
 
 Página com rolagem: à esquerda, oito passos de texto (abertura; janeiro; março; abril; maio–junho; setembro–outubro; novembro–dezembro; o ano inteiro); à direita, fixos, o mapa da Argentina (os mesmos dados de `dados/entrada.json`) e a série semanal. Ao chegar a cada passo, acendem as ações do período (laranja), as anteriores ficam em segundo plano e a série marca o período. A contagem de cada passo (ações no mapa = notícia × localidade) é calculada no navegador. As datas dos acontecimentos vêm de `pipeline/referencias/acontecimentos_2024.csv`. Ligada na página inicial (botão “A história de 2024”).
 
+### 7.8 Atalhos, downloads e citação (`assets/js/app/uso.js`)
+
+Acrescentados depois do `render()` original, sem mudar abas, cálculos ou endereços:
+
+- **Atalhos no topo de cada aba:** uma faixa logo abaixo do título da aba com links para as novas leituras que ficam no fim dela (por exemplo, “Funil ↓” em Contexto), o botão “Baixar recorte (CSV)” (o mesmo da lista de notícias) e “Como citar”. Motivo: o responsável não encontrou o funil, que fica no fim de uma aba longa.
+- **Baixar PNG e SVG embaixo de cada gráfico:** a imagem leva o título do gráfico, o recorte ativo (filtros, busca e número de notícias) e a linha “Fonte: DATALUTA Argentina 2024 (CC BY 4.0)” com o endereço do site. Os estilos são copiados do navegador para dentro do SVG e a fonte Urbanist vai embutida, para que a imagem fique igual em qualquer computador. Ficam de fora os gráficos pequenos lado a lado (para não quebrar a grade), o mapa principal e as fichas, que já tinham seus próprios botões, e os gráficos feitos em HTML, como as barras da Distribuição.
+- **Baixar tabela (CSV)** dentro de “Ver os dados em tabela” de cada nova leitura, com o recorte e a fonte nas últimas linhas.
+- **Como citar:** janela com as referências em ABNT (com data de acesso do dia), APA e BibTeX e botão de copiar; os mesmos formatos na seção “Licença e citação” da página Sobre. No repositório, `CITATION.cff` (botão “Cite this repository” do GitHub) e `.zenodo.json` (metadados para o arquivamento no Zenodo, que gera o DOI).
+
 ### 7.4 Versão em espanhol
 
 - Endereços: `/es/`, `/es/base/` e `/es/sobre/`; o link “Español”/“Português” no menu troca de idioma (na base, mantendo aba e filtros).
@@ -344,6 +353,7 @@ Datas no fuso de São Paulo. Os códigos entre colchetes são os commits do repo
 - **Quatro recursos novos e página de produções**, sem mudar a estrutura da base (seção 7.5): ficha de cada notícia com link próprio e notícias parecidas; correção colaborativa por formulário; data de atualização dos dados; galeria “Perguntas para começar” na página inicial; página “Produções”. Corrigido também o link da página inicial em espanhol, que levava à base em português. Motivo: levantamento de bases interativas de referência (IBGE, Crowd Counting, EJAtlas, Carnegie) e pedido do responsável.
 - **Ajustes na página inicial:** saiu o cartão “A mobilização aparece onde estão os bairros populares?” da galeria; saiu a bandeira do mapa da abertura (atributo `data-sem-bandeira`; no mapa menor da base ela continua); a marca no canto superior (sol + “Ações Socioespaciais”) passou a ser sol + “Início” em todas as páginas, e o link “Início” repetido no menu saiu; sugestões e correções ficaram mais visíveis (seção “Contribua com a base”, link “Contribuir” no menu e quadro acima da lista de notícias). Motivo: pedido do responsável.
 - **Novas leituras e história guiada** (seções 7.6 e 7.7): funil, mapa de pontos por categoria, cartograma, mapa de calor reordenado, perfil comparado nas fichas, linha do tempo de notícias, margem de erro no Comparar e a página “2024 em ações”. Tudo acrescentado, sem mudar abas, cálculos ou endereços existentes. Motivo: pedido do responsável para melhorar a representação.
+- **Atalhos, downloads e citação** (seção 7.8): faixa no topo de cada aba com atalhos para as novas leituras, CSV do recorte e “Como citar”; botões “Baixar PNG” e “Baixar SVG” embaixo dos gráficos, com título, recorte e fonte gravados na imagem; CSV das tabelas das novas leituras; citação em ABNT, APA e BibTeX; `CITATION.cff` e `.zenodo.json`. Motivo: facilitar encontrar as novas leituras e reutilizar e citar a base em trabalhos acadêmicos.
 ---
 
 ## 10. Pendências
@@ -352,7 +362,8 @@ Datas no fuso de São Paulo. Os códigos entre colchetes são os commits do repo
 - [ ] Completar `dados/producoes.csv` com as produções do grupo (a apresentação no GT CLACSO entrou sem link e sem data exata).
 - [ ] Criar no GitHub os rótulos “correção” e “produção” e combinar quem revisa as sugestões que chegarem pelos formulários.
 - [ ] Revisão da versão em espanhol por falante nativo (termos como “recorte”, “ficha”, “plancha”).
-- [ ] Depositar a base no Zenodo (ou repositório institucional) para obter um DOI e atualizar a citação em `LICENCAS.md`.
+- [ ] **DOI no Zenodo:** os metadados já estão em `.zenodo.json`. Falta o responsável entrar em zenodo.org com a conta do GitHub, ativar o repositório `site-acoes` em “GitHub” e criar uma versão (release) no GitHub; o Zenodo gera o DOI, que deve entrar na citação (`LICENCAS.md`, Sobre, `uso.js`, `CITATION.cff`).
+- [ ] Lista completa de autores da citação (hoje “Souza et al.”), também em `CITATION.cff` e `.zenodo.json`.
 - [ ] **Unificar nomes de organizações duplicados** (ex.: grafias diferentes de CTA e CGT). Afeta contagens, fichas e redes.
 - [ ] Resultado do **2º turno de 2023** por departamento, se a DINE publicar no formato mesa a mesa.
 - [ ] Outras fontes sugeridas e ainda não coletadas: estudantes de universidades nacionais por província, emprego público por província, titulares do Potenciar Trabajo, projetos de mineração e comunidades indígenas registradas.

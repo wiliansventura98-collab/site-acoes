@@ -516,3 +516,26 @@ dialog.fn::backdrop{background:rgba(19,41,75,.45)}
 .nl-perfil-g{display:grid;grid-template-columns:repeat(auto-fit,minmax(380px,1fr));gap:12px 28px}
 .nl-perfil-c h3{margin:6px 0 2px;font-size:13px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-2)}
 .nl-ev-n{font-size:9.5px;font-weight:800;fill:#fff;pointer-events:none}
+
+/* atalhos, downloads e citação (uso.js, 30/10/2026) */
+.uso-atalhos{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;justify-content:space-between;background:#eef5fc;border:1px solid #c9ddf1;border-radius:12px;padding:8px 12px;margin:0 0 14px;font-size:13.5px}
+.uso-novas{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center}
+.uso-novas:empty{display:none}
+.uso-rot{color:var(--ink-2);font-weight:600}
+.uso-ir{font-weight:700;color:#1d5994;background:#fff;border:1px solid #c9ddf1;border-radius:999px;padding:3px 11px;text-decoration:none}
+.uso-ir:hover,.uso-ir:focus-visible{background:#1d5994;color:#fff}
+.uso-acoes{display:flex;flex-wrap:wrap;gap:8px;margin-left:auto}
+.uso-bt{font:inherit;font-size:13px;font-weight:650;border:1px solid #1d5994;background:#fff;color:#1d5994;border-radius:999px;padding:4px 12px;cursor:pointer}
+.uso-bt:hover,.uso-bt:focus-visible{background:#1d5994;color:#fff}
+.uso-bt-p{font-size:12px;padding:3px 10px;border-color:#c9ddf1}
+.uso-baixar{display:flex;flex-wrap:wrap;gap:6px;align-items:center;justify-content:flex-end;margin:6px 0 4px}
+.uso-baixar[hidden]{display:none}
+.uso-tab-csv{margin:8px 0 4px}
+dialog.uso-dlg{width:min(760px,calc(100vw - 24px));max-height:calc(100vh - 32px);border:0;border-radius:18px;padding:22px 24px 18px;box-shadow:0 18px 60px rgba(19,41,75,.28);color:var(--ink);overflow:auto;position:relative}
+dialog.uso-dlg::backdrop{background:rgba(19,41,75,.45)}
+dialog.uso-dlg h2{margin:0 36px 8px 0;font-size:22px}
+dialog.uso-dlg .fn-fechar{position:absolute;top:12px;right:14px;margin:0}
+.uso-cit{border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin:10px 0}
+.uso-cit-cab{display:flex;gap:10px;align-items:center;margin-bottom:6px}
+.uso-cit pre{margin:0;white-space:pre-wrap;word-break:break-word;font:13px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;background:var(--nevoa,#f3f6fa);padding:8px 10px;border-radius:8px}
+@media (max-width:640px){.uso-acoes{margin-left:0}}
