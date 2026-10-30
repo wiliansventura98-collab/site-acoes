@@ -9,7 +9,7 @@ Este documento registra, de forma cumulativa, tudo o que foi feito para transfor
 | Responsável | Wilians Ventura Ferreira Souza (Unesp) |
 | Site | <https://wiliansventura98-collab.github.io/site-acoes/> (base interativa em `/base/`, página de metodologia em `/sobre/`, versão em espanhol em `/es/`) |
 | Repositório | <https://github.com/wiliansventura98-collab/site-acoes> |
-| Versão deste documento | 1.5 · 30/10/2026 |
+| Versão deste documento | 1.6 · 30/10/2026 |
 | Versão em Word | [`PROCESSO.docx`](PROCESSO.docx), gerada por `python pipeline/gerar_processo_docx.py` |
 | Licença | Base de dados: CC BY 4.0 · código: MIT (ver [`LICENCAS.md`](LICENCAS.md)) |
 
@@ -134,7 +134,7 @@ Executado por `pipeline/preparar_dados.py`.
 
 **Contagem de organizações e veículos.** O número varia conforme a regra: 867 nomes distintos incluindo menções genéricas, 822 excluindo “nacional/virtual/não informa” (página inicial). A unificação de nomes duplicados ainda não está completa (ver [Pendências](#10-pendências)).
 
-**Saídas:** `dados/base.json` (formato compacto do site), `dados/acoes_2024.csv` (uma linha por notícia), `dados/dicionario.md` (variáveis e categorias mais frequentes).
+**Saídas:** `dados/base.json` (formato compacto do site), `dados/entrada.json` (mapa animado da abertura), `dados/acoes_2024.csv` (uma linha por notícia), `dados/dicionario.md` (variáveis e categorias mais frequentes).
 
 ---
 
@@ -231,7 +231,7 @@ Cuidados registrados no site: cerca de 511 testes simultâneos (uns 26 falsos po
 
 **Recursos de leitura:** guia “Como ler” em todas as abas; glossário com 30 termos; 139 combinações prontas, cada uma com leitura em três partes (o que mostra, o que os dados dizem no recorte atual, como foi calculado); quadro “Como foi calculado este mapa”; “Como foi calculado” no Contexto; link que guarda aba, variáveis e filtros no endereço.
 
-**Identidade visual:** fundo branco, tipografia Urbanist (hospedada no próprio site, licença OFL), ilustração de marcha gerada a partir dos objetivos mais frequentes da base; mapas em Arial para exportação estável.
+**Identidade visual:** fundo branco, tipografia Urbanist (hospedada no próprio site, licença OFL); mapas em Arial para exportação estável. **Mapa animado da abertura** (página inicial e base, desde 30/10/2026; substituiu a ilustração da marcha): a Argentina é preenchida, dia a dia, por um ponto para cada ação noticiada (notícias únicas, na localidade citada, na data de início da ação ou, na falta dela, na de publicação), em cerca de 8 segundos, e depois fica parada; uma barra de semanas embaixo acompanha o ano e o contador mostra o mês e o número de ações. Pontos do mesmo lugar se espalham em espiral, e por isso as cidades com muitas ações viram manchas. Começa quando o mapa aparece na tela, tem o botão “Ver de novo” e, com “reduzir movimento” ativado no sistema, aparece direto no estado final. Dados em `dados/entrada.json` (gerado por `escrever_entrada` em `pipeline/construir_site.py`: contorno das províncias na projeção cônica conforme de Lambert do site, simplificado, e os pontos já projetados, 835 pontos em 122 localidades, 35 KB); desenho em `assets/js/mapa-entrada.js`, sem bibliotecas, e estilo em `assets/css/mapa-entrada.css`. O código da marcha (`assets/js/marcha.js`) continua no repositório, sem uso.
 
 ### 7.2 Seletores de ano e país e busca nas notícias
 
@@ -306,6 +306,7 @@ Datas no fuso de São Paulo. Os códigos entre colchetes são os commits do repo
 - **Página “Sobre e metodologia”** (`/sobre/`). Motivo: reunir num só lugar como a base foi feita, com fontes, cálculos, limites e citação.
 - **Versão em espanhol** (`/es/`), gerada a partir do português por `i18n/ferramenta.js` com o catálogo `i18n/es.json`; o GitHub Actions passou a gerá-la e a publicar também `sobre/` e `es/`. Motivo: o público da base é sobretudo argentino e latino-americano (CLACSO). [66fd7e9]
 - Seção 2, 4, 7 e 8 atualizadas; `pipeline/reconstruir.sh` ganhou o passo da versão em espanhol.
+- **Mapa animado na abertura** da página inicial e da base, no lugar da ilustração da marcha: os pontos das ações vão preenchendo a Argentina ao longo de 2024 e depois o mapa fica parado (ver seção 7, Identidade visual). Motivo: pedido de uma entrada mais dinâmica, que mostre já na abertura onde e quando as ações aconteceram. Também: links do menu passam a quebrar linha em telas estreitas (antes vazavam para a direita no celular).
 ---
 
 ## 10. Pendências

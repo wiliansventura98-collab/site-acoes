@@ -144,7 +144,7 @@ for (const [orig, dest] of PAGINAS) {
   let [saida, n] = aplica(fonte, frags, orig); total += n;
   const prof = orig.split('/').length - 1; // 0 para index.html, 1 para base/ e sobre/
   // caminhos relativos: a página fica um nível mais fundo (es/…)
-  saida = saida.replace(/(href|src|data-resumo)="(?!https?:|#|data:|mailto:)([^"]*)"/g, (m0, at, url) => {
+  saida = saida.replace(/(href|src|data-resumo|data-entrada)="(?!https?:|#|data:|mailto:)([^"]*)"/g, (m0, at, url) => {
     if (/^(\.\.\/)?es\//.test(url)) return m0; // links de idioma tratados abaixo
     return `${at}="../${url}"`;
   });

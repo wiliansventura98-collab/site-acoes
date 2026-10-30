@@ -9,6 +9,7 @@ Saídas em dados/:
     acoes_2024.csv                 base tratada, uma linha por notícia (UTF-8, abre no Excel e no R)
     dicionario.md                  dicionário de variáveis com as categorias mais frequentes
     relatorio_geocodificacao.csv   como cada localidade foi posicionada
+    entrada.json                   mapa animado da abertura: contorno do país e um ponto por ação, na ordem das datas
     camadas/acoes_2024.gpkg        camadas para QGIS/ArcGIS (requer geopandas)
 """
 from __future__ import annotations
@@ -476,6 +477,76 @@ LEMA_CURTO = {"objetivos laborales": "Trabajo", "objetivos por la reproduccion s
               "objetivos socioambientales": "Ambiente", "objetivos lgttbiq": "Diversidad", "objetivos de reconocimiento": "Reconocimiento"}
 
 
+def _lambert(lon, lat, lat1=-28.0, lat2=-46.0, lon0=-64.0, lat0=-38.0):
+    """Projeção cônica conforme de Lambert (esfera), a mesma usada nas pranchas do site. Saída em km."""
+    import math
+    R = 6371.0; r = math.radians
+    n = math.log(math.cos(r(lat1)) / math.cos(r(lat2))) / math.log(math.tan(math.pi / 4 + r(lat2) / 2) / math.tan(math.pi / 4 + r(lat1) / 2))
+    F = math.cos(r(lat1)) * math.tan(math.pi / 4 + r(lat1) / 2) ** n / n
+    rho = lambda la: R * F / math.tan(math.pi / 4 + r(la) / 2) ** n
+    p, t = rho(lat), n * r(lon - lon0)
+    return p * math.sin(t), rho(lat0) - p * math.cos(t)
+
+
+def escrever_entrada(res, coords, caminho, altura=1000):
+    """Mapa da abertura: contorno das províncias e um ponto por ação (localidade citada), em ordem de data.
+
+    Tudo já vem projetado e escalado para um viewBox de largura variável e altura fixa, para que a página
+    inicial desenhe o mapa sem bibliotecas. Cada ponto: [x, y, dia do ano]. Notícias repetidas ficam fora.
+    """
+    import datetime as dt
+    from shapely.ops import transform, unary_union
+    topo = json.loads((REFERENCIAS / "limites" / "departamentos.topo.json").read_text(encoding="utf-8"))
+    provs = collections.defaultdict(list)
+    for _id, props, geom in _topo_para_geometrias(topo):
+        provs[props.get("p")].append(geom)
+    proj = lambda x, y, z=None: _lambert(x, y)
+    provs = {p: transform(proj, unary_union(g).buffer(0)) for p, g in provs.items()}
+    pais = unary_union(list(provs.values()))
+    x0, y0, x1, y1 = pais.bounds
+    k = altura / (y1 - y0); larg = round((x1 - x0) * k, 1)
+    tela = lambda x, y, z=None: ((x - x0) * k, (y1 - y) * k)
+
+    def caminho_svg(geom, tol):
+        geom = transform(tela, geom).simplify(tol, preserve_topology=True)
+        polys = getattr(geom, "geoms", [geom])
+        partes = []
+        for pg in polys:
+            if pg.area < 2:  # ilhotas menores que ~2 unidades² não aparecem
+                continue
+            for anel in [pg.exterior, *pg.interiors]:
+                pts = list(anel.coords)
+                partes.append("M" + "L".join(f"{x:.1f},{y:.1f}" for x, y in pts[:-1]) + "Z")
+        return "".join(partes)
+
+    def dia(reg):
+        for d in (reg["inicio"], reg["data"]):
+            try:
+                t = dt.datetime.strptime(d, "%d/%m/%Y").date()
+                if t.year == 2024:
+                    return t.timetuple().tm_yday
+            except ValueError:
+                continue
+        return None
+
+    pontos = []
+    for reg in res.registros:
+        if reg["status"] == "Repetida":
+            continue
+        d = dia(reg)
+        if d is None:
+            continue
+        for loc in reg["v"]["localidad"]:
+            if loc in coords:
+                x, y = tela(*_lambert(*coords[loc]))
+                pontos.append([round(x, 1), round(y, 1), d])
+    pontos.sort(key=lambda p: p[2])
+    _json({"largura": larg, "altura": altura,
+           "pais": caminho_svg(pais, 1.2),
+           "provincias": [caminho_svg(g, 1.6) for g in provs.values()],
+           "pontos": pontos, "localidades": len({(p[0], p[1]) for p in pontos})}, caminho)
+
+
 def lemas(regs, n=9):
     from comum import chave
     cont = collections.Counter(x for r in regs for x in r["v"]["objetivos"])
@@ -510,6 +581,7 @@ def main():
            "contexto": contexto_site(), "eventos": _eventos(), "toponimos": _toponimos()},
           DADOS / "geo.json")
     escrever_csv(res, DADOS / f"acoes_{a.ano}.csv")
+    escrever_entrada(res, coords, DADOS / "entrada.json")
     escrever_contexto_csv(res, DADOS / "contexto_censo2022_departamentos.csv")
     escrever_dicionario(res, DADOS / "dicionario.md", a.ano)
     with open(DADOS / "relatorio_geocodificacao.csv", "w", newline="", encoding="utf-8") as fh:
