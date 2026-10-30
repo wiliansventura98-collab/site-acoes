@@ -83,5 +83,5 @@ h2{font-weight:800;font-size:clamp(28px,3.2vw,38px);line-height:1.1;margin:0 0 1
 .rodape p{margin:0}
 .rodape b{color:var(--tinta)}
 
-.kicker-dl{margin:0 0 10px;font-size:13px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#c45a00;max-width:60ch;line-height:1.4}
+.kicker-dl{margin:0 0 10px;font-size:13px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#1d5994;max-width:60ch;line-height:1.4}
 @media (max-width:640px){.links{flex-wrap:wrap;gap:4px 16px;font-size:14.5px}}

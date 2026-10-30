@@ -9,7 +9,7 @@ Este documento registra, de forma cumulativa, tudo o que foi feito para transfor
 | Responsável | Wilians Ventura Ferreira Souza (Unesp) |
 | Site | <https://wiliansventura98-collab.github.io/site-acoes/> (base interativa em `/base/`, página de metodologia em `/sobre/`, versão em espanhol em `/es/`) |
 | Repositório | <https://github.com/wiliansventura98-collab/site-acoes> |
-| Versão deste documento | 2.0 · 30/10/2026 |
+| Versão deste documento | 2.1 · 30/10/2026 |
 | Versão em Word | [`PROCESSO.docx`](PROCESSO.docx), gerada por `python pipeline/gerar_processo_docx.py` |
 | Licença | Base de dados: CC BY 4.0 · código: MIT (ver [`LICENCAS.md`](LICENCAS.md)) |
 
@@ -311,6 +311,7 @@ Datas no fuso de São Paulo. Os códigos entre colchetes são os commits do repo
 - **Mapa no cabeçalho inteiro** da página inicial (telas a partir de 1200 px), com grade de meridianos e paralelos no mar, e **sem o gráfico de semanas** embaixo do mapa (na página inicial e na base). Contagem de localidades do mapa passou a usar os nomes das localidades (123), e não as coordenadas arredondadas. Motivo: pedido do responsável.
 - **Mapa cobrindo o cabeçalho inteiro em qualquer tela** (a versão anterior só fazia isso a partir de 1200 px e deixava o menu sobre fundo branco): menu dentro do cabeçalho, sobre o mapa, com fundo branco translúcido; enquadramento calculado no navegador a partir do tamanho do cabeçalho e do texto. Motivo: o responsável avaliou que o mapa não ocupava todo o cabeçalho.
 - **Nome oficial da base** passa a ser “Banco de Dados das Lutas por Espaços e Territórios (DATALUTA) - Movimentos Socioespaciais e Socioterritoriais Urbanos Argentinos (2024)” (em espanhol, “Banco de Datos de las Luchas por Espacios y Territorios (DATALUTA) - Movimientos Socioespaciales y Socioterritoriales Urbanos Argentinos (2024)”), na página inicial, na base, na página Sobre, nas citações (README, `LICENCAS.md`, Sobre), neste documento e no rodapé da versão em Word. Título da página inicial: “Ações no espaço urbano argentino em 2024”. Bandeira do mapa da abertura reposicionada para o Atlântico aberto, a leste da Patagônia. Motivo: pedido do responsável.
+- **Linha com o nome da base** (acima do título, na página inicial e na Sobre) e rótulos da Síntese e das leituras passam do laranja-amarronzado para o azul da paleta (#1d5994 e #2569ad). O laranja segue só nos gráficos e mapas, onde indica “acima do esperado”. Motivo: pedido do responsável, para combinar com a paleta.
 ---
 
 ## 10. Pendências

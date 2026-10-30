@@ -317,7 +317,7 @@ h1.titulo-base span{display:block;margin-top:10px;font-size:clamp(18px,2.1vw,26p
 .sin-tools{display:flex;justify-content:flex-end;margin:4px 0 8px}
 #sinBody{max-width:1080px}
 .sin-cab{border-top:3px solid var(--ink);padding-top:14px;margin-bottom:8px}
-.sin-kicker{margin:0;font-size:12.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#c45a00}
+.sin-kicker{margin:0;font-size:12.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#2569ad}
 .sin-titulo{margin:4px 0 14px;font-size:clamp(20px,2.6vw,28px);line-height:1.2;font-weight:800;color:var(--ink);max-width:40ch}
 .sin-kpis{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-bottom:16px}
 .sin-kpis div{padding:10px 12px 10px 0;display:flex;flex-direction:column}
@@ -416,7 +416,7 @@ details.calc li{margin-bottom:5px}
 .presets button.ativo{background:var(--ink);color:#fff;border-color:var(--ink)}
 .pronto-leitura{border:1px solid #f3dcae;background:#fffaf0;border-radius:14px;padding:12px 18px 8px;margin:4px 0 16px;max-width:1080px}
 .pl-cab{display:flex;align-items:baseline;gap:10px;margin-bottom:6px}
-.pl-kicker{font-size:11.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#c45a00}
+.pl-kicker{font-size:11.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#2569ad}
 .pl-cab b{font-size:16px;color:var(--ink)}
 .pl-fecha{margin-left:auto;border:0;background:none;font-size:22px;line-height:1;color:var(--ink-3);cursor:pointer;padding:0 4px}
 .pl-fecha:hover{color:var(--ink)}
