@@ -72,7 +72,7 @@ function abrirNoticia(codigo, { semHistorico } = {}) {
   const cp = el('button', 'btn', 'Copiar o link desta ficha'); cp.type = 'button';
   const msg = el('span', 'toast');
   cp.onclick = async () => { urlSync(); try { await navigator.clipboard.writeText(location.href); msg.textContent = 'Link copiado.'; } catch (e) { msg.textContent = 'Copie o endereço da barra do navegador.'; } setTimeout(() => { msg.textContent = ''; }, 3500); };
-  const cor = el('a', 'btn', 'Sugerir uma correção'); cor.href = linkCorrecao(r); cor.target = '_blank'; cor.rel = 'noopener';
+  const cor = el('a', 'btn fn-primario', 'Sugerir uma correção'); cor.href = linkCorrecao(r); cor.target = '_blank'; cor.rel = 'noopener';
   cor.title = 'Abre um formulário no GitHub (é preciso ter uma conta) com o código desta notícia já preenchido';
   acoes.append(cp, cor, msg); cab.append(acoes);
 
@@ -131,11 +131,23 @@ function abrirNoticia(codigo, { semHistorico } = {}) {
   };
 }
 
-// link “sugerir notícia que faltou” ao pé da lista de notícias
+// quadro “Encontrou um erro? Falta alguma notícia?” logo acima da lista de notícias
 {
   const sec = $('newsSec');
-  if (sec) { const p = el('p', 'fn-falta'); const a = el('a', null, 'Sugerir uma notícia que faltou ou uma correção'); a.href = linkCorrecao(null); a.target = '_blank'; a.rel = 'noopener';
-    p.append(a, document.createTextNode(' (formulário no GitHub; é preciso ter uma conta). Cada notícia também tem esse botão na sua ficha.')); sec.append(p); }
+  if (sec) {
+    const box = el('aside', 'fn-contribuir'); box.setAttribute('aria-label', 'Sugestões e correções');
+    const txt = el('div');
+    txt.append(el('b', null, 'Encontrou um erro ou falta alguma notícia?'),
+      el('span', null, 'Envie uma sugestão: a equipe revisa antes de mudar a base. Para corrigir uma notícia específica, abra a ficha dela (botão “Ficha”) e use “Sugerir uma correção”, que já leva o código.'));
+    const bts = el('div', 'fn-contribuir-bts');
+    const b1 = el('a', 'btn fn-primario', 'Apontar um erro'); b1.href = REPO_ISSUES + '?template=correcao.yml&title=' + encodeURIComponent('Correção: ');
+    const b2 = el('a', 'btn', 'Sugerir notícia que faltou'); b2.href = linkCorrecao(null);
+    [b1, b2].forEach(a => { a.target = '_blank'; a.rel = 'noopener'; });
+    bts.append(b1, b2);
+    box.append(txt, bts);
+    const head = sec.querySelector('.sechead');
+    if (head) head.after(box); else sec.prepend(box);
+  }
 }
 
 // abre a ficha pedida no endereço (#…&noticia=CÓDIGO) e acompanha mudanças do endereço

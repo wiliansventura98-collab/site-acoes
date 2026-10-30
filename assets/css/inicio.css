@@ -101,3 +101,15 @@ h2{font-weight:800;font-size:clamp(28px,3.2vw,38px);line-height:1.1;margin:0 0 1
 .perguntas h3{margin:14px 16px 6px;font-size:18.5px;line-height:1.25;letter-spacing:-.01em;font-weight:750}
 .perguntas li p{margin:0 16px 16px;font-size:14.5px;line-height:1.45;color:var(--tinta-2)}
 @media (prefers-reduced-motion:reduce){.perguntas li a{transition:none}.perguntas li a:hover{transform:none}}
+
+/* “Contribua com a base”: sugestões e correções (formulários do GitHub) */
+.contribuir{margin-top:clamp(48px,7vw,84px);padding:clamp(22px,3vw,34px);background:#e6f0f9;border-radius:20px}
+.contribuir h2{margin-bottom:8px}
+.contribuir-lede{margin:0 0 20px;max-width:70ch;color:var(--tinta-2);font-size:17px}
+.contribuir-opcoes{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.contribuir-opcoes a{display:flex;flex-direction:column;gap:6px;height:100%;box-sizing:border-box;padding:16px 18px;background:#fff;border:1px solid #c9ddf1;border-radius:14px;text-decoration:none;color:var(--tinta);transition:box-shadow .15s ease}
+.contribuir-opcoes a:hover{box-shadow:0 6px 18px rgba(19,41,75,.12);border-color:var(--celeste-f)}
+.contribuir-opcoes b{font-size:18px;font-weight:800;color:#1d5994}
+.contribuir-opcoes b::after{content:" →"}
+.contribuir-opcoes span{font-size:14.5px;line-height:1.45;color:var(--tinta-2)}
+.contribuir-passos{margin:18px 0 0;padding-left:1.3em;color:var(--tinta-2);font-size:14.5px;display:grid;gap:4px}

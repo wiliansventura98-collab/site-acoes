@@ -1887,5 +1887,22 @@
  "(é preciso ter uma conta no GitHub). A página se atualiza sozinha na publicação seguinte.": "(se necesita una cuenta en GitHub). La página se actualiza sola en la publicación siguiente.",
  "Colunas: ano, tipo, título, autores, onde foi publicado ou apresentado, link, resumo (em português) e resumo_es (em espanhol, opcional). Tipos usados: Artigo, Capítulo de livro, Livro, Apresentação, Tese ou dissertação, Relatório, Material didático, Base de dados, Documento técnico.": "Columnas: ano (año), tipo, titulo, autores, onde (dónde se publicó o presentó), link, resumo (en portugués) y resumo_es (en español, opcional). Tipos usados: Artigo, Capítulo de livro, Livro, Apresentação, Tese ou dissertação, Relatório, Material didático, Base de dados, Documento técnico (se muestran traducidos).",
  "Artigos, apresentações, capítulos, teses e outros produtos feitos a partir do DATALUTA - Movimentos Socioespaciais e Socioterritoriais Urbanos Argentinos (2024).": "Artículos, presentaciones, capítulos, tesis y otros productos hechos a partir del DATALUTA - Movimientos Socioespaciales y Socioterritoriales Urbanos Argentinos (2024).",
- "Filtrar produções": "Filtrar producciones"
+ "Filtrar produções": "Filtrar producciones",
+ "Sugestões e correções": "Sugerencias y correcciones",
+ "Encontrou um erro ou falta alguma notícia?": "¿Encontró un error o falta alguna noticia?",
+ "Envie uma sugestão: a equipe revisa antes de mudar a base. Para corrigir uma notícia específica, abra a ficha dela (botão “Ficha”) e use “Sugerir uma correção”, que já leva o código.": "Envíe una sugerencia: el equipo la revisa antes de cambiar la base. Para corregir una noticia específica, abra su ficha (botón “Ficha”) y use “Sugerir una corrección”, que ya lleva el código.",
+ "Apontar um erro": "Señalar un error",
+ "Sugerir notícia que faltou": "Sugerir una noticia faltante",
+ "Contribuir": "Contribuir",
+ "Contribua com a base": "Contribuya con la base",
+ "Encontrou um erro, conhece uma ação que não está aqui ou fez um trabalho com estes dados? Conte para a equipe. Toda sugestão é lida e revisada antes de entrar na base.": "¿Encontró un error, conoce una acción que no está aquí o hizo un trabajo con estos datos? Cuéntele al equipo. Toda sugerencia se lee y se revisa antes de entrar en la base.",
+ "Apontar um erro numa notícia": "Señalar un error en una noticia",
+ "Movimento, objetivo, lugar ou data codificados errado, notícia repetida ou link quebrado. Dica: na base, cada notícia tem uma ficha com o botão “Sugerir uma correção”, que já preenche o código.": "Movimiento, objetivo, lugar o fecha mal codificados, noticia repetida o enlace roto. Consejo: en la base, cada noticia tiene una ficha con el botón “Sugerir una corrección”, que ya completa el código.",
+ "Sugerir uma notícia que faltou": "Sugerir una noticia faltante",
+ "Uma ação coletiva de 2024 na Argentina que não aparece na base: diga o que aconteceu, quando, onde e quem se mobilizou, com o link da notícia.": "Una acción colectiva de 2024 en la Argentina que no aparece en la base: diga qué pasó, cuándo, dónde y quién se movilizó, con el enlace de la noticia.",
+ "Incluir uma produção": "Incluir una producción",
+ "Artigo, apresentação, capítulo, tese ou material didático feito com a base, para entrar na página": "Artículo, presentación, capítulo, tesis o material didáctico hecho con la base, para entrar en la página",
+ "Escolha uma das opções acima: abre um formulário curto no GitHub (é preciso ter uma conta, gratuita).": "Elija una de las opciones de arriba: se abre un formulario corto en GitHub (se necesita una cuenta, gratuita).",
+ "Preencha e envie. A sugestão fica registrada e pode ser acompanhada.": "Complételo y envíelo. La sugerencia queda registrada y se puede seguir.",
+ "A equipe confere a notícia e, se confirmar, corrige a planilha; a base se atualiza na publicação seguinte.": "El equipo verifica la noticia y, si la confirma, corrige la planilla; la base se actualiza en la publicación siguiente."
 }

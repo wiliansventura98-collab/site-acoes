@@ -34,7 +34,7 @@ function traduzDados(b, g) {
     const [base, geo] = await Promise.all([json('../../dados/base.json'), json('../../dados/geo.json')]);
     window.__BASE__ = base;
     window.__GEO__ = geo; traduzDados(base, geo);
-    for (const m of MODULOS) await script(`../../assets/js/app-es/${m}.js?v=20261030h`);
+    for (const m of MODULOS) await script(`../../assets/js/app-es/${m}.js?v=20261030i`);
   } catch (erro) {
     console.error(erro);
     if (lede) lede.textContent = 'No se pudo cargar la base. Verifique la conexión y vuelva a cargar la página.';

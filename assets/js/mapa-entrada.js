@@ -73,7 +73,7 @@
         transform: ang ? `rotate(${ang} ${x} ${y})` : '' }, quadro);
       nome.split('\n').forEach((linha, i) => { const ts = el('tspan', { x, dy: i ? '1.2em' : (nome.includes('\n') ? '-0.2em' : '0.35em') }, t); ts.textContent = linha; });
     });
-    const flag = bandeira(quadro, 0, 0, 108);
+    const flag = fig.hasAttribute('data-sem-bandeira') ? null : bandeira(quadro, 0, 0, 108);
     const gp = el('g', { class: 'me-pontos' }, quadro);
     const gf = el('g', { class: 'me-flash' }, quadro);
     const moldura = el('rect', { class: 'me-moldura' }, svg);
@@ -104,7 +104,7 @@
       const r = fundo ? { x: -W, y: -H, width: 3 * W, height: 3 * H, rx: 0 } : { x: rx, y: ry, width: rw, height: rh, rx: sangria ? 0 : 16 };
       for (const k in r) { clipRect.setAttribute(k, r[k]); moldura.setAttribute(k, r[k]); }
       // bandeira: no Atlântico aberto, a leste da Patagônia (fundo) ou junto às Malvinas (recorte)
-      flag.setAttribute('transform', fundo ? `translate(${Math.min(ax1 + 30, vb[0] + vb[2] - 135)},${ayT + (ayB - ayT) * 0.55})` : `translate(${rx + rw - 140},${ry + rh - 170})`);
+      if (flag) flag.setAttribute('transform', fundo ? `translate(${Math.min(ax1 + 30, vb[0] + vb[2] - 135)},${ayT + (ayB - ayT) * 0.55})` : `translate(${rx + rw - 140},${ry + rh - 170})`);
     };
     ajusta();
     if (cab && 'ResizeObserver' in window) new ResizeObserver(() => ajusta()).observe(cab); else window.addEventListener('resize', ajusta);
