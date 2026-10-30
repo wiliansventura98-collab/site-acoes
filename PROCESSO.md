@@ -304,7 +304,7 @@ Datas no fuso de São Paulo. Os códigos entre colchetes são os commits do repo
 - **Ano e país** entram como variáveis (colunas opcionais `Año` e `País` da planilha) e como **seletores no topo da base**. Motivo: preparar a base para juntar os cinco anos da Argentina e os dados do Brasil numa só planilha padronizada.
 - **Busca mais visível:** campo fixo no topo da base que filtra todas as abas, com etiqueta nos filtros e guardado no link. Motivo: a busca ficava escondida no fim da página e só valia para a lista de notícias.
 - **Página “Sobre e metodologia”** (`/sobre/`). Motivo: reunir num só lugar como a base foi feita, com fontes, cálculos, limites e citação.
-- **Versão em espanhol** (`/es/`), gerada a partir do português por `i18n/ferramenta.js` com o catálogo `i18n/es.json`; o GitHub Actions passou a gerá-la e a publicar também `sobre/` e `es/`. Motivo: o público da base é sobretudo argentino e latino-americano (CLACSO).
+- **Versão em espanhol** (`/es/`), gerada a partir do português por `i18n/ferramenta.js` com o catálogo `i18n/es.json`; o GitHub Actions passou a gerá-la e a publicar também `sobre/` e `es/`. Motivo: o público da base é sobretudo argentino e latino-americano (CLACSO). [66fd7e9]
 - Seção 2, 4, 7 e 8 atualizadas; `pipeline/reconstruir.sh` ganhou o passo da versão em espanhol.
 ---
 
