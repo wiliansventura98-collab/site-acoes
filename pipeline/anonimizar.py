@@ -17,7 +17,7 @@ import sys
 
 import pandas as pd
 
-from comum import COLUNAS_PUBLICAVEIS, FONTE
+from comum import COLUNAS_OPCIONAIS, COLUNAS_PUBLICAVEIS, FONTE
 
 
 def anonimizar(planilha: str, ano: int) -> str:
@@ -27,11 +27,12 @@ def anonimizar(planilha: str, ano: int) -> str:
     faltando = [c for c in COLUNAS_PUBLICAVEIS if c not in df.columns]
     if faltando:
         sys.exit(f"Colunas esperadas não encontradas na planilha: {faltando}")
-    publico = df[COLUNAS_PUBLICAVEIS].fillna("")
+    colunas = COLUNAS_PUBLICAVEIS + [c for c in COLUNAS_OPCIONAIS if c in df.columns]
+    publico = df[colunas].fillna("")
     destino = FONTE / f"acoes_{ano}_fonte.csv"
     destino.parent.mkdir(parents=True, exist_ok=True)
     publico.to_csv(destino, index=False, encoding="utf-8")
-    descartadas = [c for c in df.columns if c not in COLUNAS_PUBLICAVEIS]
+    descartadas = [c for c in df.columns if c not in colunas]
     print(f"{len(publico)} registros gravados em {destino.relative_to(FONTE.parent.parent)}")
     print(f"Colunas descartadas: {descartadas}")
     return str(destino)

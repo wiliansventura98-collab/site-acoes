@@ -32,8 +32,12 @@ function fillSelect(sel, withNone){
 fillSelect($('var'), false); fillSelect($('cross'), true);
 
 function base(){ return ROWS.filter(r=> st.rep || !r.rep); }
+const semAcento = t => String(t||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+ROWS.forEach(r=>{ r.hayN=semAcento(r.hay); });
 function match(r, except){
   const ex=[].concat(except);
+  // busca por palavra (título, fonte ou código): filtra todas as análises
+  if(st.q && !ex.includes('q')){ const q=semAcento(st.q.trim()); if(q && !r.hayN.includes(q)) return false; }
   for(const vid in st.f){ if(ex.includes(vid)) continue; const set=st.f[vid]; if(!set.size) continue;
     const arr=r.v[VI[vid]]; if(!arr.some(x=>set.has(x))) return false; }
   return true;
@@ -54,12 +58,15 @@ function toggleFilter(vid, x, only){
 
 function renderChips(){
   const c=$('chips'); c.textContent='';
-  const keys=Object.keys(st.f);
-  if(!keys.length){ c.append(el('span','lbl','Nenhum filtro ativo. Clique numa categoria do gráfico para filtrar.')); return; }
+  const keys=Object.keys(st.f), q=(st.q||'').trim();
+  if(!keys.length && !q){ c.append(el('span','lbl','Nenhum filtro ativo. Clique numa categoria do gráfico para filtrar.')); return; }
+  const limpaBusca=()=>{ st.q=''; $('q').value=''; $('qTop').value=''; };
   c.append(el('span','lbl','Filtros:'));
+  if(q){ const ch=el('span','chip'); const t=el('span'); t.append(el('i',null,'Palavra: '), document.createTextNode(q)); ch.title='Notícias com “'+q+'” no título, na fonte ou no código';
+    const b=el('button',null,'×'); b.setAttribute('aria-label','Remover a busca'); b.onclick=()=>{ limpaBusca(); st.page=40; render(); }; ch.append(t,b); c.append(ch); }
   keys.forEach(vid=>{ const v=VARS[VI[vid]];
     st.f[vid].forEach(x=>{ const ch=el('span','chip'); const t=el('span'); const i=el('i',null,v.label+': '); t.append(i, document.createTextNode(v.values[x])); ch.title=v.label+': '+v.values[x];
       const b=el('button',null,'×'); b.setAttribute('aria-label','Remover filtro '+v.values[x]); b.onclick=()=>toggleFilter(vid,x);
       ch.append(t,b); c.append(ch); }); });
-  const clr=el('button','btn link','Limpar filtros'); clr.onclick=()=>{ st.f={}; st.page=40; render(); }; c.append(clr);
+  const clr=el('button','btn link','Limpar filtros'); clr.onclick=()=>{ st.f={}; limpaBusca(); st.page=40; render(); }; c.append(clr);
 }

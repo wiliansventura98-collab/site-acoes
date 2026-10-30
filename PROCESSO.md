@@ -7,9 +7,9 @@ Este documento registra, de forma cumulativa, tudo o que foi feito para transfor
 | Item | Informação |
 |---|---|
 | Responsável | Wilians Ventura Ferreira Souza (Unesp) |
-| Site | <https://wiliansventura98-collab.github.io/site-acoes/> (base interativa em `/base/`) |
+| Site | <https://wiliansventura98-collab.github.io/site-acoes/> (base interativa em `/base/`, página de metodologia em `/sobre/`, versão em espanhol em `/es/`) |
 | Repositório | <https://github.com/wiliansventura98-collab/site-acoes> |
-| Versão deste documento | 1.4 · 28/10/2026 |
+| Versão deste documento | 1.5 · 30/10/2026 |
 | Versão em Word | [`PROCESSO.docx`](PROCESSO.docx), gerada por `python pipeline/gerar_processo_docx.py` |
 | Licença | Base de dados: CC BY 4.0 · código: MIT (ver [`LICENCAS.md`](LICENCAS.md)) |
 
@@ -91,14 +91,18 @@ python pipeline/construir_site.py --ano 2024              # --sem-camadas pula o
 # 4. Nova verificação, agora sobre os dados gerados
 python pipeline/verificar_privacidade.py
 
-# 5. Ver localmente
-python -m http.server 8000                                # abrir http://localhost:8000/base/
+# 5. Versão em espanhol (requer Node; o pacote typescript só é usado para ler o JavaScript)
+npm install --prefix i18n --no-save --no-package-lock typescript@5.6.3
+node i18n/ferramenta.js gerar                           # → es/, assets/js/app-es/, i18n/pendentes.json
 
-# 6. Publicar: enviar ao ramo main; o GitHub Actions (.github/workflows/publicar.yml) repete 2–4 e publica
+# 6. Ver localmente
+python -m http.server 8000                                # abrir http://localhost:8000/base/ e /es/base/
+
+# 7. Publicar: enviar ao ramo main; o GitHub Actions (.github/workflows/publicar.yml) repete 2–5 e publica
 git add -A && git commit -m "…" && git push
 ```
 
-**Atualizar a base com uma nova versão da planilha:** repetir os passos 1 a 6. Os arquivos de referência (`pipeline/referencias/`) não precisam ser baixados de novo.
+**Atualizar a base com uma nova versão da planilha:** repetir os passos 1 a 7. Os arquivos de referência (`pipeline/referencias/`) não precisam ser baixados de novo.
 
 **Cache do navegador:** ao mudar CSS ou JavaScript, trocar o parâmetro `?v=AAAAMMDDx` em `index.html`, `base/index.html` e `assets/js/app/carregar.js`, para que os visitantes recebam a versão nova.
 
@@ -124,6 +128,7 @@ Executado por `pipeline/preparar_dados.py`.
 | Tipologia da ação | O campo “Acción matriz y derivada” é dividido em **ação matriz** (tipo geral) e **ação derivada** (forma concreta). |
 | Espaço | A referência espacial (`localidade;departamento;província;código`) gera província, departamento/partido, localidade e **região do INDEC** (Gran Buenos Aires = CABA + 24 partidos; demais partidos de Buenos Aires em Pampeana). |
 | Datas | Data de início da ação; na falta dela, data de publicação. Usada na série semanal e no calendário. |
+| Ano e país | Duas variáveis novas no início da base (30/10/2026). **Ano**: coluna `Año` (ou `Ano`) da planilha, se existir; senão, o ano da data da notícia. **País**: coluna `País` (ou `Pais`), se existir; senão, “Argentina”. As duas colunas são opcionais em `anonimizar.py` e `verificar_privacidade.py`. Servem para juntar, numa mesma planilha padronizada, vários anos (2020–2024) e outros países (Brasil), e já aparecem como seletores no topo da base. Hoje a base tem um só ano e um só país, então os seletores mostram apenas 2024 e Argentina. |
 | Repetidas | Notícias com `Status = Repetida` (a mesma ação noticiada mais de uma vez) ficam fora por padrão; o usuário pode incluí-las. |
 | Sem informação | Categorias como “No informa (NI)” são mantidas na base, mas excluídas dos rankings, das combinações características e da ACM. |
 
@@ -228,6 +233,24 @@ Cuidados registrados no site: cerca de 511 testes simultâneos (uns 26 falsos po
 
 **Identidade visual:** fundo branco, tipografia Urbanist (hospedada no próprio site, licença OFL), ilustração de marcha gerada a partir dos objetivos mais frequentes da base; mapas em Arial para exportação estável.
 
+### 7.2 Seletores de ano e país e busca nas notícias
+
+- No topo da base, ao lado da variável e do cruzamento, há **seletores de ano e de país** (`fAno`, `fPais`), que filtram todas as abas, e um **campo de busca** (`qTop`) sempre visível.
+- A busca procura a palavra no título, na fonte e no código da notícia, sem diferenciar maiúsculas nem acentos. Ela **filtra todas as abas** (antes valia só para a lista de notícias), aparece como etiqueta “Palavra: …” nos filtros, entra no texto do recorte das pranchas e fica guardada no link (`q=`). O botão “Ver notícias” leva à lista do recorte.
+
+### 7.3 Página “Sobre e metodologia”
+
+`sobre/index.html` (estilo em `assets/css/sobre.css`): o que é a base, como foi construída (codificação, anonimização, padronização, georreferenciação, indicadores, publicação), variáveis por dimensão, fontes oficiais, como os números são calculados, ferramentas, limites, licença e citação. Ligada no menu da página inicial e da base.
+
+### 7.4 Versão em espanhol
+
+- Endereços: `/es/`, `/es/base/` e `/es/sobre/`; o link “Español”/“Português” no menu troca de idioma (na base, mantendo aba e filtros).
+- **Como é gerada.** O português continua sendo o original. `i18n/ferramenta.js` (Node) lê o JavaScript com o analisador do TypeScript e as páginas HTML, encontra cada trecho de texto e o troca pela tradução do catálogo `i18n/es.json` (pares “texto em português” → “texto em espanhol”, cerca de 1.800). Palavras curtas que em outros arquivos são chaves internas (meses abreviados, “forte”, “baixo”…) são traduzidas só no arquivo certo, por `i18n/es-contexto.json`. Textos que são iguais nas duas línguas ou não devem ser traduzidos (nomes de organizações, seletores CSS, definições do INDEC já em espanhol) ficam em `i18n/ignorar.json`.
+- Saídas geradas (não editar à mão): `es/index.html`, `es/base/index.html`, `es/sobre/index.html` e `assets/js/app-es/*.js`. Rótulos que vêm dos dados (nomes das variáveis, meses, indicadores, acontecimentos) são traduzidos no navegador, logo depois de carregar os JSON (`TR_DADOS` em `assets/js/app-es/carregar.js`). Datas e números usam o formato `es-AR`.
+- O GitHub Actions gera a versão em espanhol a cada publicação. **Ao mudar um texto em português**, rode `node i18n/ferramenta.js gerar`: o que ficar sem tradução aparece em `i18n/pendentes.json` (e no site, em português) até ser acrescentado ao catálogo.
+- As categorias da base (tipos de movimento, objetivos etc.) já estão em espanhol na planilha e não mudam.
+
+
 ---
 
 ## 8. Verificações de qualidade
@@ -240,7 +263,8 @@ Cuidados registrados no site: cerca de 511 testes simultâneos (uns 26 falsos po
 | Femicídios | 228 vítimas diretas, igual à tabela 6 |
 | Casamento de departamentos | Todos os nomes do RENABAP e das eleições têm polígono, salvo Antártida |
 | ACM | Conferida contra implementação em numpy |
-| Regressão do site | Script automático abre as 11 abas e clica nas 139 combinações prontas: sem erros (19/10/2026) |
+| Regressão do site | Script automático abre as 12 abas e clica nas 139 combinações prontas, em português e em espanhol: sem erros (30/10/2026) |
+| Versão em espanhol | Catálogo sem pendências (`i18n/pendentes.json` vazio); varredura das páginas em espanhol, depois de clicar nas combinações prontas, sem palavras em português |
 | Privacidade | `verificar_privacidade.py` a cada publicação |
 | Leiaute | Painéis conferidos em 1300, 1024, 760 e 390 px de largura |
 
@@ -275,11 +299,19 @@ Datas no fuso de São Paulo. Os códigos entre colchetes são os commits do repo
 
 ### 28/10/2026
 - **Fichas:** a escolha passou a ser uma lista fechada só com as categorias do tipo de ficha escolhido (por exemplo, só objetivos), com o número de notícias, e um campo para filtrar a lista. Motivo: o campo de texto anterior, com sugestões, deixava o navegador misturar valores digitados antes em outros tipos de ficha (nomes de movimentos, províncias).
+
+### 30/10/2026
+- **Ano e país** entram como variáveis (colunas opcionais `Año` e `País` da planilha) e como **seletores no topo da base**. Motivo: preparar a base para juntar os cinco anos da Argentina e os dados do Brasil numa só planilha padronizada.
+- **Busca mais visível:** campo fixo no topo da base que filtra todas as abas, com etiqueta nos filtros e guardado no link. Motivo: a busca ficava escondida no fim da página e só valia para a lista de notícias.
+- **Página “Sobre e metodologia”** (`/sobre/`). Motivo: reunir num só lugar como a base foi feita, com fontes, cálculos, limites e citação.
+- **Versão em espanhol** (`/es/`), gerada a partir do português por `i18n/ferramenta.js` com o catálogo `i18n/es.json`; o GitHub Actions passou a gerá-la e a publicar também `sobre/` e `es/`. Motivo: o público da base é sobretudo argentino e latino-americano (CLACSO).
+- Seção 2, 4, 7 e 8 atualizadas; `pipeline/reconstruir.sh` ganhou o passo da versão em espanhol.
 ---
 
 ## 10. Pendências
 
-- [ ] Confirmar a escolha das licenças com o grupo/centro de pesquisa e, se houver, com a política de dados da instituição.
+- [ ] **Licenças:** o arquivo `LICENSE` foi trocado no GitHub para MIT (commit 6f63b69), mas `LICENCAS.md`, README, página Sobre e rodapés ainda dizem base de dados sob CC BY 4.0 e código sob MIT. Decidir entre manter CC BY 4.0 para os dados (recomendado) ou adotar MIT para tudo, e alinhar os arquivos. Confirmar também com o grupo/centro de pesquisa.
+- [ ] Revisão da versão em espanhol por falante nativo (termos como “recorte”, “ficha”, “plancha”).
 - [ ] Depositar a base no Zenodo (ou repositório institucional) para obter um DOI e atualizar a citação em `LICENCAS.md`.
 - [ ] **Unificar nomes de organizações duplicados** (ex.: grafias diferentes de CTA e CGT). Afeta contagens, fichas e redes.
 - [ ] Resultado do **2º turno de 2023** por departamento, se a DINE publicar no formato mesa a mesa.

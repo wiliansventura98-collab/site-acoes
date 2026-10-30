@@ -1,7 +1,7 @@
 name: Gerar dados e publicar o site
 
 # Roda a cada envio ao ramo main (ou manualmente): verifica privacidade, executa o pipeline em Python,
-# salva os dados gerados no repositório e publica o site no GitHub Pages.
+# gera a versão em espanhol, salva os dados gerados no repositório e publica o site no GitHub Pages.
 on:
   push:
     branches: [main]
@@ -40,22 +40,31 @@ jobs:
       - name: Verificar dados gerados
         run: python pipeline/verificar_privacidade.py
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Gerar a versão em espanhol (es/ e assets/js/app-es/)
+        run: |
+          npm install --prefix i18n --no-save --no-package-lock typescript@5.6.3
+          node i18n/ferramenta.js gerar
+
       - name: Salvar dados gerados no repositório
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add dados
+          git add dados es assets/js/app-es i18n/pendentes.json
           if git diff --cached --quiet; then
             echo "Dados já estavam atualizados."
           else
-            git commit -m "Atualiza dados gerados pelo pipeline [skip ci]"
+            git commit -m "Atualiza dados e versão em espanhol gerados pelo pipeline [skip ci]"
             git push
           fi
 
       - name: Preparar arquivos do site
         run: |
           mkdir -p _site
-          cp -r index.html base assets dados .nojekyll _site/
+          cp -r index.html base sobre es assets dados .nojekyll _site/
 
       - uses: actions/upload-pages-artifact@v3
         with:

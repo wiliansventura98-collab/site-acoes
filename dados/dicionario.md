@@ -16,6 +16,26 @@ Variáveis com vários valores por notícia aparecem separadas por `; ` no arqui
 
 ## Variáveis analíticas
 
+### `ano` · Año
+
+Ano da ação: coluna Año/Ano da planilha unificada ou, na falta dela, ano da data da notícia.
+
+Grupo: Tempo · categorias: 1 · um valor por notícia
+
+| Categoria mais frequente | Notícias |
+|---|---:|
+| 2024 | 934 |
+
+### `pais` · País
+
+País da base: coluna País da planilha unificada ou, na falta dela, Argentina.
+
+Grupo: Espaço · categorias: 1 · um valor por notícia
+
+| Categoria mais frequente | Notícias |
+|---|---:|
+| Argentina | 934 |
+
 ### `mes` · Mês da notícia
 
 Mês de publicação da notícia.

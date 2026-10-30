@@ -419,3 +419,11 @@ details.calc li{margin-bottom:5px}
 .pl-bloco h4{margin:6px 0 2px;font-size:13px;font-weight:800;color:var(--ink-2);text-transform:uppercase;letter-spacing:.04em}
 .pl-bloco p{margin:0 0 6px;max-width:82ch;font-size:14.5px;line-height:1.55}
 @media (max-width:520px){.mapctl.mc .perio{flex-wrap:wrap}.mapctl.mc .perio select{flex:1 1 100%}.mapctl.mc .perio .btn{flex:1 1 100%}}
+
+/* ---------- ano, país e busca por palavra ---------- */
+.controls-2{margin-top:12px;grid-template-columns:minmax(0,.7fr) minmax(0,.7fr) minmax(0,1.9fr)}
+@media (max-width:760px){.controls-2{grid-template-columns:1fr 1fr}.controls-2 .busca-topo{grid-column:1/-1}}
+.busca-linha{display:flex;gap:8px;align-items:center}
+.busca-linha input{flex:1 1 auto;min-width:0}
+.busca-linha .btn{white-space:nowrap;text-decoration:none}
+.nota-ano{margin:8px 0 0;font-size:12.5px;color:var(--ink-3)}

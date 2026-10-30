@@ -27,5 +27,11 @@ python pipeline/construir_site.py --ano "$ANO"
 echo "== 4. Verificação de privacidade (dados gerados)"
 python pipeline/verificar_privacidade.py
 
+echo "== 5. Versão em espanhol (es/ e assets/js/app-es/), se o Node estiver instalado"
+if command -v node >/dev/null 2>&1; then
+  [ -d i18n/node_modules/typescript ] || npm install --prefix i18n --no-save --no-package-lock typescript@5.6.3
+  node i18n/ferramenta.js gerar
+fi
+
 echo "Pronto. Para ver localmente: python -m http.server 8000 e abra http://localhost:8000/base/"
 echo "Lembre de registrar a mudança em PROCESSO.md (seções 9 e 10)."

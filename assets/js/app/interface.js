@@ -14,6 +14,7 @@ function render(){
   L.append(document.createTextNode('Quem se mobiliza, por quais objetivos, com que tipo de ação e onde. '), el('b',null,fmt(nUniq)), document.createTextNode(' notícias únicas (e '+fmt(nRep)+' repetidas), lidas na íntegra e codificadas em '+VARS.length+' variáveis.'));
   renderKPIs(b);
   renderChips();
+  { const sync=(id,vid)=>{ const s=$(id); if(!s) return; const f=st.f[vid]; s.value = f && f.size===1? String([...f][0]) : ''; }; sync('fAno','ano'); sync('fPais','pais'); if(document.activeElement!==$('qTop')) $('qTop').value=st.q||''; if(document.activeElement!==$('q')) $('q').value=st.q||''; }
   const v=VARS[VI[st.v]];
   const rowsV=b.filter(r=>match(r, st.v));
   let note;

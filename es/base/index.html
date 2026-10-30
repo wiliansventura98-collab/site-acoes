@@ -1,0 +1,472 @@
+<!-- GERADO por i18n/ferramenta.js a partir de base/index.html; não edite -->
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>DATALUTA Argentina 2024 · Movimientos Socioespaciales y Socioterritoriales Urbanos</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%276%27 fill=%27%2374acdf%27/%3E%3Ccircle cx=%2716%27 cy=%2716%27 r=%277%27 fill=%27%23f6b40e%27 stroke=%27%2385340a%27 stroke-width=%271.5%27/%3E%3C/svg%3E">
+<meta name="description" content="Base interactiva de noticias sobre acciones colectivas en la Argentina en 2024: distribuciones, flujos, tipologías, redes de movimientos, mapas con indicadores del INDEC y calendario.">
+<meta property="og:title" content="Banco de Datos de las Luchas por Espacios y Territorios (DATALUTA) Argentina 2024 - Movimientos Socioespaciales y Socioterritoriales Urbanos">
+<meta property="og:description" content="Base interactiva de noticias sobre acciones colectivas en la Argentina en 2024: distribuciones, flujos, tipologías, redes de movimientos, mapas con indicadores del INDEC y calendario.">
+<meta property="og:type" content="website">
+<link rel="preload" href="../../assets/fonts/urbanist-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../assets/css/fontes.css?v=20261030a">
+<link rel="stylesheet" href="../../assets/js/vendor/leaflet-1.9.4/leaflet.css">
+<link rel="stylesheet" href="../../assets/css/base.css?v=20261030a">
+<script src="../../assets/js/marcha.js?v=20261030a" defer></script>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="sol" viewBox="-28 -28 56 56"><g fill="#f6b40e" stroke="#85340a" stroke-width=".6" stroke-linejoin="round"><path d="M-1.69 -12.38L0.00 -27.00L1.69 -12.38ZM3.17 -12.09L10.33 -24.94L6.31 -10.79ZM7.56 -9.96L19.09 -19.09L9.96 -7.56ZM10.79 -6.31L24.94 -10.33L12.09 -3.17ZM12.38 -1.69L27.00 0.00L12.38 1.69ZM12.09 3.17L24.94 10.33L10.79 6.31ZM9.96 7.56L19.09 19.09L7.56 9.96ZM6.31 10.79L10.33 24.94L3.17 12.09ZM1.69 12.38L0.00 27.00L-1.69 12.38ZM-3.17 12.09L-10.33 24.94L-6.31 10.79ZM-7.56 9.96L-19.09 19.09L-9.96 7.56ZM-10.79 6.31L-24.94 10.33L-12.09 3.17ZM-12.38 1.69L-27.00 0.00L-12.38 -1.69ZM-12.09 -3.17L-24.94 -10.33L-10.79 -6.31ZM-9.96 -7.56L-19.09 -19.09L-7.56 -9.96ZM-6.31 -10.79L-10.33 -24.94L-3.17 -12.09Z"/><path d="M1.08 -12.45C0.45 -16.99 6.22 -19.01 6.09 -23.22C6.27 -17.94 2.33 -15.83 3.77 -11.92ZM5.76 -11.09C6.92 -15.53 13.02 -15.18 14.51 -19.12C12.66 -14.17 8.21 -13.73 8.04 -9.57ZM9.57 -8.04C12.33 -11.70 17.84 -9.04 20.72 -12.11C17.12 -8.25 12.84 -9.54 11.09 -5.76ZM11.92 -3.77C15.87 -6.09 19.94 -1.53 23.78 -3.26C18.97 -1.07 15.52 -3.90 12.45 -1.08ZM12.45 1.08C16.99 0.45 19.01 6.22 23.22 6.09C17.94 6.27 15.83 2.33 11.92 3.77ZM11.09 5.76C15.53 6.92 15.18 13.02 19.12 14.51C14.17 12.66 13.73 8.21 9.57 8.04ZM8.04 9.57C11.70 12.33 9.04 17.84 12.11 20.72C8.25 17.12 9.54 12.84 5.76 11.09ZM3.77 11.92C6.09 15.87 1.53 19.94 3.26 23.78C1.07 18.97 3.90 15.52 1.08 12.45ZM-1.08 12.45C-0.45 16.99 -6.22 19.01 -6.09 23.22C-6.27 17.94 -2.33 15.83 -3.77 11.92ZM-5.76 11.09C-6.92 15.53 -13.02 15.18 -14.51 19.12C-12.66 14.17 -8.21 13.73 -8.04 9.57ZM-9.57 8.04C-12.33 11.70 -17.84 9.04 -20.72 12.11C-17.12 8.25 -12.84 9.54 -11.09 5.76ZM-11.92 3.77C-15.87 6.09 -19.94 1.53 -23.78 3.26C-18.97 1.07 -15.52 3.90 -12.45 1.08ZM-12.45 -1.08C-16.99 -0.45 -19.01 -6.22 -23.22 -6.09C-17.94 -6.27 -15.83 -2.33 -11.92 -3.77ZM-11.09 -5.76C-15.53 -6.92 -15.18 -13.02 -19.12 -14.51C-14.17 -12.66 -13.73 -8.21 -9.57 -8.04ZM-8.04 -9.57C-11.70 -12.33 -9.04 -17.84 -12.11 -20.72C-8.25 -17.12 -9.54 -12.84 -5.76 -11.09ZM-3.77 -11.92C-6.09 -15.87 -1.53 -19.94 -3.26 -23.78C-1.07 -18.97 -3.90 -15.52 -1.08 -12.45Z"/><circle r="11.5"/></g><circle r="8.4" fill="none" stroke="#85340a" stroke-width=".5" opacity=".55"/></symbol></svg>
+
+<header class="hero">
+  <nav class="topo" aria-label="Navegación principal">
+    <a class="marca" href="../../"><svg viewBox="-28 -28 56 56" aria-hidden="true"><use href="#sol" x="-28" y="-28" width="56" height="56"/></svg><span>Acciones Socioespaciales</span></a>
+    <div class="links"><a href="../../">Inicio</a><a href="../../sobre/">Acerca de y metodología</a><a href="#" id="linkGloss">Glosario</a><a href="../../#dados">Datos abiertos</a><a href="https://github.com/wiliansventura98-collab/site-acoes">GitHub</a><a href="../../base/" hreflang="pt-BR" lang="pt-BR" id="linkIdioma">Português</a></div>
+  </nav>
+  <div class="hero-in">
+    <div class="brand-txt">
+      <h1 class="titulo-base">Banco de Datos de las Luchas por Espacios y Territorios (DATALUTA) Argentina 2024<span>Movimientos Socioespaciales y Socioterritoriales Urbanos</span></h1>
+      <p class="lede" id="lede">Cargando la base…</p>
+    </div>
+    <div class="kpis" id="kpis" aria-label="Indicadores del recorte"></div>
+  </div>
+  <svg class="marcha" data-resumo="../../dados/resumo.json" data-altura="150" data-semente="7" aria-label="Ilustración de una marcha"></svg>
+</header>
+
+<div class="wrap">
+  <section class="panel controls-panel" aria-label="Selección">
+    <div class="controls">
+      <label class="f" for="var">Variable
+        <select id="var"></select>
+      </label>
+      <label class="f" for="cross">Cruzar con
+        <select id="cross"></select>
+      </label>
+      <label class="opt" for="rep"><input type="checkbox" id="rep"> Incluir noticias repetidas</label>
+    </div>
+    <div class="controls controls-2">
+      <label class="f" for="fAno">Año
+        <select id="fAno"></select>
+      </label>
+      <label class="f" for="fPais">País
+        <select id="fPais"></select>
+      </label>
+      <label class="f busca-topo" for="qTop">Buscar noticias por palabra
+        <span class="busca-linha"><input type="search" id="qTop" placeholder="ej.: universidad, despidos, Ley Bases" autocomplete="off" spellcheck="false"><a class="btn" href="#newsSec" id="verNoticias">Ver noticias</a></span>
+      </label>
+    </div>
+    <p class="nota-ano" id="notaAno"></p>
+    <div class="chips" id="chips"></div>
+  </section>
+
+  <nav class="tabs" role="tablist" aria-label="Visualizaciones">
+    <a href="#sintese" role="tab" id="tab-sin" aria-selected="false">Síntesis</a>
+    <a href="#distribuicao" role="tab" id="tab-dist" aria-selected="true">Distribución</a>
+    <a href="#comparar" role="tab" id="tab-cmp" aria-selected="false">Comparar</a>
+    <a href="#fluxos" role="tab" id="tab-flow" aria-selected="false">Flujos</a>
+    <a href="#tipologias" role="tab" id="tab-typo" aria-selected="false">Tipologías</a>
+    <a href="#correspondencias" role="tab" id="tab-acm" aria-selected="false">Correspondencias</a>
+    <a href="#redes" role="tab" id="tab-net" aria-selected="false">Redes</a>
+    <a href="#mapa" role="tab" id="tab-map" aria-selected="false">Mapa</a>
+    <a href="#contexto" role="tab" id="tab-ctx" aria-selected="false">Contexto</a>
+    <a href="#tempo" role="tab" id="tab-time" aria-selected="false">En el tiempo</a>
+    <a href="#imprensa" role="tab" id="tab-imp" aria-selected="false">Prensa</a>
+    <a href="#fichas" role="tab" id="tab-fic" aria-selected="false">Fichas</a>
+  </nav>
+
+  <section class="panel" id="dist" role="tabpanel" aria-labelledby="tab-dist" aria-live="polite">
+    <div class="sechead">
+      <h2 id="distTitle">—</h2>
+      <div class="tools" id="distTools"></div>
+    </div>
+    <details class="guia"><summary>Cómo leer: Distribución</summary><div class="guia-corpo"><h4>Qué muestra</h4><p>Cuántas noticias tienen cada categoría de la variable elegida. Con “Cruzar con”, se convierte en una tabla: cada celda cuenta las noticias que tienen las dos categorías al mismo tiempo.</p>
+<h4>Cómo leer</h4><ul><li><b>Barra:</b> número de noticias; al lado, el porcentaje del recorte. Como una noticia puede tener varios valores (por ejemplo, dos tipos de movimiento), los porcentajes pueden sumar más de 100%.</li>
+<li><b>Tabla, modo Conteo:</b> cuanto más oscura la celda, más noticias. <b>% de la fila</b> responde “de las noticias de esta fila, ¿cuántas tienen esa columna?”; <b>% de la columna</b>, lo inverso.</li>
+<li><b>Modo Asociación:</b> compara cada celda con lo que se esperaría si las variables no tuvieran relación. Azul = aparece <i>más</i> de lo esperado; naranja = <i>menos</i>; blanco = dentro de lo esperado.</li></ul>
+<h4>Ejemplo en esta base</h4><p>Los <b>movimientos sindicales</b> aparecen en 446 de las 934 noticias (47,8%). Cruzando tipo de movimiento con objetivos en el modo Asociación, los <b>movimientos feministas</b> tienen residuo +13,7 en “igualdad de género” y los <b>estudiantiles</b> +11,7 en “objetivos educativos”: son las combinaciones más típicas de la base.</p>
+<h4>Precauciones</h4><p>Las categorías grandes dominan el conteo bruto; para saber qué es característico de cada grupo, use % de la fila o Asociación.</p></div></details>
+    <div class="presets" id="distPresets"></div>
+    <p class="note" id="distNote"></p>
+    <div id="distBody"></div>
+  </section>
+
+  <section class="panel" id="flowSec" role="tabpanel" aria-labelledby="tab-flow" hidden>
+    <div class="sechead"><h2>Flujos entre variables</h2><span class="meta" id="flowMeta"></span></div>
+    <div class="mapctl">
+      <label class="f" for="flowA">Etapa 1<select id="flowA"></select></label>
+      <label class="f" for="flowB">Etapa 2<select id="flowB"></select></label>
+      <label class="f" for="flowC">Etapa 3<select id="flowC"></select></label>
+      <label class="f" for="flowN">Categorías por etapa
+        <select id="flowN"><option value="5">5 principales</option><option value="8" selected>8 principales</option><option value="10">10 principales</option><option value="14">14 principales</option></select>
+      </label>
+    </div>
+    <details class="guia"><summary>Cómo leer: Flujos</summary><div class="guia-corpo"><h4>Qué muestra</h4><p>Cómo se encadenan las categorías de dos o tres variables en las mismas noticias: por ejemplo, quién se moviliza → con qué tipo de acción → por qué objetivo.</p>
+<h4>Cómo leer</h4><ul><li>Cada <b>columna</b> es una variable; cada <b>bloque</b>, una categoría (altura ∝ noticias).</li><li>Cada <b>banda</b> une categorías que aparecen juntas; el grosor es el número de noticias.</li><li>Pase el mouse para ver los valores; haga clic para filtrar.</li></ul>
+<h4>Ejemplo en esta base</h4><p>Siga la banda que sale de “Movimientos sindicales”: la parte más gruesa va hacia los desplazamientos colectivos (marchas, movilizaciones) y de ahí hacia objetivos laborales.</p>
+<h4>Precauciones</h4><p>Cuando una noticia tiene varias categorías, su peso se reparte entre las combinaciones, para que cada columna sume el total de noticias del recorte.</p></div></details>
+    <div class="presets" id="flowPresets"></div>
+    <p class="note" id="flowNote"></p>
+    <div class="chart" id="flowChart"></div>
+  </section>
+
+  <section class="panel" id="typoSec" role="tabpanel" aria-labelledby="tab-typo" hidden>
+    <div class="sechead"><h2>Tipologías de la acción</h2><span class="meta" id="typoMeta"></span></div>
+    <div class="mapctl">
+      <label class="f" for="typoA">Agrupar por<select id="typoA"></select></label>
+      <label class="f" for="typoB">Subdividir por<select id="typoB"></select></label>
+    </div>
+    <details class="guia"><summary>Cómo leer: Tipologías</summary><div class="guia-corpo"><h4>Qué muestra</h4><p>Un mapa de árbol: rectángulos dentro de rectángulos. El rectángulo grande es la acción matriz; dentro de él, las acciones derivadas.</p>
+<h4>Cómo leer</h4><p>El área de cada rectángulo es proporcional al número de noticias. Compare tamaños dentro del mismo bloque para ver qué formas concretas asume cada tipo de acción.</p>
+<h4>Ejemplo en esta base</h4><p>“Acciones comunicativas” es la acción matriz más frecuente (274 noticias); dentro de ella, los rectángulos muestran las formas derivadas, como comunicados y conferencias.</p></div></details>
+    <div class="presets" id="typoPresets"></div>
+    <p class="note" id="typoNote"></p>
+    <div class="chart" id="typoChart"></div>
+  </section>
+
+  <section class="panel" id="netSec" role="tabpanel" aria-labelledby="tab-net" hidden>
+    <div class="sechead"><h2>Articulaciones entre movimientos</h2><span class="meta" id="netMeta"></span></div>
+    <div class="mapctl">
+      <label class="f" for="netVar">Red de<select id="netVar"></select></label>
+      <label class="f" for="netN">Nodos
+        <select id="netN"><option value="25">25 más citados</option><option value="40" selected>40 más citados</option><option value="60">60 más citados</option></select>
+      </label>
+      <label class="f" for="netMin">Vínculo mínimo
+        <select id="netMin"><option value="1">1 noticia en común</option><option value="2" selected>2 noticias en común</option><option value="3">3 noticias en común</option><option value="5">5 noticias en común</option></select>
+      </label>
+      <label class="f" for="netCor">Color de los nodos
+        <select id="netCor"><option value="tipo">Tipo de movimiento predominante</option><option value="com">Comunidad (bloques que actúan juntos)</option></select>
+      </label>
+    </div>
+    <details class="guia"><summary>Cómo leer: Redes</summary><div class="guia-corpo"><h4>Qué muestra</h4><p>Qué organizaciones (u otras categorías) aparecen juntas en las mismas noticias: las articulaciones entre movimientos.</p>
+<h4>Cómo leer</h4><ul><li><b>Círculo:</b> una organización; el tamaño es el número de noticias.</li><li><b>Línea:</b> noticias en común; cuanto más gruesa, más veces actuaron juntas.</li><li><b>Color:</b> tipo de movimiento predominante o, si se elige, comunidad (bloque de organizaciones que actúan más entre sí que con las demás).</li><li><b>Tabla de abajo:</b> grado = número de aliados; fuerza = noticias en común; intermediación = cuánto hace la organización de puente entre otras.</li></ul>
+<h4>Ejemplo en esta base</h4><p>La UTEP es el nodo central: 165 noticias y 23 aliados. Los vínculos más fuertes son MTE–UTEP (36 noticias en común) y Movimiento Evita–UTEP (32). El Movimiento Evita y el Polo Obrero tienen alta intermediación: unen bloques distintos.</p></div></details>
+    <div class="presets" id="netPresets"></div>
+    <p class="note" id="netNote"></p>
+    <div class="chart" id="netChart"></div>
+    <div class="sechead" style="margin-top:24px"><h2>Quién articula la red</h2><span class="meta">haga clic en el encabezado para ordenar</span></div>
+    <p class="note" id="netCentNote"></p>
+    <div class="scroll" id="netCent"></div>
+  </section>
+
+  <section class="panel" id="mapSec" role="tabpanel" aria-labelledby="tab-map" hidden>
+    <div class="sechead"><h2 id="mapTitle">Mapa</h2><span class="meta" id="mapMeta"></span></div>
+    <div class="mapctl mc">
+      <fieldset class="mc-grupo"><legend><span>1</span> Qué mapear</legend>
+        <div class="mc-linha">
+      <label class="f">Visualización
+        <span class="seg" id="mapVis">
+          <button data-v="prancha" aria-pressed="true">Plancha cartográfica</button>
+          <button data-v="web" aria-pressed="false">Mapa navegable (mundo)</button>
+        </span>
+      </label>
+      <label class="f">Unidad espacial
+        <span class="seg" id="mapUnit">
+          <button data-v="loc" aria-pressed="true">Localidades</button>
+          <button data-v="dept" aria-pressed="false">Departamentos</button>
+          <button data-v="prov" aria-pressed="false">Provincias</button>
+        </span>
+      </label>
+      <label class="f">Medida y representación
+        <span class="seg" id="mapMeasure">
+          <button data-v="abs" aria-pressed="true">Absoluto · círculos</button>
+          <button data-v="rate" aria-pressed="false">Tasa · coroplético</button>
+          <button data-v="both" aria-pressed="false">Ambos</button>
+        </span>
+      </label>
+      <label class="f">Cuántos mapas
+        <span class="seg" id="mapMode">
+          <button data-v="one" aria-pressed="true">Un mapa</button>
+          <button data-v="multi" aria-pressed="false">Por categoría</button>
+        </span>
+      </label>
+        </div>
+      </fieldset>
+      <fieldset class="mc-grupo"><legend><span>2</span> Capas, categorías y período</legend>
+        <div class="mc-linha">
+      <label class="f mc-largo" for="ctxLayer">Capa de contexto
+        <select id="ctxLayer">
+          <option value="">Ninguna</option>
+          <optgroup label="Población · Censo 2022">
+            <option value="dens">Densidad demográfica (provincia)</option>
+            <option value="popAbs">Población absoluta (círculos)</option>
+          </optgroup>
+          <optgroup label="Pobreza y trabajo · INDEC, EPH">
+            <option value="pob">Pobreza 2024 (región)</option>
+            <option value="ind">Indigencia 2024 (región)</option>
+            <option value="des">Desocupación 2024 (región)</option>
+            <option value="pobAgl">Pobreza 2024 (31 aglomerados)</option>
+            <option value="desAgl">Desocupación 2024 (31 aglomerados)</option>
+          </optgroup>
+          <optgroup label="Violencia · SNIC">
+            <option value="hom24">Homicidios 2024 (provincia)</option>
+          </optgroup>
+        </select>
+      </label>
+      <label class="f" for="mapMes">Período
+        <span class="perio"><select id="mapMes"><option value="">Año completo (2024)</option></select><button class="btn" id="mapPlay" type="button" aria-pressed="false">Animar mes a mes</button></span>
+      </label>
+      <label class="f" for="cmpVar" id="cmpWrap" hidden>Comparar categorías de
+        <select id="cmpVar"></select>
+      </label>
+      <label class="f" for="cmpN" id="cmpNWrap" hidden>Categorías
+        <select id="cmpN"><option value="4">4 principales</option><option value="6" selected>6 principales</option><option value="9">9 principales</option><option value="12">12 principales</option></select>
+      </label>
+        </div>
+      </fieldset>
+      <fieldset class="mc-grupo"><legend><span>3</span> Opciones de la plancha</legend>
+        <div class="mc-linha mc-opcoes">
+      <label class="opt" for="mapDest"><input type="checkbox" id="mapDest" checked> Destacar lugares muy por encima o por debajo de lo esperado</label>
+      <label class="opt" for="mapTopo"><input type="checkbox" id="mapTopo" checked> Mostrar nombres de lugares (cambian con el zoom)</label>
+      <label class="f" for="author">Elaboración (aparece en la nota)
+        <input type="text" id="author" placeholder="ej.: Nombre, institución">
+      </label>
+        </div>
+      </fieldset>
+    </div>
+    <details class="guia"><summary>Cómo leer: Mapas</summary><div class="guia-corpo"><h4>Qué muestra</h4><p>Dónde ocurren las acciones informadas. La regla cartográfica es: <b>valores absolutos en círculos</b> (cuántas noticias) y <b>valores relativos en colores</b> (noticias por 100 mil habitantes o indicadores del Censo).</p>
+<h4>Cómo leer</h4><ul><li><b>Círculos amarillos:</b> el área es proporcional al número de noticias que citan el lugar.</li><li><b>Coroplético (colores):</b> del más claro al más oscuro, valores mayores. Las clases están en la leyenda.</li>
+<li><b>Capa de contexto:</b> pinta el fondo con un indicador oficial, para comparar con los círculos de noticias.</li><li><b>Mapa bivariado:</b> un solo color combina noticias por habitante (amarillo) y el indicador (azul); vea “Cómo leer” en la leyenda.</li>
+<li><b>Puntos calientes (LISA):</b> naranja = departamentos con muchas noticias por habitante rodeados de vecinos también con muchas; azul = pocos rodeados de pocos. Solo aparecen cuando el patrón difícilmente sería azar (p &lt; 0,05, en 499 sorteos). El paso a paso, con un ejemplo, está en el recuadro “Cómo se calculó este mapa”.</li>
+<li><b>Nombres de lugares:</b> aparecen más ciudades a medida que acerca (botones +/−, Ctrl + rueda o pellizco).</li>
+<li><b>Contornos naranja y azul (destacados):</b> por departamento o provincia, marcan lugares con noticias <i>muy por encima</i> (naranja) o <i>muy por debajo</i> (azul) de lo que haría esperar la población. Ejemplo: Los Lagos y Bariloche, en el sur de Neuquén y Río Negro, tienen varias veces más noticias de lo esperado para su población. El contorno solo aparece cuando la diferencia es demasiado grande para ser azar.</li>
+<li><b>Mapa navegable (mundo):</b> en “Visualización”, cambia la plancha por un mapa que puede arrastrarse a cualquier país, con nombres de países, ciudades y barrios que cambian con el zoom (y calles, con el fondo OpenStreetMap). Las capas son las mismas.</li></ul>
+<h4>Ejemplo en esta base</h4><p>Por localidad, la ciudad de Buenos Aires tiene el mayor círculo (254 noticias). Por la tasa por habitante, departamentos más pequeños de la Patagonia aparecen arriba, porque pocas noticias pesan más en una población pequeña.</p>
+<h4>Precauciones</h4><p>En lugares poco poblados, una sola noticia genera tasas altas; lea la tasa junto con los círculos. Las noticias nacionales, virtuales o sin lugar no entran en el mapa.</p></div></details>
+    <div class="presets" id="mapPresets"></div>
+    <p class="note" id="mapNote"></p>
+    <details class="calc calcbox" id="mapCalc"><summary>Cómo se calculó este mapa</summary><div id="mapCalcCorpo"></div></details>
+    <div class="wmap" id="wmap" hidden></div>
+    <div class="sheet" id="sheet"></div>
+    <div class="sheetbar">
+      <span class="meta">Pase el mouse para ver valores y haga clic en un lugar para filtrar. Acerque con los botones +/−, Ctrl + rueda o pellizco, y arrastre para mover.</span>
+      <div class="tools"><button class="btn" id="dlPng" hidden>Descargar PNG</button><button class="btn" id="dlSvg" hidden>Descargar SVG</button><span class="toast" id="mapMsg"></span></div>
+    </div>
+    <div class="rank" id="mapRank"></div>
+  </section>
+
+
+  <section class="panel" id="ctxSec" role="tabpanel" aria-labelledby="tab-ctx" hidden>
+    <div class="sechead"><h2>Noticias e indicadores oficiales</h2><span class="meta" id="ctxMeta"></span></div>
+    <div class="mapctl">
+      <label class="f">Unidad
+        <span class="seg" id="ctxNivel">
+          <button data-v="prov" aria-pressed="true">Provincias</button>
+          <button data-v="dept" aria-pressed="false">Departamentos</button>
+        </span>
+      </label>
+      <label class="f" for="ctxX">Indicador (eje horizontal)
+        <select id="ctxX">
+          <option value="densidade_hab_km2">Densidad demográfica, 2022 (hab./km², escala log)</option>
+          <option value="populacao_2022">Población, 2022 (escala log)</option>
+          <option value="taxa_homicidios_2024">Homicidios dolosos por 100 mil hab., 2024</option>
+        </select>
+      </label>
+    </div>
+    <details class="guia"><summary>Cómo leer: Contexto</summary><div class="guia-corpo"><h4>Qué muestra</h4><p>Si los lugares con más movilización registrada son también los de mayor carencia, densidad, violencia, etc. Cada punto es una provincia o un departamento.</p>
+<h4>Cómo leer</h4><ul><li><b>Eje vertical:</b> noticias por 100 mil habitantes (cuanto más alto, más movilización registrada en proporción a la población).</li><li><b>Eje horizontal:</b> el indicador oficial elegido (cuanto más a la derecha, mayor).</li>
+<li><b>Líneas grises de mediana:</b> dividen el gráfico en cuatro cuadrantes, con el nombre de cada situación (por ejemplo, “indicador alto, pocas noticias”).</li><li><b>Línea punteada:</b> tendencia media. Subiendo hacia la derecha = relación positiva; bajando = negativa.</li>
+<li><b>r y ρ:</b> fuerza de la relación, de −1 a +1. Cerca de 0 = sin relación; hasta ±0,3 = débil; ±0,3 a ±0,6 = moderada; por encima de ±0,6 = fuerte.</li><li><b>Puntos con contorno:</b> naranja = muy por encima de la tendencia (más noticias de lo que haría esperar el indicador); azul = muy por debajo. Son los casos que merecen una mirada específica, y aparecen nombrados en la lectura sobre el gráfico.</li></ul>
+<h4>Ejemplo en esta base</h4><p>Por departamento, con la privación material de los hogares en el eje horizontal, la correlación de Spearman es −0,27: relación débil y negativa. Los departamentos más pobres tienden levemente a tener <i>menos</i> noticias por habitante.</p>
+<h4>Indicadores disponibles</h4><p>El selector trae solo indicadores <b>vinculados a las luchas</b>: privación material, vivienda y servicios, educación, trabajo y protección, pueblos originarios, barrios populares (RENABAP), economía popular (ReNaTEP), voto presidencial de 2023 y femicidios. La densidad y la población quedan como <b>controles</b>, para verificar si una relación no es solo efecto del tamaño de las ciudades. Los indicadores sin vínculo directo con las acciones (internet, computadora, piso, envejecimiento, migración, fecundidad, etc.) se quitaron del sitio; siguen en el CSV de contexto, en el área de datos abiertos.</p><h4>Precauciones</h4><p>Correlación no es causa. La relación vale para lugares, no para personas (falacia ecológica). Y la base mide noticias, no todas las protestas: la cobertura de la prensa varía (vea la pestaña Prensa).</p></div></details>
+    <div class="presets" id="ctxPresets"></div>
+    <div class="leitura" id="ctxLeitura" hidden></div>
+    <p class="note" id="ctxNote"></p>
+    <div class="chart" id="ctxChart"></div>
+    <div class="sechead" style="margin-top:28px"><h2>Panorama por provincia</h2><span class="meta">haga clic en el encabezado para ordenar</span></div>
+    <div class="scroll" id="ctxTable"></div>
+    <div class="sechead" style="margin-top:28px"><h2>Regiones estadísticas</h2><span class="meta">INDEC, Encuesta Permanente de Hogares</span></div>
+    <div class="scroll" id="ctxRegions"></div>
+    <p class="foot" id="ctxSources"></p>
+  </section>
+
+  <section class="panel" id="timeSec" role="tabpanel" aria-labelledby="tab-time" hidden>
+    <div class="sechead">
+      <h2>Noticias por mes</h2>
+      <span class="meta" id="timeMeta"></span>
+    </div>
+    <details class="guia"><summary>Cómo leer: En el tiempo</summary><div class="guia-corpo"><h4>Qué muestra</h4><p>Cuándo ocurrieron las acciones: por mes, por día (calendario) y por semana, con los principales acontecimientos políticos de 2024 marcados.</p>
+<h4>Cómo leer</h4><ul><li><b>Columnas mensuales:</b> noticias por mes de publicación. Los círculos numerados en la parte superior son los acontecimientos.</li><li><b>Calendario:</b> cada cuadrado es un día; más oscuro = más acciones iniciadas; los cuadrados con contorno de color son los días de los acontecimientos.</li>
+<li><b>Semana a semana:</b> áreas apiladas por categoría; los triángulos naranja marcan semanas pico, con muchas más noticias de lo común (por encima del tercer cuartil más 1,5 veces el rango intercuartil, criterio usual para valores atípicos). Las tarjetas de abajo comparan cada acontecimiento con una semana típica y listan las noticias de esa semana.</li></ul>
+<h4>Ejemplo en esta base</h4><p>Marzo es el mes con más noticias (187), impulsado por el 8M y el 24 de marzo, Día de la Memoria: las tres semanas pico del año están en ese mes, con 47 a 55 noticias cada una, más de tres veces una semana típica (15).</p></div></details>
+    <div class="presets" id="timePresets"></div>
+    <p class="note" id="timeNote">Mes de la noticia. Haga clic en una columna para filtrar el mes.</p>
+    <div class="chart" id="timeMain"></div>
+    <div class="sechead" style="margin-top:28px"><h2>Calendario de las acciones</h2><span class="meta" id="calMeta"></span></div>
+    <p class="note">Acciones por fecha de inicio, día a día. Cada cuadrado es un día de 2024; cuanto más oscuro, más acciones iniciadas.</p>
+    <div class="chart" id="calChart"></div>
+    <div class="sechead" style="margin-top:28px"><h2>Semana a semana, con los acontecimientos de 2024</h2><span class="meta" id="semMeta"></span></div>
+    <div class="mapctl">
+      <label class="f" for="semVar">Apilar por<select id="semVar"></select></label>
+      <label class="f" for="semN">Categorías<select id="semN"><option value="4">4 principales</option><option value="6" selected>6 principales</option><option value="8">8 principales</option></select></label>
+      <label class="opt" for="semEv"><input type="checkbox" id="semEv" checked> Mostrar acontecimientos</label>
+    </div>
+    <p class="note" id="semNote"></p>
+    <div class="chart" id="semChart"></div>
+    <ol class="eventos" id="semEventos"></ol>
+    <div class="sechead" style="margin-top:28px">
+      <h2 id="smTitle">—</h2>
+    </div>
+    <p class="note" id="smNote"></p>
+    <div class="sm" id="timeSm"></div>
+  </section>
+
+  <section class="panel sintese" id="sinSec" role="tabpanel" aria-labelledby="tab-sin" hidden>
+    <div class="sechead"><h2>Síntesis del recorte</h2><span class="meta" id="sinMeta"></span></div>
+    <details class="guia"><summary>Cómo leer: Síntesis</summary><div class="guia-corpo"><h4>Qué es</h4><p>Una lectura en texto, con gráficos y mapa, que reúne los principales resultados de las otras pestañas: quién se moviliza, cómo, por qué, dónde, cuándo, con quién, frente a qué contexto y con qué cobertura de la prensa.</p>
+<h4>Cómo usar</h4><ul><li>La síntesis se <b>calcula a partir del recorte actual</b>: si usted filtra, por ejemplo, solo los movimientos sindicales o solo la Patagonia, el texto y los gráficos se rehacen para ese recorte.</li><li>Los botones de <b>síntesis listas</b> abren recortes ya armados. Para volver a la base completa, use “Toda la base”.</li><li>Cada sección indica en qué pestaña puede profundizarse el resultado.</li><li>Use “Imprimir o guardar en PDF” para llevar la síntesis a un texto, una clase o una reunión.</li></ul>
+<h4>Precauciones</h4><p>Los textos se generan automáticamente a partir de reglas estadísticas simples, descritas al final. Describen lo que registran las noticias y sirven como punto de partida para la interpretación, no como conclusión.</p></div></details>
+    <div class="presets" id="sinPresets"></div>
+    <div class="sin-tools"><button class="btn" id="sinPrint" type="button">Imprimir o guardar en PDF</button></div>
+    <article id="sinBody"></article>
+  </section>
+
+  <section class="panel" id="cmpSec" role="tabpanel" aria-labelledby="tab-cmp" hidden>
+    <div class="sechead"><h2>Comparar dos recortes</h2><span class="meta" id="cmpMeta"></span></div>
+    <div class="mapctl">
+      <label class="f" for="cmpAv">Grupo A: variable<select id="cmpAv"></select></label>
+      <label class="f" for="cmpAk">Grupo A: categoría<select id="cmpAk"></select></label>
+      <label class="f" for="cmpBk">Grupo B<select id="cmpBk"></select></label>
+      <label class="f" for="cmpY">Comparar según<select id="cmpY"></select></label>
+    </div>
+    <details class="guia"><summary>Cómo leer: Comparar</summary><div class="guia-corpo"><h4>Qué muestra</h4><p>Dos grupos de noticias lado a lado. El grupo A es una categoría (por ejemplo, la región Gran Buenos Aires); el grupo B es otra categoría o todas las demás de la misma variable. Para cada categoría de una tercera variable, el gráfico muestra qué parte de las noticias de cada grupo la contiene.</p>
+<h4>Cómo leer</h4><ul><li><b>Punto azul</b> = grupo A; <b>punto amarillo</b> = grupo B. Cuanto más a la derecha, mayor el porcentaje.</li>
+<li>A <b>línea entre los puntos</b> es la diferencia. Línea oscura = diferencia significativa; línea clara = puede ser azar.</li>
+<li>A <b>columna de la derecha</b> trae la diferencia en puntos porcentuales (A − B). El asterisco (*) marca diferencias estadísticamente significativas al 5%.</li>
+<li>Las líneas están ordenadas de la mayor ventaja de A (arriba) a la mayor ventaja de B (abajo).</li></ul>
+<h4>Ejemplos en esta base</h4><ul>
+<li><b>Gran Buenos Aires × demás regiones, según tipo de movimiento:</b> los movimientos sindicales aparecen en el 52,1% de las noticias del GBA y en el 43,2% de las demás regiones (+8,9 p.p., significativo). En cambio, los movimientos feministas son más frecuentes fuera del GBA (11,8% frente a 6,8%), y también los de pueblos originarios (6,1% frente a 2,6%).</li>
+<li><b>Movimientos sindicales × demás, según acción matriz:</b> los sindicatos recurren más a desplazamientos colectivos, como marchas (29,8% frente a 21,3%), y a interrupciones del proceso productivo, como huelgas (5,8% frente a 1,2%); usan menos acciones comunicativas (25,8% frente a 32,9%).</li></ul>
+<p>Use los botones de ejemplos sobre el gráfico para abrir esas comparaciones.</p>
+<h4>Precauciones</h4><p>Las diferencias pequeñas en categorías con pocas noticias casi nunca son significativas. Las noticias que pertenecen a los dos grupos entran en ambos.</p></div></details>
+    <div class="presets" id="cmpPresets"></div>
+    <p class="note" id="cmpNote"></p>
+    <div class="leitura" id="cmpLeitura" hidden></div>
+    <div class="chart" id="cmpChart"></div>
+  </section>
+
+  <section class="panel" id="acmSec" role="tabpanel" aria-labelledby="tab-acm" hidden>
+    <div class="sechead"><h2>Análisis de correspondencias múltiples</h2><span class="meta" id="acmMeta"></span></div>
+    <div class="mapctl">
+      <div class="f">Variables activas<div class="checks" id="acmVars"></div></div>
+      <label class="f" for="acmN">Categorías por variable<select id="acmN"><option value="5">5 principales</option><option value="8" selected>8 principales</option><option value="12">12 principales</option></select></label>
+      <label class="f" for="acmAx">Ejes<select id="acmAx"><option value="0,1">1 y 2</option><option value="0,2">1 y 3</option><option value="1,2">2 y 3</option></select></label>
+      <label class="opt" for="acmRows"><input type="checkbox" id="acmRows"> Mostrar las noticias como puntos</label>
+    </div>
+    <details class="guia"><summary>Cómo leer: Correspondencias</summary><div class="guia-corpo"><h4>Qué muestra</h4><p>Un “mapa” de las categorías de varias variables al mismo tiempo. Las categorías que suelen aparecer <b>en las mismas noticias</b> quedan <b>cerca</b>; las que rara vez aparecen juntas quedan lejos. Es el análisis de correspondencias múltiples (ACM), muy usado en las ciencias sociales para describir espacios de prácticas.</p>
+<h4>Cómo leer, paso a paso</h4><ol><li><b>Mire el centro:</b> cerca del cruce de las líneas punteadas están las categorías más comunes, las que no diferencian a nadie.</li>
+<li><b>Mire los extremos:</b> las categorías más alejadas del centro son las más características.</li>
+<li><b>Lea cada eje como una oposición:</b> el recuadro “Qué define cada eje” lista las categorías de cada lado. El eje horizontal opone lo que está a la izquierda a lo que está a la derecha; el vertical, lo que está abajo a lo que está arriba.</li>
+<li><b>Busque grupos:</b> las categorías de variables distintas (colores distintos) que aparecen juntas forman un perfil.</li></ol>
+<h4>Ejemplo en esta base</h4><p>Con las variables predeterminadas, el <b>eje 1</b> pone de un lado la escala <i>Nacional</i>, los <i>movimientos sindicales</i> y <i>Gran Buenos Aires</i>, y del otro la <i>Patagonia</i>, la escala <i>Municipal</i> y los objetivos de <i>vivienda y hábitat</i>: opone las grandes acciones nacionales, centradas en Buenos Aires, a las acciones locales del interior. El <b>eje 2</b> separa acciones <i>defensivas</i> y de <i>interseccionalidad institucional</i> de las acciones <i>reivindicativas</i> vinculadas a <i>feministas</i> y <i>desplazamientos colectivos</i>.</p>
+<h4>Precauciones</h4><p>Lea las cercanías entre categorías de variables distintas como tendencia, no como regla. El porcentaje de cada eje dice cuánta información resume; la “inercia corregida” es la estimación más realista en el ACM.</p></div></details>
+    <div class="presets" id="acmPresets"></div>
+    <div class="leitura" id="acmLeitura" hidden></div>
+    <p class="note" id="acmNote"></p>
+    <div class="chart" id="acmChart"></div>
+    <div class="sechead" style="margin-top:24px"><h2>Qué define cada eje</h2><span class="meta">categorías que más contribuyen a la inercia</span></div>
+    <div class="acm-ctr" id="acmCtr"></div>
+  </section>
+
+  <section class="panel" id="impSec" role="tabpanel" aria-labelledby="tab-imp" hidden>
+    <div class="sechead"><h2>Quién informa: la cobertura de la prensa</h2><span class="meta" id="impMeta"></span></div>
+    <details class="guia"><summary>Cómo leer: Prensa</summary><div class="guia-corpo"><h4>Qué muestra</h4><p>Quién informa las acciones. Como la base está hecha de noticias, registra lo que publicaron la prensa y otras fuentes, y no necesariamente todas las acciones que ocurrieron.</p>
+<h4>Cómo leer</h4><ul><li><b>Barras:</b> medios con más noticias.</li><li><b>Curva de Lorenz:</b> si todas las fuentes tuvieran el mismo número de noticias, la curva sería la diagonal punteada; cuanto más curva, más concentrada la cobertura. El índice de Gini lo resume (0 = igual, 1 = todo en una fuente).</li><li><b>Medios × regiones:</b> azul = el medio informa sobre esa región más de lo esperado.</li><li><b>Diversidad por provincia:</b> cuántas fuentes distintas cubren cada provincia y cuánto depende de la principal.</li></ul>
+<h4>Ejemplo en esta base</h4><p>Página/12 es la fuente más frecuente (53 noticias), concentrada en el Gran Buenos Aires; el Diario Río Negro y LM Neuquén cubren la Patagonia. Son más de 500 fuentes, y más de 360 aparecen una sola vez: la cobertura está muy dispersa.</p></div></details>
+    <p class="note" id="impNote"></p>
+    <div class="imp-grid">
+      <div><h3 class="h3">Medios con más noticias</h3><div class="chart" id="impTop"></div></div>
+      <div><h3 class="h3">Concentración de la cobertura</h3><div class="chart" id="impConc"></div></div>
+    </div>
+    <h3 class="h3" style="margin-top:24px">Medios × regiones (residuos ajustados)</h3>
+    <div class="scroll" id="impReg"></div>
+    <h3 class="h3" style="margin-top:24px">Diversidad de fuentes por provincia</h3>
+    <div class="scroll" id="impProv"></div>
+  </section>
+
+  <section class="panel" id="ficSec" role="tabpanel" aria-labelledby="tab-fic" hidden>
+    <div class="sechead"><h2>Ficha</h2><span class="meta" id="ficMeta"></span></div>
+    <div class="mapctl">
+      <label class="f" for="ficV">Tipo de ficha<select id="ficV"><option value="nombremov">Movimiento u organización</option><option value="tipomov">Tipo de movimiento</option><option value="provincia">Provincia</option><option value="departamento">Departamento / partido</option><option value="localidad">Localidad</option><option value="objetivos">Objetivo</option><option value="matriz">Acción matriz</option></select></label>
+      <label class="f" for="ficBusca">Buscar en la lista<input type="search" id="ficBusca" placeholder="Escriba parte del nombre" autocomplete="off" spellcheck="false"></label>
+      <label class="f" for="ficK">Elija<select id="ficK"></select></label>
+    </div>
+    <details class="guia"><summary>Cómo leer: Fichas</summary><div class="guia-corpo"><h4>Qué muestra</h4><p>Un retrato de una organización, tipo de movimiento, provincia, departamento, localidad, objetivo o acción: cuántas noticias, cuándo, dónde, con qué repertorio y con quién.</p>
+<h4>Cómo usar</h4><p>Elija el tipo de ficha y escriba el nombre. Haga clic en cualquier categoría de las listas para abrir su ficha. La ficha usa todas las noticias de la base, sin los filtros, y puede descargarse como imagen.</p></div></details>
+    <div class="presets" id="ficPresets"></div>
+    <div id="ficBody"></div>
+  </section>
+
+  <section class="panel glossario" id="glossario">
+    <details>
+      <summary><h2>Glosario</h2><span class="meta">los términos técnicos usados en la base, en lenguaje simple</span></summary>
+      <dl>
+        <div><dt>Noticia única / repetida</dt><dd>La misma acción puede informarse varias veces. Las copias se marcan como “repetidas” y quedan fuera de los conteos, salvo que usted marque “Incluir noticias repetidas”.</dd></div>
+        <div><dt>Recorte</dt><dd>El conjunto de noticias que queda después de los filtros elegidos. Todos los gráficos, mapas y números muestran el recorte actual.</dd></div>
+        <div><dt>Variable con varios valores</dt><dd>Una noticia puede tener más de una categoría en la misma variable (por ejemplo, dos tipos de movimiento). Por eso los porcentajes pueden sumar más de 100%.</dd></div>
+        <div><dt>Tasa por 100 mil habitantes</dt><dd>Número de noticias dividido por la población y multiplicado por 100.000. Permite comparar lugares de tamaños distintos.</dd></div>
+        <div><dt>Puntos porcentuales (p.p.)</dt><dd>Diferencia entre dos porcentajes. De 43% a 52% hay 9 puntos porcentuales (y no 9%).</dd></div>
+        <div><dt>Esperado</dt><dd>El valor que aparecería si no hubiera ninguna relación entre las cosas comparadas. Por ejemplo, en los mapas, el total de noticias repartido según la población de cada lugar.</dd></div>
+        <div><dt>Residuo ajustado</dt><dd>Mide cuánto se aleja un valor observado de lo esperado, en unidades comparables. Primero se calcula cuántas noticias tendrían las dos categorías si no hubiera relación entre ellas (lo esperado); después se divide la diferencia entre observado y esperado por la variación que suele producir el azar. Positivo = ocurre más de lo esperado (atracción); negativo = menos (rechazo); cerca de 0 = lo que se esperaría. Por encima de +1,96 o por debajo de −1,96, la diferencia difícilmente es azar (5% de probabilidad); más allá de ±3, menos de 0,3%. Ej.: estudiantiles × objetivos educativos: 85 noticias observadas frente a 22,4 esperadas, residuo +15,9.</dd></div>
+        <div><dt>Combinación característica</dt><dd>Par de categorías que aparece junto mucho más de lo que haría esperar el tamaño de los dos grupos (residuo ajustado ≥ +3). No es la combinación más frecuente, sino la que distingue a un grupo de los demás.</dd></div>
+        <div><dt>Muy por encima o por debajo de lo esperado por la población (mapas y Síntesis)</dt><dd>Compara las noticias de un lugar con la parte del total que le correspondería si las noticias se distribuyeran como la población: esperado = total de noticias × población del lugar ÷ población del país (Censo 2022). La prueba exacta de Poisson calcula la probabilidad de que una diferencia tan grande sea azar; marcamos solo los lugares con probabilidad menor al 1% (p < 0,01) e, no caso de “acima”, com pelo menos 3 notícias. Ex.: Los Lagos (Neuquén) tem 0,034% da população; de 830 notícias mapeadas, esperaríamos 0,3; há 5 (17,8 vezes o esperado).</dd></div>
+        <div><dt>Muy por encima o por debajo de la tendencia (Contexto)</dt><dd>En la dispersión, la recta de tendencia prevé la tasa de noticias de cada lugar a partir de su valor en el indicador. La diferencia entre la tasa observada y la prevista, dividida por la desviación estándar de todas esas diferencias, dice cuán fuera de la tendencia está el lugar. A partir de +1,5 desviaciones estándar, contorno naranja; a partir de −1,5, azul. Son los lugares que el indicador por sí solo no explica.</dd></div>
+        <div><dt>Semana pico</dt><dd>Semana con muchas más noticias de lo normal: por encima de Q3 + 1,5 × (Q3 − Q1), donde Q1 y Q3 son el primer y el tercer cuartil de las 53 semanas del año. Es el criterio usual para valores atípicos.</dd></div>
+        <div><dt>Índice noticias ÷ población (regiones)</dt><dd>Porcentaje de las noticias de una región dividido por su porcentaje de la población. Por encima de 1, la región tiene más noticias de lo que haría esperar su peso poblacional; por debajo de 1, menos.</dd></div>
+        <div><dt>Significativo</dt><dd>Una diferencia se llama significativa cuando es demasiado grande para explicarse por el azar. Las pruebas usan el límite usual del 5% (p < 0,05) ou o mais exigente de 1% (p < 0,01).</dd></div>
+        <div><dt>Valor p</dt><dd>La probabilidad de ver una diferencia tan grande como la observada si, en realidad, no hubiera diferencia. Cuanto menor, más confiable es el resultado.</dd></div>
+        <div><dt>Chi cuadrado (χ²) y V de Cramér</dt><dd>El chi cuadrado prueba si dos variables tienen relación; la V de Cramér indica la fuerza de esa relación, de 0 (ninguna) a 1 (total).</dd></div>
+        <div><dt>Correlación (r de Pearson y ρ de Spearman)</dt><dd>Miden si dos medidas suben o bajan juntas, de −1 a +1. Pearson mira la relación en línea recta; Spearman, el orden de los lugares, y es menos sensible a los casos extremos.</dd></div>
+        <div><dt>Mediana</dt><dd>El valor del medio: la mitad de los lugares está por encima y la mitad por debajo. Se usa para dividir los gráficos en cuadrantes.</dd></div>
+        <div><dt>Cuantiles, terciles y quintiles</dt><dd>Cortes que dividen los lugares en grupos del mismo tamaño (tres grupos en los terciles, cinco en los quintiles). Se usan para formar las clases de color de los mapas.</dd></div>
+        <div><dt>Círculos proporcionales</dt><dd>Representación de valores absolutos: el área del círculo es proporcional al número de noticias.</dd></div>
+        <div><dt>Coroplético</dt><dd>Mapa en el que cada área se pinta según un valor relativo (tasa o porcentaje). Los colores más oscuros indican valores mayores.</dd></div>
+        <div><dt>Mapa bivariado</dt><dd>Un solo color combina dos informaciones: noticias por habitante (del blanco al amarillo) y un indicador del Censo (del blanco al azul).</dd></div>
+        <div><dt>LISA (puntos calientes y fríos)</dt><dd><i>Local Indicator of Spatial Association</i>: aquí, el I de Moran local (Anselin, 1995), calculado por departamento. Pasos: (1) noticias ÷ población × 100 mil; (2) tasa suavizada por el método bayesiano empírico, que acerca a la media los departamentos pequeños; (3) puntaje z de cada tasa; (4) media de los z de los vecinos que comparten frontera o vértice; (5) I local = z del departamento × media de los vecinos; (6) 499 sorteos de vecinos al azar para obtener el valor p. Con p &lt; 0,05: alto-alto = punto caliente (naranja), bajo-bajo = punto frío (azul), alto-bajo y bajo-alto = casos aislados. El recuadro “Cómo se calculó este mapa” muestra los números, con un ejemplo.</dd></div>
+        <div><dt>Tasa bayesiana empírica</dt><dd>Ajuste de la tasa por habitante que reduce el peso del azar en lugares poco poblados, acercándolos a la media general.</dd></div>
+        <div><dt>Análisis de correspondencias múltiples (ACM)</dt><dd>Técnica que coloca categorías de varias variables en un mismo plano: las que aparecen juntas en las mismas noticias quedan cerca.</dd></div>
+        <div><dt>Inercia (ACM)</dt><dd>La cantidad de información que resume cada eje. La inercia corregida de Benzécri es la estimación más realista.</dd></div>
+        <div><dt>Comunidad (redes)</dt><dd>Grupo de nodos que se vinculan más entre sí que con el resto de la red, detectado por el método de Louvain. La modularidad Q mide cuán nítidos son esos grupos.</dd></div>
+        <div><dt>Intermediación (redes)</dt><dd>Cuánto está un nodo en el camino entre otros: las organizaciones con alta intermediación tienden puentes entre grupos.</dd></div>
+        <div><dt>Índice de Gini y HHI</dt><dd>Miden concentración. Gini cerca de 0 = noticias distribuidas por igual entre las fuentes; cerca de 1 = concentradas en pocas. HHI cerca de 1 = casi todo de una sola fuente.</dd></div>
+        <div><dt>Falacia ecológica</dt><dd>Error de sacar conclusiones sobre personas a partir de datos de lugares. Una relación entre provincias no dice cómo se comportan los individuos.</dd></div>
+        <div><dt>IPMH</dt><dd>Índice de Privación Material de los Hogares (<i>Índice de Privación Material de los Hogares</i>, INDEC, Censo 2022): proporción de hogares con privación de recursos corrientes, patrimoniales o ambas.</dd></div>
+      </dl>
+    </details>
+  </section>
+
+  <section class="panel" id="newsSec">
+    <div class="sechead"><h2>Noticias en el recorte</h2><span class="meta" id="newsCount"></span></div>
+    <div class="newsbar">
+      <input type="search" id="q" placeholder="Buscar en el título, la fuente o el código (filtra todas las pestañas)…" aria-label="Buscar noticias" autocomplete="off">
+      <div class="tools">
+        <button class="btn" id="dl" hidden>Descargar recorte (CSV)</button>
+        <span class="toast" id="dlMsg"></span>
+      </div>
+    </div>
+    <div class="scroll" style="border:0">
+      <table class="news">
+        <thead><tr><th>Fecha</th><th>Noticia</th><th>Fuente</th><th id="vcol">Valor</th></tr></thead>
+        <tbody id="newsBody"></tbody>
+      </table>
+    </div>
+    <div class="more"><button class="btn" id="moreNews" hidden>Mostrar más</button></div>
+  </section>
+
+
+  <footer class="site-foot">
+    <div class="foot-brand"><svg class="foot-sol" viewBox="-28 -28 56 56" aria-hidden="true"><use href="#sol" x="-28" y="-28" width="56" height="56"/></svg>
+      <div><b>Banco de Datos de las Luchas por Espacios y Territorios (DATALUTA) Argentina 2024</b><br>Movimientos Socioespaciales y Socioterritoriales Urbanos</div></div>
+    <p>Datos: base de noticias de acciones colectivas codificada por el proyecto (los campos con varios valores cuentan la noticia en cada valor; grafías unificadas; sin datos personales de quienes codificaron). Indicadores oficiales: INDEC (Censo 2022, resultados definitivos; Encuesta Permanente de Hogares 2024) y Ministerio de Seguridad Nacional (SNIC). Cartografía: departamentos, provincias y regiones del INDEC derivados de mgaitan/departamentos_argentina; países limítrofes Natural Earth 1:50 millones; localidades según GeoNames.</p>
+    <p>Licencia: base de datos bajo <a href="https://creativecommons.org/licenses/by/4.0/deed.pt-br" rel="license">CC BY 4.0</a> (cite el DATALUTA Argentina 2024); código bajo licencia MIT. <a href="https://github.com/wiliansventura98-collab/site-acoes/blob/main/LICENCAS.md">Licencias y cómo citar</a>.</p>
+    <p><a href="https://github.com/wiliansventura98-collab/site-acoes">Código, datos abiertos y metodología en GitHub</a> · <a href="../../">Página de inicio</a></p>
+  </footer>
+</div>
+
+<script src="../../assets/js/vendor/d3-7.8.5.min.js"></script>
+<script src="../../assets/js/vendor/d3-sankey-0.12.3.min.js"></script>
+<script src="../../assets/js/vendor/topojson-client-3.1.0.min.js"></script>
+<script src="../../assets/js/vendor/leaflet-1.9.4/leaflet.js"></script>
+<script src="../../assets/js/app-es/carregar.js?v=20261030a"></script>
+</body>
+</html>

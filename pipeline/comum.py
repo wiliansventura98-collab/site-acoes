@@ -23,10 +23,14 @@ COLUNAS_PUBLICAVEIS = [
     "Nombre de la  Institución", "ODS", "ODS 18", "DESCRIBE EL NUEVO OBJETIVO", "Link da notícia", "Mes", "Status",
     "PDFs VINCULADOS (notícias repetidas)",
 ]
+# Colunas opcionais da planilha unificada (vários anos e países); publicadas quando existem
+COLUNAS_OPCIONAIS = ["Año", "Ano", "País", "Pais"]
 COLUNAS_PESSOAIS = ["Nombre", "Apellido", "E-mail", "Submission Date", "OBSERVACIONES"]
 
 # Variáveis exploráveis: id, rótulo, grupo, ordem natural (em vez de frequência), descrição
 VARIAVEIS = [
+    ("ano", "Año", "Tempo", True, "Ano da ação: coluna Año/Ano da planilha unificada ou, na falta dela, ano da data da notícia."),
+    ("pais", "País", "Espaço", False, "País da base: coluna País da planilha unificada ou, na falta dela, Argentina."),
     ("mes", "Mês da notícia", "Tempo", True, "Mês de publicação da notícia."),
     ("escala", "Escala de la acción", "Ação", False, "Escala espacial da ação: municipal, provincial, regional, nacional ou internacional."),
     ("virtual", "¿Es una acción virtual?", "Ação", False, "Indica se a ação ocorreu em ambiente virtual."),

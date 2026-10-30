@@ -1,0 +1,81 @@
+{
+ "sintese.js": {
+  "janeiro": "enero",
+  "fevereiro": "febrero",
+  "março": "marzo",
+  "abril": "abril",
+  "maio": "mayo",
+  "junho": "junio",
+  "julho": "julio",
+  "agosto": "agosto",
+  "setembro": "septiembre",
+  "outubro": "octubre",
+  "novembro": "noviembre",
+  "dezembro": "diciembre",
+  "nula": "nula",
+  "fraca": "débil",
+  "forte": "fuerte",
+  "mais": "más",
+  "direcionalidade": "direccionalidad",
+  " das ": " de las ",
+  " concentra ": " concentra "
+ },
+ "tempo.js": {
+  "jan": "ene",
+  "fev": "feb",
+  "mai": "may",
+  "set": "sep",
+  "out": "oct",
+  "dez": "dic",
+  "seg": "lun",
+  "ter": "mar",
+  "qua": "mié",
+  "qui": "jue",
+  "sex": "vie"
+ },
+ "contexto.js": {
+  "fraca": "débil",
+  "forte": "fuerte"
+ },
+ "distribuicao.js": {
+  "fraca": "débil",
+  "forte": "fuerte",
+  " linhas": " filas",
+  " colunas": " columnas",
+  " categorias": " categorías"
+ },
+ "correspondencias.js": {
+  "esquerda": "izquierda",
+  "baixo": "abajo",
+  "direita": "derecha",
+  "cima": "arriba",
+  " categorias": " categorías"
+ },
+ "mapas.js": {
+  "nenhuma": "ninguna",
+  "poucas": "pocas",
+  "muitas": "muchas",
+  " tem ": " tiene ",
+  " das ": " de las ",
+  "localidade": "localidad"
+ },
+ "leituras.js": {
+  " com ": " con "
+ },
+ "base/index.html": {
+  "Cor:": "Color:",
+  "Linha:": "Línea:",
+  "bloco": "bloque",
+  "coluna": "columna",
+  "estudantis": "estudiantiles",
+  "faixa": "banda",
+  "ficam": "quedan",
+  "mais": "más",
+  "% da linha": "% de la fila",
+  "% da coluna": "% de la columna"
+ },
+ "sobre/index.html": {
+  "como": "cómo",
+  "e": "y"
+ }
+}

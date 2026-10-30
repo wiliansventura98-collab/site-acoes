@@ -12,7 +12,7 @@ import re
 import subprocess
 import sys
 
-from comum import COLUNAS_PESSOAIS, COLUNAS_PUBLICAVEIS, DADOS, FONTE, RAIZ
+from comum import COLUNAS_OPCIONAIS, COLUNAS_PESSOAIS, COLUNAS_PUBLICAVEIS, DADOS, FONTE, RAIZ
 
 EMAIL = re.compile(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}")
 
@@ -28,7 +28,7 @@ def main() -> int:
     for arq in sorted(FONTE.glob("*.csv")):
         with open(arq, encoding="utf-8") as fh:
             cab = next(csv.reader(fh), [])
-        extras = [c for c in cab if c not in COLUNAS_PUBLICAVEIS]
+        extras = [c for c in cab if c not in COLUNAS_PUBLICAVEIS + COLUNAS_OPCIONAIS]
         pessoais = [c for c in cab if c in COLUNAS_PESSOAIS]
         if pessoais or extras:
             problemas.append(f"{arq.name}: colunas não publicáveis {pessoais or extras}")

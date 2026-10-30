@@ -2,7 +2,7 @@
 
 Banco de Dados das Lutas por Espaços e Territórios (DATALUTA) Argentina 2024 · Movimentos Socioespaciais e Socioterritoriais Urbanos. Base interativa.
 
-**Acesse:** https://wiliansventura98-collab.github.io/site-acoes/ · **Base interativa:** https://wiliansventura98-collab.github.io/site-acoes/base/
+**Acesse:** https://wiliansventura98-collab.github.io/site-acoes/ · **Base interativa:** https://wiliansventura98-collab.github.io/site-acoes/base/ · **Sobre e metodologia:** https://wiliansventura98-collab.github.io/site-acoes/sobre/ · **Versión en español:** https://wiliansventura98-collab.github.io/site-acoes/es/
 
 **Processo de construção:** o registro completo e atualizado de tudo o que foi feito para gerar a base (fontes, tratamentos, critérios, verificações, alterações e pendências) está em [`PROCESSO.md`](PROCESSO.md); o roteiro executável está em [`pipeline/reconstruir.sh`](pipeline/reconstruir.sh).
 
@@ -128,6 +128,10 @@ python pipeline/construir_site.py --ano 2024
 ```
 index.html                    página inicial
 base/index.html               base interativa (estrutura da página)
+sobre/index.html              página “Sobre e metodologia”
+es/                           versão em espanhol das páginas (GERADA por i18n/ferramenta.js)
+assets/js/app-es/             módulos em espanhol (GERADOS por i18n/ferramenta.js)
+i18n/                         catálogo de tradução (es.json), exceções e ferramenta que gera a versão em espanhol
 assets/css/                   estilos da página inicial e da base
 assets/js/app/                aplicação em módulos: núcleo, distribuição, fluxos, tipologias, redes, mapas, contexto, tempo
 assets/js/vendor/             bibliotecas D3, d3-sankey e TopoJSON (cópias locais)
@@ -138,7 +142,7 @@ pipeline/                     scripts Python e referências geográficas
 docs/                         imagens deste README
 ```
 
-O site é estático: não há servidor nem banco de dados. A página carrega `dados/base.json` e `dados/geo.json` e desenha tudo no navegador.
+O site é estático: não há servidor nem banco de dados. Os textos são escritos em português; a versão em espanhol é gerada a partir deles (`node i18n/ferramenta.js gerar`, também executado pelo GitHub Actions), e o que faltar traduzir aparece em `i18n/pendentes.json`. A página carrega `dados/base.json` e `dados/geo.json` e desenha tudo no navegador.
 
 ## Responsável
 

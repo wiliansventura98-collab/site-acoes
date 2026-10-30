@@ -537,6 +537,7 @@ function legendBlock(g, x, y, w, md, sh, o){
 function filtersText(except){
   const ex = [].concat(except||[]);
   const parts = Object.keys(st.f).filter(v=>!ex.includes(v)).map(vid=>{ const v=VARS[VI[vid]]; return `${v.label}: ${[...st.f[vid]].map(x=>v.values[x]).join(' ou ')}`; });
+  if(st.q && st.q.trim() && !ex.includes('q')) parts.push(`Palavra: “${st.q.trim()}”`);
   return parts.join('; ');
 }
 function techNote(md, sh, o, multi){

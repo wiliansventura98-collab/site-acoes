@@ -122,7 +122,7 @@
     const usadosF = [];
     [[L[0], 0.5], [L[3], 0.17], [L[4], 0.83]].filter(c => c[0]).forEach(([[txt], px]) => { const w = largura(txt.toUpperCase(), frente.s*0.17) + frente.s*0.9; if(cabe(usadosF, W*px, w)) cabecera(gR, W*px, frente.y, frente.s, txt); });
     el('path', {d:`M0,${H-0.5}L${W},${H-0.5}`, stroke:COR.tinta, 'stroke-width':1}, svg);
-    const tit = el('title', {}, null); tit.textContent = 'Ilustração: marcha com faixas dos objetivos mais frequentes nas notícias: ' + L.map(l=>l[0]).join(', ');
+    const tit = el('title', {}, null); tit.textContent = (document.documentElement.lang === 'es' ? 'Ilustración: marcha con pancartas de los objetivos más frecuentes en las noticias: ' : 'Ilustração: marcha com faixas dos objetivos mais frequentes nas notícias: ') + L.map(l=>l[0]).join(', ');
     svg.insertBefore(tit, svg.firstChild);
     svg.setAttribute('role', 'img');
     svg.classList.add('pronta');

@@ -13,6 +13,7 @@ function urlSync(){
   p.set('v', st.v); if(st.x) p.set('x', st.x); if(st.rep) p.set('rep','1'); if(st.mode && st.mode!=='n') p.set('m', st.mode);
   const fs=Object.keys(st.f).filter(vid=>st.f[vid].size).map(vid=>vid+':'+[...st.f[vid]].map(k=>VARS[VI[vid]].values[k]).join('|'));
   if(fs.length) p.set('f', fs.join(';'));
+  if(st.q && st.q.trim()) p.set('q', st.q.trim());
   if(TAB==='fic' && FIC.k!=null){ p.set('fv', FIC.v); p.set('fk', VARS[VI[FIC.v]].values[FIC.k]); }
   const novo = '#'+(CHAVE_ABA[TAB]||'distribuicao')+'?'+p.toString();
   if(location.hash!==novo){ try{ history.replaceState(null,'',novo); }catch(e){} }
@@ -27,6 +28,7 @@ function urlSync(){
   st.f={};
   (p.get('f')||'').split(';').filter(Boolean).forEach(par=>{ const j=par.indexOf(':'); const vid=par.slice(0,j); if(VI[vid]==null) return;
     const vals=VARS[VI[vid]].values; const ks=par.slice(j+1).split('|').map(n=>vals.indexOf(n)).filter(k=>k>=0); if(ks.length) st.f[vid]=new Set(ks); });
+  st.q = p.get('q') || '';
   if(VI[p.get('fv')]!=null){ const k=VARS[VI[p.get('fv')]].values.indexOf(p.get('fk')); if(k>=0){ FIC.v=p.get('fv'); FIC.k=k; } }
 })();
 // botão para copiar o link do recorte

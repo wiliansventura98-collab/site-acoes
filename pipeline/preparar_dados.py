@@ -176,7 +176,14 @@ def preparar(df: pd.DataFrame) -> Resultado:
         matriz, derivada = acao(r)
         provs, locs, deps, regs = espaco(r["Referencia Espacial"])
         mes = int(float(r["Mes"]))
+        ano = next((limpar(r[c]) for c in ("Año", "Ano") if c in r.index and limpar(r[c])), "")
+        if not ano:
+            m_ano = re.search(r"(\d{4})\s*$", limpar(r["FECHA INICIAL DE LA ACCIÓN"]) or limpar(r["Fecha de la Noticia"]) or "")
+            ano = m_ano.group(1) if m_ano else ""
+        pais = next((limpar(r[c]) for c in ("País", "Pais") if c in r.index and limpar(r[c])), "Argentina")
         v = {
+            "ano": [str(int(float(ano)))] if ano else [],
+            "pais": [pais],
             "mes": [f"{mes:02d} · {MESES[mes - 1]}"],
             "escala": [limpar(r["Escala de la Acción"])],
             "virtual": [limpar(r["¿ES UNA ACCIÓN VIRTUAL?"])],

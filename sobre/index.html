@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sobre e metodologia · DATALUTA Argentina 2024</title>
+<meta name="description" content="Como a base DATALUTA Argentina 2024 foi construída: codificação, tratamento, georreferenciação, indicadores oficiais, medidas estatísticas, ferramentas, limites, licença e citação.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%276%27 fill=%27%2313294b%27/%3E%3Ccircle cx=%2716%27 cy=%2716%27 r=%277%27 fill=%27%23f2a900%27/%3E%3C/svg%3E">
+<link rel="preload" href="../assets/fonts/urbanist-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../assets/css/fontes.css?v=20261030a">
+<link rel="stylesheet" href="../assets/css/inicio.css?v=20261030a">
+<link rel="stylesheet" href="../assets/css/sobre.css?v=20261030a">
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="sol" viewBox="-28 -28 56 56"><g fill="#f6b40e" stroke="#85340a" stroke-width=".6" stroke-linejoin="round"><path d="M-1.69 -12.38L0.00 -27.00L1.69 -12.38ZM3.17 -12.09L10.33 -24.94L6.31 -10.79ZM7.56 -9.96L19.09 -19.09L9.96 -7.56ZM10.79 -6.31L24.94 -10.33L12.09 -3.17ZM12.38 -1.69L27.00 0.00L12.38 1.69ZM12.09 3.17L24.94 10.33L10.79 6.31ZM9.96 7.56L19.09 19.09L7.56 9.96ZM6.31 10.79L10.33 24.94L3.17 12.09ZM1.69 12.38L0.00 27.00L-1.69 12.38ZM-3.17 12.09L-10.33 24.94L-6.31 10.79ZM-7.56 9.96L-19.09 19.09L-9.96 7.56ZM-10.79 6.31L-24.94 10.33L-12.09 3.17ZM-12.38 1.69L-27.00 0.00L-12.38 -1.69ZM-12.09 -3.17L-24.94 -10.33L-10.79 -6.31ZM-9.96 -7.56L-19.09 -19.09L-7.56 -9.96ZM-6.31 -10.79L-10.33 -24.94L-3.17 -12.09Z"/><path d="M1.08 -12.45C0.45 -16.99 6.22 -19.01 6.09 -23.22C6.27 -17.94 2.33 -15.83 3.77 -11.92ZM5.76 -11.09C6.92 -15.53 13.02 -15.18 14.51 -19.12C12.66 -14.17 8.21 -13.73 8.04 -9.57ZM9.57 -8.04C12.33 -11.70 17.84 -9.04 20.72 -12.11C17.12 -8.25 12.84 -9.54 11.09 -5.76ZM11.92 -3.77C15.87 -6.09 19.94 -1.53 23.78 -3.26C18.97 -1.07 15.52 -3.90 12.45 -1.08ZM12.45 1.08C16.99 0.45 19.01 6.22 23.22 6.09C17.94 6.27 15.83 2.33 11.92 3.77ZM11.09 5.76C15.53 6.92 15.18 13.02 19.12 14.51C14.17 12.66 13.73 8.21 9.57 8.04ZM8.04 9.57C11.70 12.33 9.04 17.84 12.11 20.72C8.25 17.12 9.54 12.84 5.76 11.09ZM3.77 11.92C6.09 15.87 1.53 19.94 3.26 23.78C1.07 18.97 3.90 15.52 1.08 12.45ZM-1.08 12.45C-0.45 16.99 -6.22 19.01 -6.09 23.22C-6.27 17.94 -2.33 15.83 -3.77 11.92ZM-5.76 11.09C-6.92 15.53 -13.02 15.18 -14.51 19.12C-12.66 14.17 -8.21 13.73 -8.04 9.57ZM-9.57 8.04C-12.33 11.70 -17.84 9.04 -20.72 12.11C-17.12 8.25 -12.84 9.54 -11.09 5.76ZM-11.92 3.77C-15.87 6.09 -19.94 1.53 -23.78 3.26C-18.97 1.07 -15.52 3.90 -12.45 1.08ZM-12.45 -1.08C-16.99 -0.45 -19.01 -6.22 -23.22 -6.09C-17.94 -6.27 -15.83 -2.33 -11.92 -3.77ZM-11.09 -5.76C-15.53 -6.92 -15.18 -13.02 -19.12 -14.51C-14.17 -12.66 -13.73 -8.21 -9.57 -8.04ZM-8.04 -9.57C-11.70 -12.33 -9.04 -17.84 -12.11 -20.72C-8.25 -17.12 -9.54 -12.84 -5.76 -11.09ZM-3.77 -11.92C-6.09 -15.87 -1.53 -19.94 -3.26 -23.78C-1.07 -18.97 -3.90 -15.52 -1.08 -12.45Z"/><circle r="11.5"/></g><circle r="8.4" fill="none" stroke="#85340a" stroke-width=".5" opacity=".55"/></symbol></svg>
+
+<nav class="topo" aria-label="Navegação principal">
+  <a class="marca" href="../"><svg viewBox="-28 -28 56 56" aria-hidden="true"><use href="#sol" x="-28" y="-28" width="56" height="56"/></svg><span>Ações Socioespaciais</span></a>
+  <div class="links">
+    <a href="../">Início</a>
+    <a href="../base/">Base interativa</a>
+    <a href="../#dados">Dados abertos</a>
+    <a href="https://github.com/wiliansventura98-collab/site-acoes">GitHub</a>
+    <a href="../es/sobre/" hreflang="es" lang="es">Español</a>
+  </div>
+</nav>
+
+<main class="sobre">
+  <header class="sobre-cab">
+    <p class="kicker-dl">Banco de Dados das Lutas por Espaços e Territórios (DATALUTA) Argentina 2024</p>
+    <h1>Sobre a base e a metodologia</h1>
+    <p class="lede">Como uma planilha de notícias codificadas se tornou uma base interativa aberta: de onde vêm os dados, como foram tratados, como cada número é calculado e quais são os limites da base.</p>
+    <nav class="indice" aria-label="Nesta página">
+      <a href="#o-que-e">O que é</a><a href="#construcao">Como foi construída</a><a href="#variaveis">Variáveis</a><a href="#fontes">Fontes oficiais</a><a href="#medidas">Como os números são calculados</a><a href="#ferramentas">Ferramentas</a><a href="#limites">Limites</a><a href="#citar">Licença e citação</a>
+    </nav>
+  </header>
+
+  <section id="o-que-e">
+    <h2>O que é</h2>
+    <p>O DATALUTA Argentina 2024 reúne <b>notícias de imprensa sobre ações coletivas de movimentos sociais na Argentina em 2024</b>. Cada notícia foi lida na íntegra e codificada pela equipe numa ficha comum. A base responde a quatro perguntas: <b>quem se mobiliza</b>, <b>por quê</b>, <b>como</b> e <b>onde e quando</b>.</p>
+    <div class="cartoes">
+      <div><b>1.019</b><span>notícias codificadas</span></div>
+      <div><b>934</b><span>notícias únicas (85 repetidas ficam fora por padrão)</span></div>
+      <div><b>24</b><span>variáveis: 22 da ficha, mais ano e país</span></div>
+      <div><b>508</b><span>veículos de imprensa</span></div>
+    </div>
+  </section>
+
+  <section id="construcao">
+    <h2>Como foi construída</h2>
+    <ol class="passos">
+      <li><h3>Codificação</h3><p>Leitura completa de cada notícia e preenchimento de uma ficha com 22 variáveis: tempo, ação, protagonistas, instituições, espaço e fonte.</p></li>
+      <li><h3>Anonimização</h3><p>A planilha original, que traz nome e e-mail de quem codificou, nunca é publicada. Um script mantém só as colunas publicáveis, e uma verificação automática bloqueia a publicação se encontrar planilhas, colunas pessoais ou e-mails.</p></li>
+      <li><h3>Padronização</h3><p>Campos com vários valores são separados; grafias, maiúsculas, acentos e siglas são unificados (por exemplo, “UTEP” passa a contar junto com o nome completo); a tipologia da ação é dividida em ação matriz (tipo geral) e ação derivada (forma concreta).</p></li>
+      <li><h3>Georreferenciação</h3><p>A referência espacial (localidade, departamento, província) gera as unidades do INDEC: 6 regiões, 24 jurisdições e 512 departamentos ou partidos, com o Gran Buenos Aires separado do resto da província. Cada localidade recebe coordenadas: revisadas à mão, pelo GeoNames dentro da mesma província ou, em último caso, no centro do departamento.</p></li>
+      <li><h3>Indicadores oficiais</h3><p>As notícias são cruzadas com indicadores ligados às lutas (seção <a href="#fontes">Fontes oficiais</a>), depois de compatibilizar nomes de departamentos e recortes entre as fontes e de conferir os totais com os valores oficiais.</p></li>
+      <li><h3>Plataforma e publicação</h3><p>Um pipeline em Python gera os dados do site e os arquivos abertos. A cada mudança, o GitHub Actions verifica a privacidade, roda o pipeline e publica o site no GitHub Pages. Todo o processo é registrado num <a href="https://github.com/wiliansventura98-collab/site-acoes/blob/main/PROCESSO.md">documento de processo</a> e pode ser refeito com um só comando.</p></li>
+    </ol>
+  </section>
+
+  <section id="variaveis">
+    <h2>Variáveis</h2>
+    <table class="tab">
+      <thead><tr><th>Dimensão</th><th>Variáveis</th></tr></thead>
+      <tbody>
+        <tr><td>Tempo</td><td>Ano, mês, data da notícia, início e fim da ação</td></tr>
+        <tr><td>Ação</td><td>Escala, ação virtual, modalidade (socioespacial, socioterritorial, virtual), direcionalidade, ação matriz, ação derivada, objetivos, quantidade de pessoas</td></tr>
+        <tr><td>Protagonistas</td><td>Tipo de movimento, nome do movimento ou organização</td></tr>
+        <tr><td>Instituições</td><td>Tipo e nome da instituição interpelada, Objetivos de Desenvolvimento Sustentável (ODS)</td></tr>
+        <tr><td>Espaço</td><td>País, região, província, departamento, localidade, lugar da ação, outras localizações, dependências públicas</td></tr>
+        <tr><td>Fonte</td><td>Veículo, título e link da notícia</td></tr>
+      </tbody>
+    </table>
+    <p class="nota">Uma notícia pode ter vários valores numa mesma variável (por exemplo, dois tipos de movimento); por isso as porcentagens podem somar mais de 100%. O <a href="https://github.com/wiliansventura98-collab/site-acoes/blob/main/dados/dicionario.md">dicionário de variáveis</a> traz as categorias de cada uma.</p>
+  </section>
+
+  <section id="fontes">
+    <h2>Fontes oficiais</h2>
+    <table class="tab">
+      <thead><tr><th>Fonte</th><th>Indicadores</th><th>Recorte</th></tr></thead>
+      <tbody>
+        <tr><td>INDEC, Censo 2022 (Geoportal estadístico)</td><td>Privação material dos domicílios, água, esgoto, gás, aluguel, educação, jovens que não estudam nem trabalham, desocupação, cobertura de saúde, aposentadoria, população indígena, população e densidade</td><td>Departamento e província</td></tr>
+        <tr><td>INDEC, Encuesta Permanente de Hogares 2024</td><td>Pobreza, indigência e desocupação</td><td>Região e aglomerado urbano</td></tr>
+        <tr><td>RENABAP (registro de bairros populares), 2023</td><td>Famílias e bairros populares por habitante</td><td>Departamento e província</td></tr>
+        <tr><td>Dirección Nacional Electoral, 2023</td><td>Voto presidencial no 1º turno (LLA, UxP, JxC, FIT)</td><td>Departamento e província</td></tr>
+        <tr><td>ReNaTEP (economia popular), 2023</td><td>Inscritos em relação à população de 18 a 65 anos</td><td>Província</td></tr>
+        <tr><td>Registro Nacional de Femicidios, 2024</td><td>Femicídios por 100 mil mulheres</td><td>Província</td></tr>
+        <tr><td>Ministerio de Seguridad (SNIC), 2024</td><td>Homicídios dolosos por 100 mil habitantes</td><td>Província</td></tr>
+      </tbody>
+    </table>
+    <p class="nota">Cartografia: limites do Instituto Geográfico Nacional (via mgaitan/departamentos_argentina, simplificados com mapshaper); topônimos do GeoNames (CC BY 4.0); países vizinhos do Natural Earth. Detalhes em <a href="https://github.com/wiliansventura98-collab/site-acoes/blob/main/pipeline/referencias/contexto/FONTES.md">FONTES.md</a>.</p>
+  </section>
+
+  <section id="medidas">
+    <h2>Como os números são calculados</h2>
+    <dl class="medidas">
+      <div><dt>Contagem e porcentagem</dt><dd>Número de notícias do recorte que têm a categoria; a porcentagem é sobre o total de notícias do recorte.</dd></div>
+      <div><dt>Taxa por 100 mil habitantes</dt><dd>Notícias que citam o lugar ÷ população do Censo 2022 × 100.000. Permite comparar lugares de tamanhos diferentes.</dd></div>
+      <div><dt>Esperado e resíduo ajustado</dt><dd>O esperado é quantas notícias teriam duas categorias juntas se não houvesse relação entre elas (linha × coluna ÷ total). O resíduo ajustado mede a distância entre observado e esperado em unidades comparáveis; acima de ±1,96, dificilmente é acaso (p &lt; 0,05). Uma <b>combinação característica</b> tem resíduo ≥ +3.</dd></div>
+      <div><dt>Comparar dois recortes</dt><dd>Diferença em pontos percentuais e teste z de duas proporções (significativo com |z| ≥ 1,96).</dd></div>
+      <div><dt>Muito acima ou abaixo do esperado (mapas)</dt><dd>Esperado = total de notícias × população do lugar ÷ população do país. O teste exato de Poisson marca os lugares com probabilidade menor que 1% de ter tantas (ou tão poucas) notícias por acaso.</dd></div>
+      <div><dt>Muito acima ou abaixo da tendência (Contexto)</dt><dd>A reta de mínimos quadrados prevê a taxa de cada lugar a partir do indicador; destacam-se os lugares cuja diferença passa de 1,5 desvio-padrão. A relação é medida pelo ρ de Spearman.</dd></div>
+      <div><dt>Mapa bivariado</dt><dd>Cada departamento combina duas classes: notícias por habitante (nenhuma, até a mediana, acima) e o indicador em tercis, numa grade de nove cores.</dd></div>
+      <div><dt>Pontos quentes e frios (LISA)</dt><dd>I de Moran local sobre a taxa bayesiana empírica de cada departamento, comparada com a média dos vizinhos (contiguidade “rainha”); 499 permutações condicionais; classes com p &lt; 0,05.</dd></div>
+      <div><dt>Correspondências múltiplas (ACM)</dt><dd>Codificação difusa (notícia com várias categorias reparte o peso) e inércia corrigida de Benzécri; categorias próximas no plano tendem a aparecer nas mesmas notícias.</dd></div>
+      <div><dt>Redes</dt><dd>Duas categorias se ligam quando aparecem na mesma notícia; comunidades pelo método de Louvain e intermediação de Brandes.</dd></div>
+      <div><dt>Semanas de pico</dt><dd>Semanas acima de Q3 + 1,5 × (Q3 − Q1) das semanas do ano.</dd></div>
+      <div><dt>Concentração da imprensa</dt><dd>Curva de Lorenz, índice de Gini e parcela dos dez maiores veículos.</dd></div>
+    </dl>
+    <p class="nota">Na base interativa, cada aba tem um guia “Como ler”, e os mapas e o Contexto mostram o cálculo passo a passo, com exemplos do recorte escolhido.</p>
+  </section>
+
+  <section id="ferramentas">
+    <h2>Ferramentas</h2>
+    <div class="ferramentas">
+      <div><h3>Tratamento dos dados</h3><p><b>Python</b> com pandas, geopandas, openpyxl e shapely; mapshaper para simplificar os limites.</p></div>
+      <div><h3>Plataforma</h3><p><b>HTML, CSS e JavaScript</b>, com D3.js, d3-sankey, TopoJSON e Leaflet; tipografia Urbanist. Todos os cálculos rodam no navegador, sem servidor.</p></div>
+      <div><h3>Publicação</h3><p><b>GitHub</b>, GitHub Actions e GitHub Pages: a cada mudança, verificação de privacidade, pipeline e publicação automáticos.</p></div>
+      <div><h3>Dados abertos</h3><p>CSV, GeoPackage para QGIS, dicionário de variáveis e código, no <a href="https://github.com/wiliansventura98-collab/site-acoes">repositório</a>.</p></div>
+    </div>
+  </section>
+
+  <section id="limites">
+    <h2>Limites</h2>
+    <ul class="lista">
+      <li>A base mede o que a imprensa registrou, e não todas as ações ocorridas. A cobertura varia entre veículos e províncias: um lugar sem notícias pode ser um lugar sem cobertura.</li>
+      <li>As correlações com indicadores oficiais são entre lugares, e não entre pessoas, e não indicam causa.</li>
+      <li>As taxas de lugares pouco populosos variam muito com poucas notícias; por isso os mapas trazem testes estatísticos e taxas suavizadas.</li>
+      <li>Alguns nomes de organizações ainda estão sendo unificados.</li>
+    </ul>
+  </section>
+
+  <section id="citar">
+    <h2>Licença e citação</h2>
+    <p>A base de dados está sob a licença <a href="https://creativecommons.org/licenses/by/4.0/deed.pt-br" rel="license">CC BY 4.0</a>: pode ser usada e adaptada para qualquer fim, com crédito. O código está sob licença MIT. Detalhes em <a href="https://github.com/wiliansventura98-collab/site-acoes/blob/main/LICENCAS.md">LICENCAS.md</a>.</p>
+    <blockquote class="citacao">SOUZA, Wilians Ventura Ferreira et al. <b>Banco de Dados das Lutas por Espaços e Territórios (DATALUTA) Argentina 2024: Movimentos Socioespaciais e Socioterritoriais Urbanos</b>. 2026. Base de dados. Disponível em: https://wiliansventura98-collab.github.io/site-acoes/.</blockquote>
+    <p><a class="cta" href="../base/">Explorar a base interativa</a></p>
+  </section>
+</main>
+
+<footer class="rodape">
+  <svg viewBox="-28 -28 56 56" aria-hidden="true"><use href="#sol" x="-28" y="-28" width="56" height="56"/></svg>
+  <p><b>DATALUTA Argentina 2024</b><br>Wilians Ventura Ferreira Souza, Universidade Estadual Paulista (Unesp)</p>
+</footer>
+</body>
+</html>

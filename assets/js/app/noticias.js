@@ -7,8 +7,8 @@
 
 let current=[];
 function renderNews(rows){
-  const q=st.q.trim().toLowerCase();
-  const list = (q? rows.filter(r=>r.hay.includes(q)) : rows).slice().sort((a,b)=> a.sort<b.sort?-1: a.sort>b.sort?1: a.codigo.localeCompare(b.codigo));
+  const list = rows.slice()  // a busca por palavra já entra no filtro geral (match)
+  .sort((a,b)=> a.sort<b.sort?-1: a.sort>b.sort?1: a.codigo.localeCompare(b.codigo));
   current=list;
   $('newsCount').textContent = fmt(list.length)+' notícia'+(list.length===1?'':'s');
   const vid=st.v, iv=VI[vid], v=VARS[iv];
