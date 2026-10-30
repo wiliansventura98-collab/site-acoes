@@ -14,11 +14,15 @@
     ? { meses: ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'],
         acao: n => n === 1 ? 'acción' : 'acciones',
         fim: (n, l) => `<b>${n}</b> acciones informadas en 2024, en ${l} localidades`,
-        rever: 'Ver de nuevo', rotulo: 'Mapa de la Argentina con un punto por cada acción colectiva informada en 2024' }
+        rever: 'Ver de nuevo', rotulo: 'Mapa de la Argentina con un punto por cada acción colectiva informada en 2024',
+        nomes: { chile: 'CHILE', bolivia: 'BOLIVIA', paraguai: 'PARAGUAY', brasil: 'BRASIL', uruguai: 'URUGUAY', atlantico: 'OCÉANO\nATLÁNTICO', pacifico: 'OCÉANO PACÍFICO' },
+        bandeira: 'Bandera de la Argentina' }
     : { meses: ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'],
         acao: n => n === 1 ? 'ação' : 'ações',
         fim: (n, l) => `<b>${n}</b> ações noticiadas em 2024, em ${l} localidades`,
-        rever: 'Ver de novo', rotulo: 'Mapa da Argentina com um ponto para cada ação coletiva noticiada em 2024' };
+        rever: 'Ver de novo', rotulo: 'Mapa da Argentina com um ponto para cada ação coletiva noticiada em 2024',
+        nomes: { chile: 'CHILE', bolivia: 'BOLÍVIA', paraguai: 'PARAGUAI', brasil: 'BRASIL', uruguai: 'URUGUAI', atlantico: 'OCEANO\nATLÂNTICO', pacifico: 'OCEANO PACÍFICO' },
+        bandeira: 'Bandeira da Argentina' };
   const fmt = n => n.toLocaleString(ES ? 'es-AR' : 'pt-BR');
   const el = (tag, at, pai) => { const e = document.createElementNS(NS, tag); for (const k in at) e.setAttribute(k, at[k]); if (pai) pai.append(e); return e; };
   const semMovimento = () => window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -27,18 +31,48 @@
   const INICIO_MES = [1, 32, 61, 92, 122, 153, 183, 214, 245, 275, 306, 336];
   const mesDe = d => { let m = 0; while (m < 11 && d >= INICIO_MES[m + 1]) m++; return m; };
 
+  // bandeira argentina: três faixas (celeste, branca, celeste) e o Sol de Maio, com mastro
+  function bandeira(pai, x, y, w) {
+    const h = w * 0.625, g = el('g', { class: 'me-bandeira', transform: `translate(${x},${y})` }, pai);
+    el('title', {}, g).textContent = T.bandeira;
+    el('line', { x1: -3, x2: -3, y1: -4, y2: h + 70, class: 'me-mastro' }, g);
+    el('rect', { width: w, height: h / 3, fill: '#74acdf' }, g);
+    el('rect', { y: h / 3, width: w, height: h / 3, fill: '#ffffff' }, g);
+    el('rect', { y: 2 * h / 3, width: w, height: h / 3, fill: '#74acdf' }, g);
+    const sol = document.getElementById('sol');
+    if (sol) el('use', { href: '#sol', x: w / 2 - h * 0.16, y: h / 2 - h * 0.16, width: h * 0.32, height: h * 0.32 }, g);
+    else el('circle', { cx: w / 2, cy: h / 2, r: h * 0.1, fill: '#f6b40e', stroke: '#85340a', 'stroke-width': .8 }, g);
+    el('rect', { width: w, height: h, class: 'me-bandeira-borda' }, g);
+  }
+
   async function montar(fig) {
     let D;
     try { const r = await fetch(fig.dataset.entrada); if (!r.ok) throw 0; D = await r.json(); } catch (e) { fig.hidden = true; return; }
-    const W = D.largura, H = D.altura, PAD = 6;
+    const W = D.largura, H = D.altura, PAD = 2;
 
-    // ---- mapa ----
+    // ---- mapa: oceano, países vizinhos, províncias, contorno, nomes e bandeira ----
     const svg = el('svg', { viewBox: `${-PAD} ${-PAD} ${W + 2 * PAD} ${H + 2 * PAD}`, role: 'img', 'aria-label': T.rotulo, class: 'me-mapa' });
-    const terra = el('g', { class: 'me-terra' }, svg);
+    const cid = 'me-clip-' + Math.random().toString(36).slice(2, 8);
+    el('rect', { width: W, height: H, rx: 16 }, el('clipPath', { id: cid }, el('defs', {}, svg)));
+    const quadro = el('g', { 'clip-path': `url(#${cid})` }, svg);
+    el('rect', { width: W, height: H, class: 'me-mar' }, quadro);
+    if (D.vizinhos) el('path', { d: D.vizinhos, class: 'me-viz' }, quadro);
+    const terra = el('g', { class: 'me-terra' }, quadro);
     D.provincias.forEach(p => el('path', { d: p }, terra));
-    el('path', { d: D.pais, class: 'me-contorno' }, svg);
-    const gp = el('g', { class: 'me-pontos' }, svg);
-    const gf = el('g', { class: 'me-flash' }, svg);
+    const divisas = el('g', { class: 'me-divisas' }, quadro);
+    D.provincias.forEach(p => el('path', { d: p }, divisas));
+    el('path', { d: D.pais, class: 'me-contorno' }, quadro);
+    (D.rotulos || []).forEach(([k, x, y, ang]) => {
+      const nome = T.nomes[k]; if (!nome) return;
+      const oceano = k === 'atlantico' || k === 'pacifico';
+      const t = el('text', { x, y, class: oceano ? 'me-rot me-oceano' : 'me-rot', 'text-anchor': 'middle',
+        transform: ang ? `rotate(${ang} ${x} ${y})` : '' }, quadro);
+      nome.split('\n').forEach((linha, i) => { const ts = el('tspan', { x, dy: i ? '1.2em' : (nome.includes('\n') ? '-0.2em' : '0.35em') }, t); ts.textContent = linha; });
+    });
+    bandeira(quadro, W - 140, H - 170, 108);
+    el('rect', { width: W, height: H, rx: 16, class: 'me-moldura' }, svg);
+    const gp = el('g', { class: 'me-pontos' }, quadro);
+    const gf = el('g', { class: 'me-flash' }, quadro);
 
     // posição final de cada ponto: espiral de girassol em torno da localidade
     const vistos = new Map();

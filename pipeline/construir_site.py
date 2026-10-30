@@ -489,35 +489,52 @@ def _lambert(lon, lat, lat1=-28.0, lat2=-46.0, lon0=-64.0, lat0=-38.0):
 
 
 def escrever_entrada(res, coords, caminho, altura=1000):
-    """Mapa da abertura: contorno das províncias e um ponto por ação (localidade citada), em ordem de data.
+    """Mapa da abertura: a Argentina entre os países vizinhos e um ponto por ação (localidade citada), em ordem de data.
 
-    Tudo já vem projetado e escalado para um viewBox de largura variável e altura fixa, para que a página
+    Tudo já vem projetado (Lambert, como nas pranchas) e escalado para um viewBox de altura fixa, para que a página
     inicial desenhe o mapa sem bibliotecas. Cada ponto: [x, y, dia do ano]. Notícias repetidas ficam fora.
     """
     import datetime as dt
+    from shapely.geometry import box
     from shapely.ops import transform, unary_union
-    topo = json.loads((REFERENCIAS / "limites" / "departamentos.topo.json").read_text(encoding="utf-8"))
+    lim = REFERENCIAS / "limites"
     provs = collections.defaultdict(list)
-    for _id, props, geom in _topo_para_geometrias(topo):
+    for _id, props, geom in _topo_para_geometrias(json.loads((lim / "departamentos.topo.json").read_text(encoding="utf-8"))):
         provs[props.get("p")].append(geom)
     proj = lambda x, y, z=None: _lambert(x, y)
     provs = {p: transform(proj, unary_union(g).buffer(0)) for p, g in provs.items()}
     pais = unary_union(list(provs.values()))
-    x0, y0, x1, y1 = pais.bounds
+    # moldura: a Argentina com uma margem para mostrar Chile, Bolívia, Paraguai, Uruguai, Brasil e os oceanos
+    ax0, ay0, ax1, ay1 = pais.bounds
+    w, h = ax1 - ax0, ay1 - ay0
+    x0, x1, y0, y1 = ax0 - 0.30 * w, ax1 + 0.26 * w, ay0 - 0.025 * h, ay1 + 0.05 * h
+    moldura = box(x0, y0, x1, y1)
+    viz = [transform(proj, g).buffer(0).intersection(moldura)
+           for _id, props, g in _topo_para_geometrias(json.loads((lim / "paises_vizinhos.topo.json").read_text(encoding="utf-8")))
+           if props.get("name") != "Argentina"]
+    vizinhos = unary_union([g for g in viz if not g.is_empty])
     k = altura / (y1 - y0); larg = round((x1 - x0) * k, 1)
     tela = lambda x, y, z=None: ((x - x0) * k, (y1 - y) * k)
 
-    def caminho_svg(geom, tol):
+    def caminho_svg(geom, tol, minimo=2):
         geom = transform(tela, geom).simplify(tol, preserve_topology=True)
         polys = getattr(geom, "geoms", [geom])
         partes = []
         for pg in polys:
-            if pg.area < 2:  # ilhotas menores que ~2 unidades² não aparecem
+            if pg.geom_type != "Polygon" or pg.area < minimo:  # ilhotas muito pequenas não aparecem
                 continue
             for anel in [pg.exterior, *pg.interiors]:
                 pts = list(anel.coords)
                 partes.append("M" + "L".join(f"{x:.1f},{y:.1f}" for x, y in pts[:-1]) + "Z")
         return "".join(partes)
+
+    # rótulos: chave (traduzida na página), posição em graus, rotação
+    rot = []
+    for chave, lon, lat, ang in [("chile", -71.4, -36.5, -90), ("bolivia", -64.6, -21.0, 0), ("paraguai", -58.4, -22.9, 0),
+                                 ("brasil", -50.9, -27.4, 0), ("uruguai", -55.5, -33.0, 0),
+                                 ("atlantico", -57.5, -44.5, 0), ("pacifico", -78.6, -45.0, -90)]:
+        x, y = tela(*_lambert(lon, lat))
+        rot.append([chave, round(x, 1), round(y, 1), ang])
 
     def dia(reg):
         for d in (reg["inicio"], reg["data"]):
@@ -542,10 +559,11 @@ def escrever_entrada(res, coords, caminho, altura=1000):
                 pontos.append([round(x, 1), round(y, 1), d])
     pontos.sort(key=lambda p: p[2])
     _json({"largura": larg, "altura": altura,
+           "vizinhos": caminho_svg(vizinhos, 1.6, 4),
            "pais": caminho_svg(pais, 1.2),
            "provincias": [caminho_svg(g, 1.6) for g in provs.values()],
+           "rotulos": rot,
            "pontos": pontos, "localidades": len({(p[0], p[1]) for p in pontos})}, caminho)
-
 
 def lemas(regs, n=9):
     from comum import chave
