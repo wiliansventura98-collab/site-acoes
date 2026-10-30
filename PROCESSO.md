@@ -7,9 +7,9 @@ Este documento registra, de forma cumulativa, tudo o que foi feito para transfor
 | Item | Informação |
 |---|---|
 | Responsável | Wilians Ventura Ferreira Souza (Unesp) |
-| Site | <https://wiliansventura98-collab.github.io/site-acoes/> (base interativa em `/base/`, página de metodologia em `/sobre/`, versão em espanhol em `/es/`) |
+| Site | <https://wiliansventura98-collab.github.io/site-acoes/> (base interativa em `/base/`, metodologia em `/sobre/`, produções em `/producoes/`, versão em espanhol em `/es/`) |
 | Repositório | <https://github.com/wiliansventura98-collab/site-acoes> |
-| Versão deste documento | 2.1 · 30/10/2026 |
+| Versão deste documento | 2.2 · 30/10/2026 |
 | Versão em Word | [`PROCESSO.docx`](PROCESSO.docx), gerada por `python pipeline/gerar_processo_docx.py` |
 | Licença | Base de dados: CC BY 4.0 · código: MIT (ver [`LICENCAS.md`](LICENCAS.md)) |
 
@@ -242,6 +242,17 @@ Cuidados registrados no site: cerca de 511 testes simultâneos (uns 26 falsos po
 
 `sobre/index.html` (estilo em `assets/css/sobre.css`): o que é a base, como foi construída (codificação, anonimização, padronização, georreferenciação, indicadores, publicação), variáveis por dimensão, fontes oficiais, como os números são calculados, ferramentas, limites, licença e citação. Ligada no menu da página inicial e da base.
 
+### 7.5 Recursos acrescentados em 30/10/2026 (sem mudar a estrutura da base)
+
+Todos entram como módulos ou páginas novas; abas, cálculos, combinações prontas e endereços antigos continuam iguais.
+
+- **Ficha de cada notícia** (`assets/js/app/ficha-noticia.js`). Cada linha da lista de notícias ganha um botão “Ficha”, que abre um painel com tudo o que foi codificado (agrupado como na planilha), datas, veículo, link da notícia original, um mapa pequeno com as localidades citadas e até 5 **notícias parecidas**. Parecidas = soma de categorias em comum, com pesos: organização 3, tipo de movimento 2, objetivos 2, localidade 2, ação matriz 1, ação derivada 1, província 1; entram as que somam 3 ou mais; empate desfeito pela data mais próxima. A ficha tem **link próprio** (`base/#…&noticia=CÓDIGO`), que abre a base já com ela.
+- **Correção colaborativa.** Botão “Sugerir uma correção” em cada ficha e link “Sugerir uma notícia que faltou” ao pé da lista. Ambos abrem um formulário do GitHub (`.github/ISSUE_TEMPLATE/correcao.yml`) com o código e o título da notícia já preenchidos; é preciso ter conta no GitHub. A equipe revisa antes de mudar a planilha.
+- **Data de atualização dos dados** na página inicial, na base e na página Sobre (`assets/js/atualizado.js`). Vem do campo `atualizado` de `dados/resumo.json`, que o pipeline preenche com a data do último commit que alterou a planilha publicável (`dados/fonte/acoes_2024_fonte.csv`); o GitHub Actions passou a baixar o histórico completo (`fetch-depth: 0`) para isso.
+- **Galeria “Perguntas para começar”** na página inicial: 9 cartões com pergunta, texto curto e miniatura (`assets/img/galeria/`, geradas por captura da própria base). Cada cartão abre a base numa combinação pronta pelo parâmetro novo `pronto=ABA:N` (`assets/js/app/abrir-pronto.js`; N = posição do botão na aba, contando de 0). **Atenção:** se a ordem das combinações prontas de uma aba mudar, os links da galeria precisam ser revistos.
+- **Página “Produções”** (`/producoes/`): artigos, apresentações e outros produtos feitos com a base, agrupados por ano, com busca e filtro por tipo. A lista vem de `dados/producoes.csv` (colunas ano, tipo, titulo, autores, onde, link, resumo, resumo_es), editável no GitHub ou no Excel; sugestões pelo formulário `.github/ISSUE_TEMPLATE/producao.yml`. Ligada no menu de todas as páginas.
+- A ferramenta da versão em espanhol passou a manter os links entre páginas dentro de `es/` (antes, links da página inicial em espanhol levavam à base em português) e a gerar também `es/producoes/`.
+
 ### 7.4 Versão em espanhol
 
 - Endereços: `/es/`, `/es/base/` e `/es/sobre/`; o link “Español”/“Português” no menu troca de idioma (na base, mantendo aba e filtros).
@@ -312,11 +323,14 @@ Datas no fuso de São Paulo. Os códigos entre colchetes são os commits do repo
 - **Mapa cobrindo o cabeçalho inteiro em qualquer tela** (a versão anterior só fazia isso a partir de 1200 px e deixava o menu sobre fundo branco): menu dentro do cabeçalho, sobre o mapa, com fundo branco translúcido; enquadramento calculado no navegador a partir do tamanho do cabeçalho e do texto. Motivo: o responsável avaliou que o mapa não ocupava todo o cabeçalho.
 - **Nome oficial da base** passa a ser “Banco de Dados das Lutas por Espaços e Territórios (DATALUTA) - Movimentos Socioespaciais e Socioterritoriais Urbanos Argentinos (2024)” (em espanhol, “Banco de Datos de las Luchas por Espacios y Territorios (DATALUTA) - Movimientos Socioespaciales y Socioterritoriales Urbanos Argentinos (2024)”), na página inicial, na base, na página Sobre, nas citações (README, `LICENCAS.md`, Sobre), neste documento e no rodapé da versão em Word. Título da página inicial: “Ações no espaço urbano argentino em 2024”. Bandeira do mapa da abertura reposicionada para o Atlântico aberto, a leste da Patagônia. Motivo: pedido do responsável.
 - **Linha com o nome da base** (acima do título, na página inicial e na Sobre) e rótulos da Síntese e das leituras passam do laranja-amarronzado para o azul da paleta (#1d5994 e #2569ad). O laranja segue só nos gráficos e mapas, onde indica “acima do esperado”. Motivo: pedido do responsável, para combinar com a paleta.
+- **Quatro recursos novos e página de produções**, sem mudar a estrutura da base (seção 7.5): ficha de cada notícia com link próprio e notícias parecidas; correção colaborativa por formulário; data de atualização dos dados; galeria “Perguntas para começar” na página inicial; página “Produções”. Corrigido também o link da página inicial em espanhol, que levava à base em português. Motivo: levantamento de bases interativas de referência (IBGE, Crowd Counting, EJAtlas, Carnegie) e pedido do responsável.
 ---
 
 ## 10. Pendências
 
 - [ ] **Licenças:** o arquivo `LICENSE` foi trocado no GitHub para MIT (commit 6f63b69), mas `LICENCAS.md`, README, página Sobre e rodapés ainda dizem base de dados sob CC BY 4.0 e código sob MIT. Decidir entre manter CC BY 4.0 para os dados (recomendado) ou adotar MIT para tudo, e alinhar os arquivos. Confirmar também com o grupo/centro de pesquisa.
+- [ ] Completar `dados/producoes.csv` com as produções do grupo (a apresentação no GT CLACSO entrou sem link e sem data exata).
+- [ ] Criar no GitHub os rótulos “correção” e “produção” e combinar quem revisa as sugestões que chegarem pelos formulários.
 - [ ] Revisão da versão em espanhol por falante nativo (termos como “recorte”, “ficha”, “plancha”).
 - [ ] Depositar a base no Zenodo (ou repositório institucional) para obter um DOI e atualizar a citação em `LICENCAS.md`.
 - [ ] **Unificar nomes de organizações duplicados** (ex.: grafias diferentes de CTA e CGT). Afeta contagens, fichas e redes.

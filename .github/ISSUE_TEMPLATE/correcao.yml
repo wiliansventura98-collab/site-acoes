@@ -1,0 +1,44 @@
+name: Correção ou notícia que faltou / Corrección o noticia faltante
+description: Aponte um erro de codificação numa notícia da base ou sugira uma notícia que faltou. / Señale un error de codificación o sugiera una noticia faltante.
+title: "Correção: "
+labels: ["correção"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Obrigado por ajudar a melhorar o DATALUTA. A equipe revisa cada sugestão antes de mudar a base.
+        Não inclua dados pessoais (seus ou de terceiros).
+  - type: dropdown
+    id: tipo
+    attributes:
+      label: O que você quer apontar?
+      options:
+        - Erro de codificação (movimento, objetivo, ação, instituição…)
+        - Localização errada
+        - Data errada
+        - Notícia repetida
+        - Link quebrado
+        - Notícia que faltou na base
+        - Outro
+    validations:
+      required: true
+  - type: input
+    id: codigo
+    attributes:
+      label: Código da notícia
+      description: Aparece na ficha da notícia (ex.: URBA02012024A.pdf). Deixe em branco se for uma notícia que faltou.
+  - type: input
+    id: titulo_noticia
+    attributes:
+      label: Título da notícia
+  - type: textarea
+    id: descricao
+    attributes:
+      label: O que está errado e como deveria ser
+      description: Para uma notícia que faltou, diga o que aconteceu, quando, onde e quem se mobilizou.
+    validations:
+      required: true
+  - type: input
+    id: fonte
+    attributes:
+      label: Link da notícia ou da fonte que confirma

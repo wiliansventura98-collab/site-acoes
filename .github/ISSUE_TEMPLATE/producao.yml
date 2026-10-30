@@ -1,0 +1,42 @@
+name: Sugerir uma produção / Sugerir una producción
+description: Artigo, apresentação, capítulo, tese ou outro produto feito com o DATALUTA, para entrar na página Produções.
+title: "Produção: "
+labels: ["produção"]
+body:
+  - type: input
+    id: titulo
+    attributes:
+      label: Título
+    validations:
+      required: true
+  - type: input
+    id: autores
+    attributes:
+      label: Autores (como na referência)
+    validations:
+      required: true
+  - type: dropdown
+    id: tipo
+    attributes:
+      label: Tipo
+      options: [Artigo, Capítulo de livro, Livro, Apresentação, Tese ou dissertação, Relatório, Material didático, Base de dados, Documento técnico]
+    validations:
+      required: true
+  - type: input
+    id: ano
+    attributes:
+      label: Ano
+    validations:
+      required: true
+  - type: input
+    id: onde
+    attributes:
+      label: Onde foi publicado ou apresentado
+  - type: input
+    id: link
+    attributes:
+      label: Link (texto, slides, DOI)
+  - type: textarea
+    id: resumo
+    attributes:
+      label: Resumo curto (2 ou 3 linhas)

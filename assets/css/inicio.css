@@ -85,3 +85,19 @@ h2{font-weight:800;font-size:clamp(28px,3.2vw,38px);line-height:1.1;margin:0 0 1
 
 .kicker-dl{margin:0 0 10px;font-size:13px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#1d5994;max-width:60ch;line-height:1.4}
 @media (max-width:640px){.links{flex-wrap:wrap;gap:4px 16px;font-size:14.5px}}
+
+/* data de atualização dos dados (atualizado.js) */
+.atualizado{margin:0;font-size:13.5px;color:#4a5b74}
+.atualizado time{font-weight:700;color:#13294b}
+
+/* galeria “Perguntas para começar”: cada cartão abre a base numa combinação pronta (parâmetro pronto=) */
+.perguntas{padding-top:clamp(48px,7vw,84px)}
+.perguntas-lede{margin:-6px 0 22px;color:var(--tinta-2);max-width:70ch;font-size:16.5px}
+.perguntas ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:22px}
+.perguntas li a{display:flex;flex-direction:column;height:100%;text-decoration:none;color:var(--tinta);border:1px solid var(--regua);border-radius:16px;overflow:hidden;background:#fff;transition:box-shadow .15s ease,transform .15s ease}
+.perguntas li a:hover{box-shadow:0 8px 24px rgba(19,41,75,.12);transform:translateY(-2px)}
+.perguntas li a:focus-visible{outline:2px solid var(--celeste-f);outline-offset:3px}
+.perguntas img{display:block;width:100%;height:auto;aspect-ratio:10/7;object-fit:cover;background:var(--nevoa);border-bottom:1px solid var(--regua)}
+.perguntas h3{margin:14px 16px 6px;font-size:18.5px;line-height:1.25;letter-spacing:-.01em;font-weight:750}
+.perguntas li p{margin:0 16px 16px;font-size:14.5px;line-height:1.45;color:var(--tinta-2)}
+@media (prefers-reduced-motion:reduce){.perguntas li a{transition:none}.perguntas li a:hover{transform:none}}

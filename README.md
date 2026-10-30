@@ -2,7 +2,7 @@
 
 Banco de Dados das Lutas por Espaços e Territórios (DATALUTA) - Movimentos Socioespaciais e Socioterritoriais Urbanos Argentinos (2024). Base interativa.
 
-**Acesse:** https://wiliansventura98-collab.github.io/site-acoes/ · **Base interativa:** https://wiliansventura98-collab.github.io/site-acoes/base/ · **Sobre e metodologia:** https://wiliansventura98-collab.github.io/site-acoes/sobre/ · **Versión en español:** https://wiliansventura98-collab.github.io/site-acoes/es/
+**Acesse:** https://wiliansventura98-collab.github.io/site-acoes/ · **Base interativa:** https://wiliansventura98-collab.github.io/site-acoes/base/ · **Sobre e metodologia:** https://wiliansventura98-collab.github.io/site-acoes/sobre/ · **Produções:** https://wiliansventura98-collab.github.io/site-acoes/producoes/ · **Versión en español:** https://wiliansventura98-collab.github.io/site-acoes/es/
 
 **Processo de construção:** o registro completo e atualizado de tudo o que foi feito para gerar a base (fontes, tratamentos, critérios, verificações, alterações e pendências) está em [`PROCESSO.md`](PROCESSO.md); o roteiro executável está em [`pipeline/reconstruir.sh`](pipeline/reconstruir.sh).
 
@@ -129,6 +129,7 @@ python pipeline/construir_site.py --ano 2024
 index.html                    página inicial
 base/index.html               base interativa (estrutura da página)
 sobre/index.html              página “Sobre e metodologia”
+producoes/index.html          página “Produções” (lista lida de dados/producoes.csv)
 es/                           versão em espanhol das páginas (GERADA por i18n/ferramenta.js)
 assets/js/app-es/             módulos em espanhol (GERADOS por i18n/ferramenta.js)
 i18n/                         catálogo de tradução (es.json), exceções e ferramenta que gera a versão em espanhol

@@ -19,7 +19,7 @@ const contexto = fs.existsSync(CTX) ? JSON.parse(fs.readFileSync(CTX, 'utf8')) :
 const catalogo = fs.existsSync(CAT) ? JSON.parse(fs.readFileSync(CAT, 'utf8')) : {};
 const ignorar = new Set(fs.existsSync(IGN) ? JSON.parse(fs.readFileSync(IGN, 'utf8')) : []);
 
-const PAGINAS = [['index.html', 'es/index.html'], ['base/index.html', 'es/base/index.html'], ['sobre/index.html', 'es/sobre/index.html']];
+const PAGINAS = [['index.html', 'es/index.html'], ['base/index.html', 'es/base/index.html'], ['sobre/index.html', 'es/sobre/index.html'], ['producoes/index.html', 'es/producoes/index.html']];
 const JS_DIR = 'assets/js/app', JS_ES = 'assets/js/app-es';
 
 // texto que parece prosa a traduzir (e não identificador, seletor, cor, CSS ou caminho)
@@ -144,8 +144,10 @@ for (const [orig, dest] of PAGINAS) {
   let [saida, n] = aplica(fonte, frags, orig); total += n;
   const prof = orig.split('/').length - 1; // 0 para index.html, 1 para base/ e sobre/
   // caminhos relativos: a página fica um nível mais fundo (es/…)
-  saida = saida.replace(/(href|src|data-resumo|data-entrada)="(?!https?:|#|data:|mailto:)([^"]*)"/g, (m0, at, url) => {
+  saida = saida.replace(/(href|src|data-resumo|data-entrada|data-fonte)="(?!https?:|#|data:|mailto:)([^"]*)"/g, (m0, at, url) => {
     if (/^(\.\.\/)?es\//.test(url)) return m0; // links de idioma tratados abaixo
+    // links entre páginas que também existem em espanhol (início, base, sobre, produções) ficam dentro de es/
+    if (at === 'href' && /^(\.\.\/|\.\/)?((base|sobre|producoes)\/)?(#[^"]*)?$/.test(url) && url !== '') return m0;
     return `${at}="../${url}"`;
   });
   saida = saida.replace('<html lang="pt-BR">', '<html lang="es">').replace('aria-label="Ilustração de uma marcha"', 'aria-label="Ilustración de una marcha"');

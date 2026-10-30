@@ -584,6 +584,20 @@ def escrever_entrada(res, coords, caminho, altura=1000):
            "rotulos": rot,
            "pontos": pontos, "localidades": len(locs)}, caminho)
 
+def _data_dos_dados(fonte):
+    """Data da última mudança na planilha publicável (último commit que a alterou; sem Git, a data do arquivo)."""
+    import datetime as dt
+    import subprocess
+    try:
+        d = subprocess.run(["git", "log", "-1", "--format=%cs", "--", str(fonte)], capture_output=True, text=True,
+                           cwd=fonte.parent, timeout=20).stdout.strip()
+        if d:
+            return d
+    except (OSError, subprocess.SubprocessError):
+        pass
+    return dt.date.fromtimestamp(fonte.stat().st_mtime).isoformat()
+
+
 def lemas(regs, n=9):
     from comum import chave
     cont = collections.Counter(x for r in regs for x in r["v"]["objetivos"])
@@ -635,7 +649,8 @@ def main():
     _json({"noticias": len(res.linhas), "unicas": unicas, "variaveis": len(res.variaveis),
            "movimentos": distintos("nombremov", sem_info), "localidades": distintos("localidad", sem_info),
            "provincias": distintos("provincia", lambda s: s in pop), "fontes": distintos("fuente", sem_info),
-           "aglomerados_contexto": len(contexto()["aglomerados"]) - 1, "lemas": lemas(regs_unicos)}, DADOS / "resumo.json")
+           "aglomerados_contexto": len(contexto()["aglomerados"]) - 1, "lemas": lemas(regs_unicos),
+           "atualizado": _data_dos_dados(fonte)}, DADOS / "resumo.json")
     metodos = collections.Counter(r["metodo"] for r in relatorio)
     print(f"{len(res.linhas)} notícias ({unicas} únicas), {len(res.variaveis)} variáveis; localidades: {dict(metodos)}")
     for aviso in res.avisos:
