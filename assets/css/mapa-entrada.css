@@ -28,10 +28,20 @@
 .me-rever:focus-visible{outline:2px solid #2569ad;outline-offset:2px}
 .mapa-entrada figcaption{font-size:12.5px;line-height:1.4;color:#7c8aa0;text-align:center;max-width:36ch}
 
-/* modo fundo: o mapa ocupa todo o cabeçalho, atrás do texto (telas a partir de 1200 px; ver data-fundo) */
+/* modo fundo: o mapa ocupa todo o cabeçalho, atrás do texto (data-fundo, telas a partir de 760 px) */
 .mapa-entrada.me-fundo{position:absolute;inset:0;display:block;z-index:0}
 .me-fundo .me-mapa{width:100%;height:100%;max-width:none}
-.me-fundo .me-moldura,.me-fundo .me-rot-pacifico{display:none}
-.me-fundo .me-leg{position:absolute;right:24px;bottom:24px;width:auto;max-width:260px;
+.me-fundo .me-moldura,.me-fundo .me-rot-pacifico,.me-fundo .me-rot-bolivia{display:none}
+.me-fundo .me-leg{position:absolute;right:20px;bottom:20px;width:auto;max-width:260px;
   flex-direction:column;align-items:center;gap:2px;background:rgba(255,255,255,.88);border-radius:14px;padding:10px 16px;box-shadow:0 2px 10px rgba(19,41,75,.08)}
 .me-fundo figcaption{max-width:32ch}
+/* sangria: no celular, o recorte da Argentina vai de uma borda à outra, sem moldura */
+.mapa-entrada.me-sangria{width:calc(100% + 40px);margin:0 -20px}
+.me-sangria .me-mapa{width:100%;height:auto;max-height:640px}
+.me-sangria .me-moldura{display:none}
+.me-sangria .me-leg{padding:0 20px}
+@media (max-width:1099px){
+  .me-fundo .me-leg{left:20px;right:auto;bottom:14px;max-width:none;flex-direction:row;align-items:baseline;gap:4px 12px;background:none;box-shadow:none;padding:0}
+  .me-fundo .me-cont{text-align:left}
+  .me-fundo figcaption{display:none}
+}

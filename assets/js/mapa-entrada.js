@@ -4,7 +4,7 @@
  * lugar se espalham num pequeno “girassol”, e por isso as cidades com muitas ações viram manchas.
  *
  * Uso: <figure class="mapa-entrada" data-entrada="dados/entrada.json" data-duracao="8000" data-fundo>…</figure>
- * Com data-fundo, em telas a partir de 1200 px, o mapa ocupa todo o cabeçalho (o CSS o põe atrás do texto).
+ * Com data-fundo, o mapa ocupa todo o cabeçalho (o CSS o põe atrás do texto); no celular, vai de ponta a ponta.
  * Os dados (contorno já projetado e pontos ordenados por data) são gerados por pipeline/construir_site.py.
  * Sem bibliotecas. Com “reduzir movimento” ativado no sistema, o mapa aparece direto no estado final.
  */
@@ -58,7 +58,7 @@
     const cid = 'me-clip-' + Math.random().toString(36).slice(2, 8);
     const clipRect = el('rect', {}, el('clipPath', { id: cid }, el('defs', {}, svg)));
     const quadro = el('g', { 'clip-path': `url(#${cid})` }, svg);
-    el('rect', { width: W, height: H, class: 'me-mar' }, quadro);
+    el('rect', { x: -W, y: -H, width: 3 * W, height: 3 * H, class: 'me-mar' }, quadro);
     if (D.grade) el('path', { d: D.grade, class: 'me-grade' }, quadro);
     if (D.vizinhos) el('path', { d: D.vizinhos, class: 'me-viz' }, quadro);
     const terra = el('g', { class: 'me-terra' }, quadro);
@@ -78,21 +78,36 @@
     const gf = el('g', { class: 'me-flash' }, quadro);
     const moldura = el('rect', { class: 'me-moldura' }, svg);
 
-    // Em tela larga, com data-fundo, o mapa ocupa todo o cabeçalho (quadro largo, ancorado à direita);
-    // nos demais casos mostra só o recorte da Argentina, numa moldura de cantos arredondados.
-    const largo = fig.hasAttribute('data-fundo') && window.matchMedia ? matchMedia('(min-width: 1200px)') : null;
+    // Com data-fundo, o mapa ocupa todo o cabeçalho, atrás do texto: a altura do mapa é a do cabeçalho e o quadro
+    // é deslocado para a Argentina começar logo depois do texto. Em tela estreita (ou se a Argentina não couber),
+    // mostra só o recorte da Argentina: sem moldura e de ponta a ponta (data-fundo) ou numa moldura (base).
+    const cab = fig.hasAttribute('data-fundo') ? fig.closest('header') : null;
+    const texto = cab && cab.querySelector('.abertura-txt');
+    const [ax0, ax1, ayT, ayB] = D.argentina || [rx + rw * 0.19, rx + rw * 0.83, ry, ry + rh];
+    const nav = cab && cab.querySelector('.topo');
     const ajusta = () => {
-      const fundo = !!(largo && largo.matches);
-      fig.classList.toggle('me-fundo', fundo);
-      const vb = fundo ? [0, 0, W, H] : [rx - 2, ry - 2, rw + 4, rh + 4];
-      svg.setAttribute('viewBox', vb.join(' '));
-      svg.setAttribute('preserveAspectRatio', fundo ? 'xMaxYMid slice' : 'xMidYMid meet');
-      const r = fundo ? { x: 0, y: 0, width: W, height: H, rx: 0 } : { x: rx, y: ry, width: rw, height: rh, rx: 16 };
+      let vb = null;
+      if (cab && window.innerWidth >= 760) {
+        // a Argentina vai de logo abaixo da navegação até perto do pé do cabeçalho, e começa logo depois do texto
+        const hr = cab.getBoundingClientRect();
+        const topo = nav ? nav.getBoundingClientRect().bottom - hr.top + 6 : 16, pe = 14;
+        const s = (hr.height - topo - pe) / (ayB - ayT), vis = hr.width / s;
+        const fimTexto = texto ? texto.getBoundingClientRect().right - hr.left + 28 : hr.width * 0.5;
+        const x0 = Math.min(ax0 - fimTexto / s, W - vis), y0 = ayT - topo / s;
+        if (x0 + vis >= ax1 + 40) vb = [x0, y0, vis, hr.height / s];
+      }
+      const fundo = !!vb, sangria = !fundo && !!cab;
+      fig.classList.toggle('me-fundo', fundo); fig.classList.toggle('me-sangria', sangria);
+      if (cab) cab.classList.toggle('com-mapa-fundo', fundo);
+      svg.setAttribute('viewBox', (vb || [rx - 2, ry - 2, rw + 4, rh + 4]).join(' '));
+      svg.setAttribute('preserveAspectRatio', fundo ? 'xMinYMin meet' : 'xMidYMid meet');
+      const r = fundo ? { x: -W, y: -H, width: 3 * W, height: 3 * H, rx: 0 } : { x: rx, y: ry, width: rw, height: rh, rx: sangria ? 0 : 16 };
       for (const k in r) { clipRect.setAttribute(k, r[k]); moldura.setAttribute(k, r[k]); }
-      // bandeira: no Atlântico Sul, junto às Malvinas (recorte) ou no Atlântico aberto, à direita (fundo)
-      flag.setAttribute('transform', fundo ? `translate(${W - 250},${H * 0.36})` : `translate(${rx + rw - 140},${ry + rh - 170})`);
+      // bandeira: no Atlântico, a leste de Buenos Aires (fundo) ou junto às Malvinas (recorte)
+      flag.setAttribute('transform', fundo ? `translate(${ax1 + 10},${ayT + (ayB - ayT) * 0.3})` : `translate(${rx + rw - 140},${ry + rh - 170})`);
     };
-    ajusta(); if (largo) largo.addEventListener('change', ajusta);
+    ajusta();
+    if (cab && 'ResizeObserver' in window) new ResizeObserver(() => ajusta()).observe(cab); else window.addEventListener('resize', ajusta);
 
     // posição final de cada ponto: espiral de girassol em torno da localidade
     const vistos = new Map();

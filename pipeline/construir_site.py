@@ -509,7 +509,7 @@ def escrever_entrada(res, coords, caminho, altura=1000):
     w, h = ax1 - ax0, ay1 - ay0
     # quadro largo (Pacífico a oeste), para o mapa ocupar todo o cabeçalho; "recorte" é o quadro justo da Argentina,
     # usado em telas estreitas e na base interativa
-    x0, x1, y0, y1 = ax0 - 4.2 * w, ax1 + 0.95 * w, ay0 - 0.03 * h, ay1 + 0.06 * h
+    x0, x1, y0, y1 = ax0 - 4.2 * w, ax1 + 0.95 * w, ay0 - 0.04 * h, ay1 + 0.16 * h
     rx0, rx1 = ax0 - 0.30 * w, ax1 + 0.26 * w
     moldura = box(x0, y0, x1, y1)
     viz = [transform(proj, g).buffer(0).intersection(moldura)
@@ -575,7 +575,8 @@ def escrever_entrada(res, coords, caminho, altura=1000):
                 pontos.append([round(x, 1), round(y, 1), d]); locs.add(loc)
     pontos.sort(key=lambda p: p[2])
     _json({"largura": larg, "altura": altura,
-           "recorte": [round((rx0 - x0) * k, 1), 0, round((rx1 - rx0) * k, 1), altura],
+           "recorte": [round((rx0 - x0) * k, 1), round((y1 - ay1 - 0.05 * h) * k, 1), round((rx1 - rx0) * k, 1), round(1.075 * h * k, 1)],
+           "argentina": [round((ax0 - x0) * k, 1), round((ax1 - x0) * k, 1), round((y1 - ay1) * k, 1), round((y1 - ay0) * k, 1)],
            "grade": "".join(grade),
            "vizinhos": caminho_svg(vizinhos, 1.6, 4),
            "pais": caminho_svg(pais, 1.2),
